@@ -1409,16 +1409,16 @@
 - (void)frameDidChange:(NSNotification *)notification
 {
 	[self _checkWindowFrame];
-	
-    // trying to address the drawing artifacts for the progress indicators - hackery follows
-    // this one fixes the "blanking" effect when the control hides and shows itself
-    NSEnumerator *e = [_cells objectEnumerator];
-    PSMTabBarCell *cell;
-    while ( (cell = [e nextObject]) ) {
-        [[cell indicator] stopAnimation:self];
-        [[cell indicator] startAnimation:self];
-    }
-	
+
+	// trying to address the drawing artifacts for the progress indicators - hackery follows
+	// this one fixes the "blanking" effect when the control hides and shows itself
+	NSEnumerator *e = [_cells objectEnumerator];
+	PSMTabBarCell *cell;
+	while ( (cell = [e nextObject]) ) {
+		[[cell indicator] stopAnimation:self];
+		[[cell indicator] startAnimation:self];
+	}
+
 	[self update:NO];
 }
 
@@ -1444,7 +1444,9 @@
     while ( (cell = [e nextObject]) ) {
         [[cell indicator] startAnimation:self];
     }
-    [self setNeedsDisplay:YES];
+	
+	[self _checkWindowFrame];
+    [self update:NO];
 }
 
 - (void)resetCursorRects

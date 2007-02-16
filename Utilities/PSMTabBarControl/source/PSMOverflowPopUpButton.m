@@ -77,12 +77,12 @@
 
 - (void)setHidden:(BOOL)value
 {
+	[_animationTimer invalidate], _animationTimer = nil;
+	
 	if (!value && _animatingAlternateImage) {
 		_animationValue = ANIMATION_STEP;
 		_animationTimer = [NSTimer scheduledTimerWithTimeInterval:TIMER_INTERVAL target:self selector:@selector(animateStep:) userInfo:nil repeats:YES];
 		[[NSRunLoop currentRunLoop] addTimer:_animationTimer forMode:NSEventTrackingRunLoopMode];
-	} else {
-		[_animationTimer invalidate], _animationTimer = nil;
 	}
 	
 	[super setHidden:value];
@@ -101,12 +101,12 @@
 	[self setNeedsDisplay:YES];
 	
 	if (![self isHidden] && !_animationTimer) {
+		[_animationTimer invalidate], _animationTimer = nil;
+		
 		if (flag) {
 			_animationValue = ANIMATION_STEP;
 			_animationTimer = [NSTimer scheduledTimerWithTimeInterval:TIMER_INTERVAL target:self selector:@selector(animateStep:) userInfo:nil repeats:YES];
 			[[NSRunLoop currentRunLoop] addTimer:_animationTimer forMode:NSEventTrackingRunLoopMode];
-		} else {
-			[_animationTimer invalidate], _animationTimer = nil;
 		}
 	}
 }
