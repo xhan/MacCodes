@@ -34,6 +34,7 @@
         _hasCloseButton = YES;
         _isCloseButtonSuppressed = NO;
         _count = 0;
+        _isEdited = NO;
         _isPlaceholder = NO;
     }
     return self;
@@ -60,6 +61,7 @@
         _hasCloseButton = YES;
         _isCloseButtonSuppressed = NO;
         _count = 0;
+        _isEdited = NO;
         
         if (value) {
             [self setCurrentStep:(kPSMTabDragAnimationSteps - 1)];
@@ -261,6 +263,17 @@
     _currentStep = value;
 }
 
+- (BOOL)isEdited
+{
+    return _isEdited;
+}
+
+- (void)setIsEdited:(BOOL)value
+{
+    _isEdited = value;
+    //[_controlView update:[[self controlView] automaticallyAnimates]]; // binding notice is too fast
+}
+
 #pragma mark -
 #pragma mark Bindings
 
@@ -392,6 +405,7 @@
         [aCoder encodeBool:_isCloseButtonSuppressed forKey:@"isCloseButtonSuppressed"];
         [aCoder encodeBool:_hasIcon forKey:@"hasIcon"];
         [aCoder encodeInt:_count forKey:@"count"];
+        [aCoder encodeBool:_isEdited forKey:@"isEdited"];
     }
 }
 
@@ -415,6 +429,7 @@
             _isCloseButtonSuppressed = [aDecoder decodeBoolForKey:@"isCloseButtonSuppressed"];
             _hasIcon = [aDecoder decodeBoolForKey:@"hasIcon"];
             _count = [aDecoder decodeIntForKey:@"count"];
+            _isEdited = [aDecoder decodeBoolForKey:@"isEdited"];
         }
     }
     return self;

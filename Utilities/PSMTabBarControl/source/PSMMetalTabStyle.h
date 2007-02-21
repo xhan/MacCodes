@@ -13,6 +13,9 @@
     NSImage *metalCloseButton;
     NSImage *metalCloseButtonDown;
     NSImage *metalCloseButtonOver;
+    NSImage *metalCloseDirtyButton;
+    NSImage *metalCloseDirtyButtonDown;
+    NSImage *metalCloseDirtyButtonOver;
     NSImage *_addTabButtonImage;
     NSImage *_addTabButtonPressedImage;
     NSImage *_addTabButtonRolloverImage;

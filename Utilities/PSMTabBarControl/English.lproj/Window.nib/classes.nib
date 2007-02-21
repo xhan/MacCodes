@@ -1,6 +1,13 @@
 {
     IBClasses = (
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }, 
+        {
+            CLASS = PSMTabBarControl; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {delegate = id; partnerView = id; style = id; tabView = NSTabView; }; 
+            SUPERCLASS = NSControl; 
+        }, 
         {
             ACTIONS = {
                 addNewTab = id; 
@@ -17,6 +24,7 @@
                 configTabOptimumWidth = id; 
                 configTabSizeToFit = id; 
                 configUseOverflowMenu = id; 
+                isEditedAction = id; 
                 isProcessingAction = id; 
                 setIconNamed = id; 
                 setObjectCount = id; 
@@ -29,6 +37,7 @@
             OUTLETS = {
                 drawer = NSDrawer; 
                 iconButton = NSPopUpButton; 
+                isEditedButton = NSButton; 
                 isProcessingButton = NSButton; 
                 objectCounterField = NSTextField; 
                 tabBar = PSMTabBarControl; 

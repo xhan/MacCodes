@@ -18,9 +18,9 @@
 
 - (id)initWithTabBarCell:(PSMTabBarCell *)cell image:(NSImage *)image styleMask:(unsigned int)styleMask
 {
-	if ( (self = [super initWithContentRect:NSMakeRect(0, 0, 0, 0) styleMask:styleMask backing:NSBackingStoreBuffered defer:NO]) ) {
+	if ( (self = [super initWithContentRect:NSMakeRect(0, 0, [image size].width, [image size].height) styleMask:styleMask backing:NSBackingStoreBuffered defer:NO]) ) {
 		_cell = [cell retain];
-		_imageView = [[[NSImageView alloc] initWithFrame:NSMakeRect(0, 0, 0, 0)] autorelease];
+		_imageView = [[[NSImageView alloc] initWithFrame:NSMakeRect(0, 0, [image size].width, [image size].height)] autorelease];
 		[self setContentView:_imageView];
 		[self setLevel:NSStatusWindowLevel];
 		[self setIgnoresMouseEvents:YES];

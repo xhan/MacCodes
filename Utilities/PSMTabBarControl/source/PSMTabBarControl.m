@@ -186,11 +186,6 @@
 		// resize
 		[self setPostsFrameChangedNotifications:YES];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(frameDidChange:) name:NSViewFrameDidChangeNotification object:self];
-		
-		// window status
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowStatusDidChange:) name:NSWindowDidBecomeKeyNotification object:[self window]];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowStatusDidChange:) name:NSWindowDidResignKeyNotification object:[self window]];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowDidMove:) name:NSWindowDidMoveNotification object:[self window]];
     }
     [self setTarget:self];
     return self;
@@ -238,6 +233,20 @@
     }
 }
 
+- (void)viewWillMoveToWindow:(NSWindow *)aWindow {
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    NSWindow *myWindow = [self window];
+    if (myWindow) {
+        [center removeObserver:self name:NSWindowDidBecomeKeyNotification object:myWindow];
+        [center removeObserver:self name:NSWindowDidResignKeyNotification object:myWindow];
+        [center removeObserver:self name:NSWindowDidMoveNotification object:myWindow];
+    } 
+    if (aWindow) {
+		[center addObserver:self selector:@selector(windowStatusDidChange:) name:NSWindowDidBecomeKeyNotification object:aWindow];
+		[center addObserver:self selector:@selector(windowStatusDidChange:) name:NSWindowDidResignKeyNotification object:aWindow];
+		[center addObserver:self selector:@selector(windowDidMove:) name:NSWindowDidMoveNotification object:aWindow];
+    }
+}
 
 #pragma mark -
 #pragma mark Accessors
@@ -571,7 +580,8 @@
     [cell unbind:@"hasIcon"];
     [cell unbind:@"title"];
     [cell unbind:@"count"];
-	
+    [cell unbind:@"isEdited"];
+
 	if ([item identifier] != nil) {
 		if ([[[cell representedObject] identifier] respondsToSelector:@selector(isProcessing)]) {
 			[[[cell representedObject] identifier] removeObserver:cell forKeyPath:@"isProcessing"];
@@ -587,6 +597,12 @@
 	if ([item identifier] != nil) {
 		if ([[[cell representedObject] identifier] respondsToSelector:@selector(objectCount)]) {
 			[[item identifier] removeObserver:cell forKeyPath:@"objectCount"];
+		}
+	}
+    
+	if ([item identifier] != nil) {
+		if ([[[cell representedObject] identifier] respondsToSelector:@selector(isEdited)]) {
+			[[item identifier] removeObserver:cell forKeyPath:@"isEdited"];
 		}
 	}
 	
@@ -1768,6 +1784,14 @@
 		if ([[[cell representedObject] identifier] respondsToSelector:@selector(objectCount)]) {
 			[cell bind:@"count" toObject:[item identifier] withKeyPath:@"objectCount" options:nil];
 			[[item identifier] addObserver:cell forKeyPath:@"objectCount" options:nil context:nil];
+		}
+    }
+
+    [cell setIsEdited:NO];
+    if ([item identifier] != nil) {
+		if ([[[cell representedObject] identifier] respondsToSelector:@selector(isEdited)]) {
+			[cell bind:@"isEdited" toObject:[item identifier] withKeyPath:@"isEdited" options:nil];
+			[[item identifier] addObserver:cell forKeyPath:@"isEdited" options:nil context:nil];
 		}
     }
     

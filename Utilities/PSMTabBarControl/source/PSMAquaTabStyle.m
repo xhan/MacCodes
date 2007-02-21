@@ -60,6 +60,10 @@
     aquaCloseButtonDown = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"AquaTabClose_Front_Pressed"]];
     aquaCloseButtonOver = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"AquaTabClose_Front_Rollover"]];
     
+    aquaCloseDirtyButton = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"AquaTabCloseDirty_Front"]];
+    aquaCloseDirtyButtonDown = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"AquaTabCloseDirty_Front_Pressed"]];
+    aquaCloseDirtyButtonOver = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"AquaTabCloseDirty_Front_Rollover"]];
+        
     _addTabButtonImage = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"AquaTabNew"]];
     _addTabButtonPressedImage = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"AquaTabNewPressed"]];
     _addTabButtonRolloverImage = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"AquaTabNewRollover"]];
@@ -74,6 +78,9 @@
     [aquaCloseButton release];
     [aquaCloseButtonDown release];
     [aquaCloseButtonOver release];
+    [aquaCloseDirtyButton release];
+    [aquaCloseDirtyButtonDown release];
+    [aquaCloseDirtyButtonOver release];
     [_addTabButtonImage release];
     [_addTabButtonPressedImage release];
     [_addTabButtonRolloverImage release];
@@ -419,14 +426,10 @@
         NSRect closeButtonRect = [cell closeButtonRectForFrame:cellFrame];
         NSImage *closeButton = nil;
         
-        closeButton = aquaCloseButton;
-        if ([cell closeButtonOver]) {
-            closeButton = aquaCloseButtonOver;
-        }
+        closeButton = [cell isEdited] ? aquaCloseDirtyButton : aquaCloseButton;
         
-        if ([cell closeButtonPressed]) {
-            closeButton = aquaCloseButtonDown;
-        }
+        if ([cell closeButtonOver]) closeButton = [cell isEdited] ? aquaCloseDirtyButtonOver : aquaCloseButtonOver;
+        if ([cell closeButtonPressed]) closeButton = [cell isEdited] ? aquaCloseDirtyButtonDown : aquaCloseButtonDown;
         
         closeButtonSize = [closeButton size];
         
@@ -516,6 +519,9 @@
         [aCoder encodeObject:aquaCloseButton forKey:@"aquaCloseButton"];
         [aCoder encodeObject:aquaCloseButtonDown forKey:@"aquaCloseButtonDown"];
         [aCoder encodeObject:aquaCloseButtonOver forKey:@"aquaCloseButtonOver"];
+        [aCoder encodeObject:aquaCloseDirtyButton forKey:@"aquaCloseDirtyButton"];
+        [aCoder encodeObject:aquaCloseDirtyButtonDown forKey:@"aquaCloseDirtyButtonDown"];
+        [aCoder encodeObject:aquaCloseDirtyButtonOver forKey:@"aquaCloseDirtyButtonOver"];
         [aCoder encodeObject:_addTabButtonImage forKey:@"addTabButtonImage"];
         [aCoder encodeObject:_addTabButtonPressedImage forKey:@"addTabButtonPressedImage"];
         [aCoder encodeObject:_addTabButtonRolloverImage forKey:@"addTabButtonRolloverImage"];
@@ -535,6 +541,9 @@
             aquaCloseButton = [[aDecoder decodeObjectForKey:@"aquaCloseButton"] retain];
             aquaCloseButtonDown = [[aDecoder decodeObjectForKey:@"aquaCloseButtonDown"] retain];
             aquaCloseButtonOver = [[aDecoder decodeObjectForKey:@"aquaCloseButtonOver"] retain];
+            aquaCloseDirtyButton = [[aDecoder decodeObjectForKey:@"aquaCloseDirtyButton"] retain];
+            aquaCloseDirtyButtonDown = [[aDecoder decodeObjectForKey:@"aquaCloseDirtyButtonDown"] retain];
+            aquaCloseDirtyButtonOver = [[aDecoder decodeObjectForKey:@"aquaCloseDirtyButtonOver"] retain];
             _addTabButtonImage = [[aDecoder decodeObjectForKey:@"addTabButtonImage"] retain];
             _addTabButtonPressedImage = [[aDecoder decodeObjectForKey:@"addTabButtonPressedImage"] retain];
             _addTabButtonRolloverImage = [[aDecoder decodeObjectForKey:@"addTabButtonRolloverImage"] retain];

@@ -45,7 +45,11 @@
 	_closeButton = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"AquaTabClose_Front"]];
 	_closeButtonDown = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"AquaTabClose_Front_Pressed"]];
 	_closeButtonOver = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"AquaTabClose_Front_Rollover"]];
-	
+
+    _closeDirtyButton = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"AquaTabCloseDirty_Front"]];
+    _closeDirtyButtonDown = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"AquaTabCloseDirty_Front_Pressed"]];
+    _closeDirtyButtonOver = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"AquaTabCloseDirty_Front_Rollover"]];
+        	
 	_addTabButtonImage = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"AquaTabNew"]];
     _addTabButtonPressedImage = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"AquaTabNewPressed"]];
     _addTabButtonRolloverImage = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"AquaTabNewRollover"]];
@@ -58,6 +62,10 @@
 	[_closeButton release];
 	[_closeButtonDown release];
 	[_closeButtonOver release];
+    
+	[_closeDirtyButton release];
+	[_closeDirtyButtonDown release];
+	[_closeDirtyButtonOver release];
 	
 	[_addTabButtonImage release];
 	[_addTabButtonPressedImage release];
@@ -356,16 +364,16 @@
 		closeButtonSize = [closeButton size];
 		
 		if ([cell closeButtonPressed]) {
-			closeButton = _closeButtonDown;
+			closeButton = [cell isEdited] ? _closeDirtyButtonDown : _closeButtonDown;
 		} else if ([cell closeButtonOver]) {
-			closeButton = _closeButtonOver;
+            closeButton = [cell isEdited] ? _closeDirtyButtonOver : _closeButtonOver;
 		} else if ([cell hasIcon]) {
 			closeButton = [[[cell representedObject] identifier] icon];
 			closeButtonRect.size = [closeButton size];
 			closeButtonRect.origin.x -= ([closeButton size].width - [_closeButton size].width) / 2;
 			closeButtonRect.origin.y = cellFrame.origin.y + (cellFrame.size.height - [closeButton size].height) / 2;
 		} else {
-			closeButton = _closeButton;
+			closeButton = [cell isEdited] ? _closeDirtyButton : _closeButton;;
 		}
 		
 		if ([controlView isFlipped]) {
@@ -707,6 +715,9 @@
         [aCoder encodeObject:_closeButton forKey:@"closeButton"];
         [aCoder encodeObject:_closeButtonDown forKey:@"closeButtonDown"];
         [aCoder encodeObject:_closeButtonOver forKey:@"closeButtonOver"];
+        [aCoder encodeObject:_closeDirtyButton forKey:@"closeDirtyButton"];
+        [aCoder encodeObject:_closeDirtyButtonDown forKey:@"closeDirtyButtonDown"];
+        [aCoder encodeObject:_closeDirtyButtonOver forKey:@"closeDirtyButtonOver"];
         [aCoder encodeObject:_addTabButtonImage forKey:@"addTabButtonImage"];
         [aCoder encodeObject:_addTabButtonPressedImage forKey:@"addTabButtonPressedImage"];
         [aCoder encodeObject:_addTabButtonRolloverImage forKey:@"addTabButtonRolloverImage"];
@@ -719,9 +730,12 @@
 {
    if ( (self = [super init]) ) {
         if ([aDecoder allowsKeyedCoding]) {
-            _closeButton = [[aDecoder decodeObjectForKey:@"metalCloseButton"] retain];
-            _closeButtonDown = [[aDecoder decodeObjectForKey:@"metalCloseButtonDown"] retain];
-            _closeButtonOver = [[aDecoder decodeObjectForKey:@"metalCloseButtonOver"] retain];
+            _closeButton = [[aDecoder decodeObjectForKey:@"closeButton"] retain];
+            _closeButtonDown = [[aDecoder decodeObjectForKey:@"closeButtonDown"] retain];
+            _closeButtonOver = [[aDecoder decodeObjectForKey:@"closeButtonOver"] retain];
+            _closeDirtyButton = [[aDecoder decodeObjectForKey:@"closeDirtyButton"] retain];
+            _closeDirtyButtonDown = [[aDecoder decodeObjectForKey:@"closeDirtyButtonDown"] retain];
+            _closeDirtyButtonOver = [[aDecoder decodeObjectForKey:@"closeDirtyButtonOver"] retain];
             _addTabButtonImage = [[aDecoder decodeObjectForKey:@"addTabButtonImage"] retain];
             _addTabButtonPressedImage = [[aDecoder decodeObjectForKey:@"addTabButtonPressedImage"] retain];
             _addTabButtonRolloverImage = [[aDecoder decodeObjectForKey:@"addTabButtonRolloverImage"] retain];

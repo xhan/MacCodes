@@ -35,6 +35,10 @@
         unifiedCloseButtonDown = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"AquaTabClose_Front_Pressed"]];
         unifiedCloseButtonOver = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"AquaTabClose_Front_Rollover"]];
         
+        unifiedCloseDirtyButton = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"AquaTabCloseDirty_Front"]];
+        unifiedCloseDirtyButtonDown = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"AquaTabCloseDirty_Front_Pressed"]];
+        unifiedCloseDirtyButtonOver = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"AquaTabCloseDirty_Front_Rollover"]];
+        
         _addTabButtonImage = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"AquaTabNew"]];
         _addTabButtonPressedImage = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"AquaTabNewPressed"]];
         _addTabButtonRolloverImage = [[NSImage alloc] initByReferencingFile:[[PSMTabBarControl bundle] pathForImageResource:@"AquaTabNewRollover"]];
@@ -53,6 +57,9 @@
     [unifiedCloseButton release];
     [unifiedCloseButtonDown release];
     [unifiedCloseButtonOver release];
+    [unifiedCloseDirtyButton release];
+    [unifiedCloseDirtyButtonDown release];
+    [unifiedCloseDirtyButtonOver release]; 
     [_addTabButtonImage release];
     [_addTabButtonPressedImage release];
     [_addTabButtonRolloverImage release];
@@ -407,13 +414,10 @@
         NSRect closeButtonRect = [cell closeButtonRectForFrame:cellFrame];
         NSImage * closeButton = nil;
         
-        closeButton = unifiedCloseButton;
-        if ([cell closeButtonOver]) {
-            closeButton = unifiedCloseButtonOver;
-        }
-        if ([cell closeButtonPressed]) {
-            closeButton = unifiedCloseButtonDown;
-        }
+        closeButton = [cell isEdited] ? unifiedCloseDirtyButton : unifiedCloseButton;
+        
+        if ([cell closeButtonOver]) closeButton = [cell isEdited] ? unifiedCloseDirtyButtonOver : unifiedCloseButtonOver;
+        if ([cell closeButtonPressed]) closeButton = [cell isEdited] ? unifiedCloseDirtyButtonDown : unifiedCloseButtonDown;
         
         closeButtonSize = [closeButton size];
         if ([controlView isFlipped]) {
@@ -550,6 +554,9 @@
         [aCoder encodeObject:unifiedCloseButton forKey:@"unifiedCloseButton"];
         [aCoder encodeObject:unifiedCloseButtonDown forKey:@"unifiedCloseButtonDown"];
         [aCoder encodeObject:unifiedCloseButtonOver forKey:@"unifiedCloseButtonOver"];
+        [aCoder encodeObject:unifiedCloseDirtyButton forKey:@"unifiedCloseDirtyButton"];
+        [aCoder encodeObject:unifiedCloseDirtyButtonDown forKey:@"unifiedCloseDirtyButtonDown"];
+        [aCoder encodeObject:unifiedCloseDirtyButtonOver forKey:@"unifiedCloseDirtyButtonOver"];
         [aCoder encodeObject:_addTabButtonImage forKey:@"addTabButtonImage"];
         [aCoder encodeObject:_addTabButtonPressedImage forKey:@"addTabButtonPressedImage"];
         [aCoder encodeObject:_addTabButtonRolloverImage forKey:@"addTabButtonRolloverImage"];
@@ -564,6 +571,9 @@
             unifiedCloseButton = [[aDecoder decodeObjectForKey:@"unifiedCloseButton"] retain];
             unifiedCloseButtonDown = [[aDecoder decodeObjectForKey:@"unifiedCloseButtonDown"] retain];
             unifiedCloseButtonOver = [[aDecoder decodeObjectForKey:@"unifiedCloseButtonOver"] retain];
+            unifiedCloseDirtyButton = [[aDecoder decodeObjectForKey:@"unifiedCloseDirtyButton"] retain];
+            unifiedCloseDirtyButtonDown = [[aDecoder decodeObjectForKey:@"unifiedCloseDirtyButtonDown"] retain];
+            unifiedCloseDirtyButtonOver = [[aDecoder decodeObjectForKey:@"unifiedCloseDirtyButtonOver"] retain];
             _addTabButtonImage = [[aDecoder decodeObjectForKey:@"addTabButtonImage"] retain];
             _addTabButtonPressedImage = [[aDecoder decodeObjectForKey:@"addTabButtonPressedImage"] retain];
             _addTabButtonRolloverImage = [[aDecoder decodeObjectForKey:@"addTabButtonRolloverImage"] retain];

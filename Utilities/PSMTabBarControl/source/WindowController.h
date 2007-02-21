@@ -17,6 +17,7 @@
     IBOutlet    PSMTabBarControl    *tabBar;
     
     IBOutlet    NSButton            *isProcessingButton;
+    IBOutlet    NSButton            *isEditedButton;
     IBOutlet    NSTextField         *objectCounterField;
     IBOutlet    NSPopUpButton       *iconButton;
 }
@@ -33,6 +34,7 @@
 
 // Actions
 - (IBAction)isProcessingAction:(id)sender;
+- (IBAction)isEditedAction:(id)sender;
 
 - (PSMTabBarControl *)tabBar;
 

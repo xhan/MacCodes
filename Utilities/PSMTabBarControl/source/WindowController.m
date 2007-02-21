@@ -105,6 +105,11 @@
     [[[tabView selectedTabViewItem] identifier] setValue:[NSNumber numberWithBool:[sender state]] forKeyPath:@"isProcessing"];
 }
 
+- (IBAction)isEditedAction:(id)sender
+{
+    [[[tabView selectedTabViewItem] identifier] setValue:[NSNumber numberWithBool:[sender state]] forKeyPath:@"isEdited"];
+}
+
 - (IBAction)setTabLabel:(id)sender
 {
     [[tabView selectedTabViewItem] setLabel:[sender stringValue]];
@@ -264,6 +269,10 @@
 	
 	if ([[tabViewItem identifier] respondsToSelector:@selector(isProcessing)]) {
 		[isProcessingButton setState:[[tabViewItem identifier] isProcessing]];
+	}
+    
+	if ([[tabViewItem identifier] respondsToSelector:@selector(isEdited)]) {
+		[isEditedButton setState:[[tabViewItem identifier] isEdited]];
 	}
 	
 	if ([[tabViewItem identifier] respondsToSelector:@selector(iconName)]) {
