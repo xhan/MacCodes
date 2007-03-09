@@ -1167,7 +1167,7 @@
     PSMTabBarCell *cell = [self cellForPoint:mousePt cellFrame:&cellFrame];
     if (cell) {
 		BOOL overClose = NSMouseInRect(mousePt, [cell closeButtonRectForFrame:cellFrame], [self isFlipped]);
-        if (overClose && ![self disableTabClose] && ([self allowsBackgroundTabClosing] || [[cell representedObject] isEqualTo:[tabView selectedTabViewItem]])) {
+        if (overClose && ![self disableTabClose] && ([self allowsBackgroundTabClosing] || [[cell representedObject] isEqualTo:[tabView selectedTabViewItem]] || [theEvent modifierFlags] & NSCommandKeyMask)) {
             [cell setCloseButtonOver:NO];
             [cell setCloseButtonPressed:YES];
 			_closeClicked = YES;

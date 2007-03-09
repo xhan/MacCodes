@@ -237,7 +237,7 @@
 		A251BE930959A23A0058BC7F /* TabClose_Front_Rollover.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = TabClose_Front_Rollover.tif; path = images/TabClose_Front_Rollover.tif; sourceTree = "<group>"; };
 		A251BE940959A23A0058BC7F /* TabClose_Front.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = TabClose_Front.tif; path = images/TabClose_Front.tif; sourceTree = "<group>"; };
 		A251BE9B0959A2530058BC7F /* ReadMe.rtfd */ = {isa = PBXFileReference; lastKnownFileType = wrapper.rtfd; path = ReadMe.rtfd; sourceTree = "<group>"; };
-		A251BEA00959BB5B0058BC7F /* TabBarControlDemo.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = TabBarControlDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A251BEA00959BB5B0058BC7F /* TabBarControlDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TabBarControlDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A251BEA20959BB5B0058BC7F /* TabBarControlDemo-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "TabBarControlDemo-Info.plist"; sourceTree = "<group>"; };
 		A251BEC30959BC0E0058BC7F /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = "<group>"; };
 		A268E7F809A9822900E082AA /* AquaTabNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AquaTabNew.png; path = images/AquaTabNew.png; sourceTree = "<group>"; };

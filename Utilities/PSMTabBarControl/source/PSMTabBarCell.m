@@ -187,7 +187,7 @@
 
 - (BOOL)closeButtonOver
 {
-    return (_closeButtonOver && ([_controlView allowsBackgroundTabClosing] || ([self tabState] & PSMTab_SelectedMask)));
+    return (_closeButtonOver && ([_controlView allowsBackgroundTabClosing] || ([self tabState] & PSMTab_SelectedMask) || [[NSApp currentEvent] modifierFlags] & NSCommandKeyMask));
 }
 
 - (void)setCloseButtonOver:(BOOL)value
