@@ -533,6 +533,9 @@
 
 - (void)drawBackgroundInRect:(NSRect)rect
 {
+	//Draw for our whole bounds; it'll be automatically clipped to fit the appropriate drawing area
+	rect = [tabBar bounds];
+
 	if (orientation == PSMTabBarVerticalOrientation && [tabBar frame].size.width < 2) {
 		return;
 	}

@@ -608,6 +608,9 @@
 
 - (void)drawBackgroundInRect:(NSRect)rect
 {
+	//Draw for our whole bounds; it'll be automatically clipped to fit the appropriate drawing area
+	rect = [tabBar bounds];
+
 	NSBezierPath *path = [NSBezierPath bezierPath];
 	[path setLineWidth:1.0];
 	

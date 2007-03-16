@@ -27,6 +27,7 @@
     NSImage *_addTabButtonRolloverImage;
     
     NSDictionary *_objectCountStringAttributes;
+	PSMTabBarControl *tabBar;
 }
 
 - (void)loadImages;

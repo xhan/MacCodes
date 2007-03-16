@@ -1645,6 +1645,9 @@
     if ([[self delegate] respondsToSelector:@selector(tabViewDidChangeNumberOfTabViewItems:)]) {
         [[self delegate] performSelector:@selector(tabViewDidChangeNumberOfTabViewItems:) withObject:aTabView];
     }
+	
+	// reset cursor tracking for the add tab button if one exists
+	if ([self addTabButton]) [[self addTabButton] resetCursorRects];
 }
 
 #pragma mark -

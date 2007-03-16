@@ -377,12 +377,19 @@
 - (void)drawBackgroundInRect:(NSRect)rect
 {
 	if (rect.size.height <= 22.0) {
+		//Draw for our whole bounds; it'll be automatically clipped to fit the appropriate drawing area
+		rect = [tabBar bounds];
+
 		[aquaTabBg drawInRect:rect fromRect:NSMakeRect(0.0, 0.0, 1.0, 22.0) operation:NSCompositeSourceOver fraction:1.0];
 	}
 }
 
 - (void)drawTabBar:(PSMTabBarControl *)bar inRect:(NSRect)rect
 {
+	if (tabBar != bar) {
+		tabBar = bar;
+	}
+
 	[self drawBackgroundInRect:rect];
     
     // no tab view == not connected

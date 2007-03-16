@@ -494,6 +494,9 @@
 
 - (void)drawBackgroundInRect:(NSRect)rect
 {
+	//Draw for our whole bounds; it'll be automatically clipped to fit the appropriate drawing area
+	rect = [tabBar bounds];
+
 	NSRect gradientRect = rect;
 	gradientRect.size.height -= 1.0;
 	if ([[[tabBar tabView] window] isKeyWindow]) {
