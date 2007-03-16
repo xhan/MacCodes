@@ -303,7 +303,6 @@
 						if (totalWidth < availableWidth) {
 							int leftoverWidth = availableWidth - totalWidth;
 							int q;
-							
 							for (q = i - 1; q >= 0; q--) {
 								int desiredAddition = (int)leftoverWidth / (q + 1);
 								int newCellWidth = (int)[[newWidths objectAtIndex:q] floatValue] + desiredAddition;
@@ -410,9 +409,10 @@
         cell = [cells objectAtIndex:i];
         
         // supress close button?
-        [cell setCloseButtonSuppressed:(cellCount == 1 && [_control canCloseOnlyTab] == NO) ||
-                                       [_control disableTabClose]];
-        
+        [cell setCloseButtonSuppressed:((cellCount == 1 && [_control canCloseOnlyTab] == NO) ||
+										[_control disableTabClose] ||
+										([[_control delegate] respondsToSelector:@selector(tabView:disableTabCloseForTabViewItem:)] && 
+										 [[_control delegate] tabView:[_control tabView] disableTabCloseForTabViewItem:[cell representedObject]]))];
         if (i < [widths count]) {
             tabState = 0;
             
