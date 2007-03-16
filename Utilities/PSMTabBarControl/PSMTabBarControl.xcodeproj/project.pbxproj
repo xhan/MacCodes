@@ -142,6 +142,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		34FD7C080BA9FB5900BBAA24 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0259C573FE90428111CA0C5A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 53DF68FC067E5B5A0090B5B0 /* PSMTabBarControlFramework */;
+			remoteInfo = PSMTabBarControlFramework;
+		};
 		3767A65C0A2D0C5C005F7522 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0259C573FE90428111CA0C5A /* Project object */;
@@ -600,6 +607,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				34FD7C090BA9FB5900BBAA24 /* PBXTargetDependency */,
 			);
 			name = TabBarControlDemo;
 			productName = TabBarControlDemo;
@@ -774,6 +782,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		34FD7C090BA9FB5900BBAA24 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 53DF68FC067E5B5A0090B5B0 /* PSMTabBarControlFramework */;
+			targetProxy = 34FD7C080BA9FB5900BBAA24 /* PBXContainerItemProxy */;
+		};
 		3767A65D0A2D0C5C005F7522 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = A251BE9F0959BB5B0058BC7F /* TabBarControlDemo */;
