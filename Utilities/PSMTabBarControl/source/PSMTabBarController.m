@@ -236,7 +236,12 @@
     if ([_control orientation] == PSMTabBarVerticalOrientation) {
         currentOrigin = [style topMarginForTabBarControl];
     }
-    
+
+	//Don't let cells overlap the add tab button if it is visible
+	if ([_control showAddTabButton]) {
+		availableWidth -= [self addButtonRect].size.width;
+	}
+
     for (i = 0; i < cellCount; i++) {
         currentCell = [cells objectAtIndex:i];
         
@@ -314,7 +319,6 @@
 						// stretch - distribute leftover room among cells
 						int leftoverWidth = availableWidth - totalOccupiedWidth + width;
 						int q;
-						
 						for (q = i - 1; q >= 0; q--) {
 							int desiredAddition = (int)leftoverWidth / (q + 1);
 							int newCellWidth = (int)[[newWidths objectAtIndex:q] floatValue] + desiredAddition;
@@ -330,7 +334,7 @@
 						
 						[newWidths removeAllObjects];
 						totalOccupiedWidth = 0;
-						
+												
 						cellWidth = [NSNumber numberWithFloat:[cell1 desiredWidthOfCell] < availableWidth * 0.5f ? [cell1 desiredWidthOfCell] : availableWidth * 0.5f];
 						[newWidths addObject:cellWidth];
 						totalOccupiedWidth += [cellWidth floatValue];
@@ -352,6 +356,7 @@
 					if (revisedWidth >= [_control cellMinWidth]) {
 						unsigned q;
 						totalOccupiedWidth = 0;
+
 						for (q = 0; q < [newWidths count]; q++) {
 							[newWidths replaceObjectAtIndex:q withObject:[NSNumber numberWithFloat:revisedWidth]];
 							totalOccupiedWidth += revisedWidth;
