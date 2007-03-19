@@ -419,6 +419,7 @@
     _showAddTabButton = value;
     [_addTabButton setFrame:[_controller addButtonRect]];
     [_addTabButton setHidden:!_showAddTabButton];
+	[self update];
 }
 
 - (int)cellMinWidth
