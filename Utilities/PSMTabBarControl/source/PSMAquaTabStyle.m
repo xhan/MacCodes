@@ -108,6 +108,11 @@
 	return 0.0f;
 }
 
+- (void)setOrientation:(PSMTabBarOrientation)value
+{
+
+}
+
 #pragma mark -
 #pragma mark Add Tab Button
 
@@ -279,6 +284,11 @@
     resultWidth += MARGIN_X;
     
     return ceil(resultWidth);
+}
+
+- (float)tabCellHeight
+{
+	return kPSMTabBarControlHeight;
 }
 
 #pragma mark -
