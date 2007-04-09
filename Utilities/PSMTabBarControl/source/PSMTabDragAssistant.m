@@ -264,11 +264,11 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
 				drawPoint = NSMakePoint(_dragWindowOffset.width, [viewImage size].height - _dragWindowOffset.height);
 				
 				if ([control orientation] == PSMTabBarHorizontalOrientation) {
-					drawPoint.y += kPSMTabBarControlHeight - [tabImage size].height;
-					_dragWindowOffset.height -= kPSMTabBarControlHeight - [tabImage size].height;
+					drawPoint.y += [[control style] tabCellHeight] - [tabImage size].height;
+					_dragWindowOffset.height -= [[control style] tabCellHeight] - [tabImage size].height;
 				} else {
 					drawPoint.x += [control frame].size.width - [tabImage size].width;
-					//_dragWindowOffset.height -= kPSMTabBarControlHeight - [tabImage size].height;
+					//_dragWindowOffset.height -= [[control style] tabCellHeight] - [tabImage size].height;
 					//_dragWindowOffset.width -= ([control frame].size.width - [tabImage size].width) + 1;
 				}
 				
