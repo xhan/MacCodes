@@ -226,6 +226,17 @@
     //[_controlView update:[[self controlView] automaticallyAnimates]]; // binding notice is too fast
 }
 
+- (BOOL)hasLargeImage
+{
+	return _hasLargeImage;
+}
+
+- (void)setHasLargeImage:(BOOL)value
+{
+	_hasLargeImage = value;
+}
+
+
 - (int)count
 {
     return _count;
@@ -404,6 +415,7 @@
         [aCoder encodeBool:_hasCloseButton forKey:@"hasCloseButton"];
         [aCoder encodeBool:_isCloseButtonSuppressed forKey:@"isCloseButtonSuppressed"];
         [aCoder encodeBool:_hasIcon forKey:@"hasIcon"];
+        [aCoder encodeBool:_hasLargeImage forKey:@"hasLargeImage"];
         [aCoder encodeInt:_count forKey:@"count"];
         [aCoder encodeBool:_isEdited forKey:@"isEdited"];
     }
@@ -428,6 +440,7 @@
             _hasCloseButton = [aDecoder decodeBoolForKey:@"hasCloseButton"];
             _isCloseButtonSuppressed = [aDecoder decodeBoolForKey:@"isCloseButtonSuppressed"];
             _hasIcon = [aDecoder decodeBoolForKey:@"hasIcon"];
+            _hasLargeImage = [aDecoder decodeBoolForKey:@"hasLargeImage"];
             _count = [aDecoder decodeIntForKey:@"count"];
             _isEdited = [aDecoder decodeBoolForKey:@"isEdited"];
         }

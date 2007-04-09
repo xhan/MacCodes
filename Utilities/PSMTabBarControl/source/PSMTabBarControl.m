@@ -101,7 +101,7 @@
     aRect.origin.x = [style leftMarginForTabBarControl];
     aRect.origin.y = 0.0;
     aRect.size.width = [self availableCellWidth];
-    aRect.size.height = kPSMTabBarControlHeight;
+    aRect.size.height = [style tabCellHeight];
     return aRect;
 }
 
@@ -363,12 +363,14 @@
 {
 	PSMTabBarOrientation lastOrientation = _orientation;
 	_orientation = value;
-    
+
 	if (_tabBarWidth < 10) {
 		_tabBarWidth = 120;
 	}
 	
 	if (lastOrientation != _orientation) {
+		[[self style] setOrientation:_orientation];
+
         [self _positionOverflowMenu]; //move the overflow popup button to the right place
 		[self update:NO];
 	}
@@ -551,7 +553,7 @@
 		cellRect.size.width = 30;
 		cellRect.origin.x = lastCellFrame.origin.x + lastCellFrame.size.width;
 	} else {
-		cellRect = lastCellFrame;
+		cellRect = /*lastCellFrame*/[self genericCellRect];
 		cellRect.size.width = lastCellFrame.size.width;
 		cellRect.size.height = 0;
 		cellRect.origin.y = lastCellFrame.origin.y + lastCellFrame.size.height;
@@ -569,6 +571,7 @@
     if ([_cells count] == [tabView numberOfTabViewItems]) {
         [self update]; // don't update unless all are accounted for!
     }
+	NSLog(@"%i %i",[_cells count],[tabView numberOfTabViewItems]);
 }
 
 - (void)removeTabForCell:(PSMTabBarCell *)cell
@@ -579,6 +582,7 @@
     [[cell indicator] unbind:@"animate"];
     [[cell indicator] unbind:@"hidden"];
     [cell unbind:@"hasIcon"];
+    [cell unbind:@"hasLargeImage"];
     [cell unbind:@"title"];
     [cell unbind:@"count"];
     [cell unbind:@"isEdited"];
@@ -600,7 +604,13 @@
 			[[item identifier] removeObserver:cell forKeyPath:@"objectCount"];
 		}
 	}
-    
+
+	if ([item identifier] != nil) {
+		if ([[[cell representedObject] identifier] respondsToSelector:@selector(largeImage)]) {
+			[[item identifier] removeObserver:cell forKeyPath:@"largeImage"];
+		}
+	}
+	
 	if ([item identifier] != nil) {
 		if ([[[cell representedObject] identifier] respondsToSelector:@selector(isEdited)]) {
 			[[item identifier] removeObserver:cell forKeyPath:@"isEdited"];
@@ -1098,7 +1108,7 @@
 - (void)_positionOverflowMenu
 {
     NSRect cellRect, frame = [self frame];
-    cellRect.size.height = kPSMTabBarControlHeight;
+    cellRect.size.height = [style tabCellHeight];
     cellRect.size.width = [style rightMarginForTabBarControl];
     
 	if ([self orientation] == PSMTabBarHorizontalOrientation) {
@@ -1107,7 +1117,7 @@
 		[_overflowPopUpButton setAutoresizingMask:NSViewNotSizable | NSViewMinXMargin];
 	} else {
 		cellRect.origin.x = 0;
-		cellRect.origin.y = frame.size.height - kPSMTabBarControlHeight;
+		cellRect.origin.y = frame.size.height - [style tabCellHeight];
 		cellRect.size.width = frame.size.width;
 		[_overflowPopUpButton setAutoresizingMask:NSViewNotSizable | NSViewMinXMargin | NSViewMinYMargin];
 	}
@@ -1791,6 +1801,17 @@
 		}
     }
 
+	// bind for a large image
+	[cell setHasLargeImage:NO];
+    if ([item identifier] != nil) {
+		if ([[[cell representedObject] identifier] respondsToSelector:@selector(largeImage)]) {
+			NSMutableDictionary *bindingOptions = [NSMutableDictionary dictionary];
+			[bindingOptions setObject:NSIsNotNilTransformerName forKey:@"NSValueTransformerName"];
+			[cell bind:@"hasLargeImage" toObject:[item identifier] withKeyPath:@"largeImage" options:bindingOptions];
+			[[item identifier] addObserver:cell forKeyPath:@"largeImage" options:nil context:nil];
+		}
+    }
+	
     [cell setIsEdited:NO];
     if ([item identifier] != nil) {
 		if ([[[cell representedObject] identifier] respondsToSelector:@selector(isEdited)]) {

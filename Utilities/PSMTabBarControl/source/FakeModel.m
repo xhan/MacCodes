@@ -79,4 +79,17 @@
     _isEdited = value;
 }
 
+
+- (NSImage *)largeImage
+{
+    return [NSImage imageNamed:@"largeImage"];
+}
+
+- (void)setLargeImage:(NSImage *)icon
+{
+    [icon retain];
+    [_icon release];
+    _icon = icon;
+}
+
 @end
