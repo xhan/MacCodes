@@ -16,6 +16,11 @@
 #define kPSMAdiumObjectCounterRadius 7.0
 #define kPSMAdiumCounterMinWidth 20
 
+#define kPSMTabBarControlSourceListHeight	28
+
+#define kPSMTabBarLargeImageHeight			kPSMTabBarControlSourceListHeight - 4
+#define kPSMTabBarLargeImageWidth			kPSMTabBarLargeImageHeight
+
 @implementation PSMAdiumTabStyle
 
 - (NSString *)name
@@ -119,6 +124,11 @@
 	return 10.0f;
 }
 
+- (void)setOrientation:(PSMTabBarOrientation)value
+{
+	orientation = value;
+}
+
 #pragma mark -
 #pragma mark Add Tab Button
 
@@ -154,19 +164,37 @@
 	return dragRect;
 }
 
+- (BOOL)closeButtonIsVisibleForCell:(PSMTabBarCell *)cell
+{
+	return ([cell hasCloseButton] && ![cell isCloseButtonSuppressed]);
+	
+}
 - (NSRect)closeButtonRectForTabCell:(PSMTabBarCell *)cell withFrame:(NSRect)cellFrame
 {
-	if ([cell hasCloseButton] == NO) {
+	if ([self closeButtonIsVisibleForCell:cell] == NO) {
 		return NSZeroRect;
 	}
 
 	NSRect result;
 	result.size = [_closeButton size];
-	result.origin.x = cellFrame.origin.x + Adium_MARGIN_X;
-	result.origin.y = cellFrame.origin.y + MARGIN_Y + 2.0;
 
-	if ([cell state] == NSOnState) {
-		result.origin.y -= 1;
+	switch (orientation) {
+		case PSMTabBarHorizontalOrientation:
+		{
+			result.origin.x = cellFrame.origin.x + Adium_MARGIN_X;
+			result.origin.y = cellFrame.origin.y + MARGIN_Y + 2.0;
+			if ([cell state] == NSOnState) {
+				result.origin.y -= 1;
+			}
+			break;
+		}			
+
+		case PSMTabBarVerticalOrientation:
+		{
+			result.origin.x = NSMaxX(cellFrame) - (Adium_MARGIN_X*2) - NSWidth(result);
+			result.origin.y = NSMinY(cellFrame) + (NSHeight(cellFrame) / 2) - (result.size.height / 2) + 1;
+			break;
+		}
 	}
 
 	return result;
@@ -185,7 +213,7 @@
 	result.origin.x = cellFrame.origin.x + Adium_MARGIN_X;
 	result.origin.y = cellFrame.origin.y + MARGIN_Y;
 
-	if ([cell hasCloseButton] && ![cell isCloseButtonSuppressed]) {
+	if ([self closeButtonIsVisibleForCell:cell]) {
 		result.origin.x += [_closeButton size].width + Adium_CellPadding;
 	}
 
@@ -216,24 +244,34 @@
 	return result;
 }
 
-- (NSRect)objectCounterRectForTabCell:(PSMTabBarCell *)cell
+- (NSSize)sizeForObjectCounterRectForTabCell:(PSMTabBarCell *)cell
 {
-	NSRect cellFrame = [cell frame];
-
-	if ([cell count] == 0) {
-		return NSZeroRect;
-	}
-
+	NSSize size;
 	float countWidth = [[self attributedObjectCountValueForTabCell:cell] size].width;
+
 	countWidth += (2 * kPSMAdiumObjectCounterRadius - 6.0);
 	
 	if (countWidth < kPSMAdiumCounterMinWidth) {
 		countWidth = kPSMAdiumCounterMinWidth;
 	}
+	
+	size = NSMakeSize(countWidth, 2 * kPSMAdiumObjectCounterRadius); // temp
 
+	return size;
+}
+
+- (NSRect)objectCounterRectForTabCell:(PSMTabBarCell *)cell
+{
+	NSRect cellFrame;
 	NSRect result;
-	result.size = NSMakeSize(countWidth, 2 * kPSMAdiumObjectCounterRadius); // temp
-	result.origin.x = cellFrame.origin.x + cellFrame.size.width - Adium_MARGIN_X - result.size.width;
+
+	if ([cell count] == 0) {
+		return NSZeroRect;
+	}
+
+	cellFrame = [cell frame];
+	result.size = [self sizeForObjectCounterRectForTabCell:cell];
+	result.origin.x = NSMaxX(cellFrame) - Adium_MARGIN_X - result.size.width;
 	result.origin.y = cellFrame.origin.y + MARGIN_Y + 1.0;
 
 	if (![[cell indicator] isHidden]) {
@@ -251,7 +289,7 @@
 	resultWidth = Adium_MARGIN_X;
 
 	// close button?
-	if ([cell hasCloseButton] && ![cell isCloseButtonSuppressed]) {
+	if ([self closeButtonIsVisibleForCell:cell]) {
 		resultWidth += [_closeButton size].width + Adium_CellPadding;
 	}
 
@@ -264,7 +302,7 @@
 	resultWidth += kPSMMinimumTitleWidth;
 
 	// object counter?
-	if ([cell count] > 0) {
+	if (([cell count] > 0) && (orientation == PSMTabBarHorizontalOrientation)) {
 		resultWidth += [self objectCounterRectForTabCell:cell].size.width + Adium_CellPadding;
 	}
 
@@ -287,7 +325,7 @@
 	resultWidth = Adium_MARGIN_X;
 
 	// close button?
-	if ([cell hasCloseButton] && ![cell isCloseButtonSuppressed]) {
+	if ([self closeButtonIsVisibleForCell:cell]) {
 		resultWidth += [_closeButton size].width + Adium_CellPadding;
 	}
 
@@ -300,7 +338,7 @@
 	resultWidth += [[cell attributedStringValue] size].width;
 
 	// object counter?
-	if ([cell count] > 0) {
+	if (([cell count] > 0) && (orientation == PSMTabBarHorizontalOrientation)){
 		resultWidth += [self objectCounterRectForTabCell:cell].size.width + Adium_CellPadding;
 	}
 
@@ -313,6 +351,11 @@
 	resultWidth += Adium_MARGIN_X;
 
 	return ceil(resultWidth);
+}
+
+- (float)tabCellHeight
+{
+	return ((orientation == PSMTabBarHorizontalOrientation) ? kPSMTabBarControlHeight : kPSMTabBarControlSourceListHeight);
 }
 
 #pragma mark -
@@ -340,7 +383,6 @@
 	if (!TruncatingTailParagraphStyle) {
 		TruncatingTailParagraphStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] retain];
 		[TruncatingTailParagraphStyle setLineBreakMode:NSLineBreakByTruncatingTail];
-		[TruncatingTailParagraphStyle setAlignment:NSCenterTextAlignment];
 	}
 	[attrStr addAttribute:NSParagraphStyleAttributeName value:TruncatingTailParagraphStyle range:range];
 
@@ -350,40 +392,228 @@
 #pragma mark -
 #pragma mark Cell Drawing
 
+- (float)heightOfAttributedString:(NSAttributedString *)inAttributedString withWidth:(float)width
+{
+    NSTextStorage		*textStorage;
+    NSTextContainer 	*textContainer;
+    NSLayoutManager 	*layoutManager;
+	float				height;
+	
+    //Setup the layout manager and text container
+    textStorage = [[NSTextStorage alloc] initWithAttributedString:inAttributedString];
+    textContainer = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(width, 1e7)];
+    layoutManager = [[NSLayoutManager alloc] init];
+	
+    //Configure
+    [textContainer setLineFragmentPadding:0.0];
+    [layoutManager addTextContainer:textContainer];
+    [textStorage addLayoutManager:layoutManager];
+	
+    //Force the layout manager to layout its text
+    (void)[layoutManager glyphRangeForTextContainer:textContainer];
+	
+	height = [layoutManager usedRectForTextContainer:textContainer].size.height;
+	
+	[textStorage release];
+	[textContainer release];
+	[layoutManager release];
+	
+    return height;
+}
+
+- (void)drawObjectCounterInCell:(PSMTabBarCell *)cell withRect:(NSRect)myRect
+{
+	[[NSColor colorWithCalibratedWhite:0.3 alpha:0.6] set];
+	NSBezierPath *path = [NSBezierPath bezierPath];
+	[path setLineWidth:1.0];
+	
+	if ([cell state] == NSOnState) {
+		myRect.origin.y -= 1.0;
+	}
+	
+	[path moveToPoint:NSMakePoint(NSMinX(myRect) + kPSMAdiumObjectCounterRadius, NSMinY(myRect))];
+	[path lineToPoint:NSMakePoint(NSMaxX(myRect) - kPSMAdiumObjectCounterRadius, NSMinY(myRect))];
+	[path appendBezierPathWithArcWithCenter:NSMakePoint(NSMaxX(myRect) - kPSMAdiumObjectCounterRadius, NSMinY(myRect) + kPSMAdiumObjectCounterRadius) 
+									 radius:kPSMAdiumObjectCounterRadius
+								 startAngle:270.0
+								   endAngle:90.0];
+	[path lineToPoint:NSMakePoint(NSMinX(myRect) + kPSMAdiumObjectCounterRadius, NSMaxY(myRect))];
+	[path appendBezierPathWithArcWithCenter:NSMakePoint(NSMinX(myRect) + kPSMAdiumObjectCounterRadius, NSMinY(myRect) + kPSMAdiumObjectCounterRadius) 
+									 radius:kPSMAdiumObjectCounterRadius
+								 startAngle:90.0
+								   endAngle:270.0];
+	[path fill];
+	
+	// draw attributed string centered in area
+	NSRect counterStringRect;
+	NSAttributedString *counterString = [self attributedObjectCountValueForTabCell:cell];
+	counterStringRect.size = [counterString size];
+	counterStringRect.origin.x = myRect.origin.x + ((myRect.size.width - counterStringRect.size.width) / 2.0) + 0.25;
+	counterStringRect.origin.y = myRect.origin.y + ((myRect.size.height - counterStringRect.size.height) / 2.0) + 0.5;
+	[counterString drawInRect:counterStringRect];
+}
+
+- (NSBezierPath *)bezierPathWithRoundedRect:(NSRect)rect radius:(float)radius
+{
+    NSBezierPath	*path = [NSBezierPath bezierPath];
+    NSPoint 		topLeft, topRight, bottomLeft, bottomRight;
+    
+    topLeft = NSMakePoint(rect.origin.x, rect.origin.y);
+    topRight = NSMakePoint(rect.origin.x + rect.size.width, rect.origin.y);
+    bottomLeft = NSMakePoint(rect.origin.x, rect.origin.y + rect.size.height);
+    bottomRight = NSMakePoint(rect.origin.x + rect.size.width, rect.origin.y + rect.size.height);
+	
+    [path appendBezierPathWithArcWithCenter:NSMakePoint(topLeft.x + radius, topLeft.y + radius)
+                                     radius:radius
+                                 startAngle:180
+                                   endAngle:270
+                                  clockwise:NO];
+    [path lineToPoint:NSMakePoint(topRight.x - radius, topRight.y)];
+    
+    [path appendBezierPathWithArcWithCenter:NSMakePoint(topRight.x - radius, topRight.y + radius)
+                                     radius:radius
+                                 startAngle:270
+                                   endAngle:0
+                                  clockwise:NO];
+    [path lineToPoint:NSMakePoint(bottomRight.x, bottomRight.y - radius)];
+    
+    [path appendBezierPathWithArcWithCenter:NSMakePoint(bottomRight.x - radius, bottomRight.y - radius)
+                                     radius:radius
+                                 startAngle:0
+                                   endAngle:90
+                                  clockwise:NO];
+    [path lineToPoint:NSMakePoint(bottomLeft.x + radius, bottomLeft.y)];
+	
+    [path appendBezierPathWithArcWithCenter:NSMakePoint(bottomLeft.x + radius, bottomLeft.y - radius)
+                                     radius:radius
+                                 startAngle:90
+                                   endAngle:180
+                                  clockwise:NO];
+    [path lineToPoint:NSMakePoint(topLeft.x, topLeft.y + radius)];
+	
+    return path;
+}
+
 - (void)drawInteriorWithTabCell:(PSMTabBarCell *)cell inView:(NSView*)controlView
 {
 	NSRect cellFrame = [cell frame];
-	float labelPosition = cellFrame.origin.x + Adium_MARGIN_X;
+	
+	if ((orientation == PSMTabBarVerticalOrientation) &&
+		[cell hasLargeImage]) {
+		NSImage *image = [[[cell representedObject] identifier] largeImage];
+		cellFrame.origin.x += Adium_MARGIN_X;
+
+		NSRect imageDrawingRect = NSMakeRect(cellFrame.origin.x,
+											 cellFrame.origin.y - ((kPSMTabBarControlSourceListHeight - kPSMTabBarLargeImageHeight) / 2),
+											 kPSMTabBarLargeImageWidth, kPSMTabBarLargeImageHeight);
+
+		[NSGraphicsContext saveGraphicsState];
+		//Use a transform to draw an arbitrary image in our flipped view
+		NSAffineTransform *transform = [NSAffineTransform transform];
+		[transform translateXBy:imageDrawingRect.origin.x yBy:(imageDrawingRect.origin.y + imageDrawingRect.size.height)];
+		[transform scaleXBy:1.0 yBy:-1.0];
+		[transform concat];
+
+		imageDrawingRect.origin = NSMakePoint(0,0);
+		
+		//Create Rounding.
+		float userIconRoundingRadius = (kPSMTabBarLargeImageWidth / 4.0);
+		if (userIconRoundingRadius > 3) userIconRoundingRadius = 3;
+		NSBezierPath	*clipPath = [self bezierPathWithRoundedRect:imageDrawingRect radius:userIconRoundingRadius];
+		[clipPath addClip];
+
+		[image drawInRect:imageDrawingRect
+				 fromRect:NSMakeRect(0, 0, [image size].width, [image size].height)
+				operation:NSCompositeSourceOver
+				 fraction:1.0];
+
+		[NSGraphicsContext restoreGraphicsState];
+
+		cellFrame.origin.x += imageDrawingRect.size.width;
+		cellFrame.size.width -= imageDrawingRect.size.width;
+	}
+
+	// label rect
+	NSRect labelRect;
+	labelRect.origin.x = cellFrame.origin.x + Adium_MARGIN_X;
+	labelRect.size.width = cellFrame.size.width - (labelRect.origin.x - cellFrame.origin.x) - Adium_CellPadding;
+	labelRect.size.height = cellFrame.size.height;
+	switch (orientation)
+	{
+		case PSMTabBarHorizontalOrientation:
+			labelRect.origin.y = cellFrame.origin.y + MARGIN_Y + 1.0;
+			break;
+		case PSMTabBarVerticalOrientation:
+			labelRect.origin.y = cellFrame.origin.y;
+			break;
+	}
 	
 	//draw the close button and icon combined
-	if ([cell hasCloseButton] && ![cell isCloseButtonSuppressed]) {
-		NSSize closeButtonSize = NSZeroSize;
+	if ([self closeButtonIsVisibleForCell:cell]) {
 		NSRect closeButtonRect = [cell closeButtonRectForFrame:cellFrame];
 		NSImage *closeButton = nil;
-		
-		closeButtonSize = [closeButton size];
-		
+
 		if ([cell closeButtonPressed]) {
 			closeButton = [cell isEdited] ? _closeDirtyButtonDown : _closeButtonDown;
 		} else if ([cell closeButtonOver]) {
             closeButton = [cell isEdited] ? _closeDirtyButtonOver : _closeButtonOver;
+		} else if ((orientation == PSMTabBarVerticalOrientation) &&
+				   ([cell count] > 0)) {
+			/* In vertical tabs, the count indicator supercedes the icon */
+			NSSize counterSize = [self sizeForObjectCounterRectForTabCell:cell];
+			if (counterSize.width > NSWidth(closeButtonRect)) {
+				closeButtonRect.origin.x -= (counterSize.width - NSWidth(closeButtonRect));
+				closeButtonRect.size.width = counterSize.width;
+			}
+
+			closeButtonRect.origin.y = cellFrame.origin.y + ((NSHeight(cellFrame) - counterSize.height) / 2);
+			closeButtonRect.size.height = counterSize.height;
+
+			[self drawObjectCounterInCell:cell withRect:closeButtonRect];
+
 		} else if ([cell hasIcon]) {
 			closeButton = [[[cell representedObject] identifier] icon];
 			closeButtonRect.size = [closeButton size];
-			closeButtonRect.origin.x -= ([closeButton size].width - [_closeButton size].width) / 2;
-			closeButtonRect.origin.y = cellFrame.origin.y + (cellFrame.size.height - [closeButton size].height) / 2;
+			
+			switch (orientation)
+			{
+				case PSMTabBarHorizontalOrientation:
+					closeButtonRect.origin.x -= (NSWidth(closeButtonRect) - [_closeButton size].width) / 2;
+					break;
+				case PSMTabBarVerticalOrientation:
+					closeButtonRect.origin.x -= (NSWidth(closeButtonRect) - [_closeButton size].width);
+					break;
+			}
+
+			closeButtonRect.origin.y = cellFrame.origin.y + ((NSHeight(cellFrame) - NSHeight(closeButtonRect)) / 2) - Adium_CellPadding;
 		} else {
-			closeButton = [cell isEdited] ? _closeDirtyButton : _closeButton;;
+			closeButton = ([cell isEdited] ? _closeDirtyButton : _closeButton);
 		}
 		
 		if ([controlView isFlipped]) {
 			closeButtonRect.origin.y += closeButtonRect.size.height;
 		}
-		
+
 		[closeButton compositeToPoint:closeButtonRect.origin operation:NSCompositeSourceOver fraction:1.0];
 		
 		// scoot label over by the size of the standard close button
-		labelPosition += [_closeButton size].width + Adium_CellPadding;
+		switch (orientation)
+		{
+			case PSMTabBarHorizontalOrientation:
+			{
+				float oldOrigin = labelRect.origin.x;
+				labelRect.origin.x = (NSMaxX(closeButtonRect) + (Adium_CellPadding*2));
+				labelRect.size.width -= (labelRect.origin.x - oldOrigin);
+				break;
+			}
+			case PSMTabBarVerticalOrientation:
+			{
+				//Generate the remaining label rect directly from the location of the close button, allowing for padding
+				labelRect.size.width = NSMinX(closeButtonRect) - Adium_CellPadding - NSMinX(labelRect);
+				break;
+			}
+		}
+
 	} else if ([cell hasIcon]) {
 		NSRect iconRect = [self iconRectForTabCell:cell];
 		NSImage *icon = [[[cell representedObject] identifier] icon];
@@ -403,17 +633,19 @@
                 
 		[icon compositeToPoint:iconRect.origin operation:NSCompositeSourceOver fraction:1.0];
 		
-		// scoot label over
-		labelPosition += iconRect.size.width + Adium_CellPadding;
+		// scoot label over by the size of the standard close button
+		switch (orientation)
+		{
+			case PSMTabBarHorizontalOrientation:
+				labelRect.origin.x += (NSWidth(iconRect) + Adium_CellPadding);
+				labelRect.size.width -= (NSWidth(iconRect) + Adium_CellPadding);
+				break;
+			case PSMTabBarVerticalOrientation:
+				labelRect.size.width -= (NSWidth(iconRect) + Adium_CellPadding);
+				break;
+		}		
 	}
-	
-    // label rect
-	NSRect labelRect;
-	labelRect.origin.x = labelPosition;
-	labelRect.size.width = cellFrame.size.width - (labelRect.origin.x - cellFrame.origin.x) - Adium_CellPadding;
-	labelRect.size.height = cellFrame.size.height;
-	labelRect.origin.y = cellFrame.origin.y + MARGIN_Y + 1.0;
-	
+
 	if ([cell state] == NSOnState) {
 		labelRect.origin.y -= 1;
 	}
@@ -423,36 +655,26 @@
 	}
     
 	// object counter
-	if ([cell count] > 0) {
-		[[NSColor colorWithCalibratedWhite:0.3 alpha:0.6] set];
-		NSBezierPath *path = [NSBezierPath bezierPath];
-		[path setLineWidth:1.0];
-		NSRect myRect = [self objectCounterRectForTabCell:cell];
+	//The object counter takes up space horizontally...
+	if (([cell count] > 0) &&
+		(orientation == PSMTabBarHorizontalOrientation)) {
+		NSRect counterRect = [self objectCounterRectForTabCell:cell];
 		
-		if ([cell state] == NSOnState) {
-			myRect.origin.y -= 1.0;
-		}
-		
-		[path moveToPoint:NSMakePoint(myRect.origin.x + kPSMAdiumObjectCounterRadius, myRect.origin.y)];
-		[path lineToPoint:NSMakePoint(myRect.origin.x + myRect.size.width - kPSMAdiumObjectCounterRadius, myRect.origin.y)];
-		[path appendBezierPathWithArcWithCenter:NSMakePoint(myRect.origin.x + myRect.size.width - kPSMAdiumObjectCounterRadius, myRect.origin.y + kPSMAdiumObjectCounterRadius) radius:kPSMAdiumObjectCounterRadius startAngle:270.0 endAngle:90.0];
-		[path lineToPoint:NSMakePoint(myRect.origin.x + kPSMAdiumObjectCounterRadius, myRect.origin.y + myRect.size.height)];
-		[path appendBezierPathWithArcWithCenter:NSMakePoint(myRect.origin.x + kPSMAdiumObjectCounterRadius, myRect.origin.y + kPSMAdiumObjectCounterRadius) radius:kPSMAdiumObjectCounterRadius startAngle:90.0 endAngle:270.0];
-		[path fill];
-		
-		// draw attributed string centered in area
-		NSRect counterStringRect;
-		NSAttributedString *counterString = [self attributedObjectCountValueForTabCell:cell];
-		counterStringRect.size = [counterString size];
-		counterStringRect.origin.x = myRect.origin.x + ((myRect.size.width - counterStringRect.size.width) / 2.0) + 0.25;
-		counterStringRect.origin.y = myRect.origin.y + ((myRect.size.height - counterStringRect.size.height) / 2.0) + 0.5;
-		[counterString drawInRect:counterStringRect];
-        
-        labelRect.size.width -= myRect.size.width + Adium_CellPadding;
+		[self drawObjectCounterInCell:cell withRect:counterRect];
+		labelRect.size.width -= counterRect.size.width + Adium_CellPadding;
 	}
 	
 	// draw label
-	[[cell attributedStringValue] drawInRect:labelRect];
+	NSAttributedString *attributedString = [cell attributedStringValue];
+	if (orientation == PSMTabBarVerticalOrientation) {
+		//Calculate the centered rect
+		float stringHeight = [self heightOfAttributedString:attributedString withWidth:labelRect.size.width];
+		if (stringHeight < labelRect.size.height) {
+			labelRect.origin.y += (NSHeight(labelRect) - stringHeight) / 2.0;
+		}		
+	}
+
+	[attributedString drawInRect:labelRect];
 }
 
 - (void)drawTabCell:(PSMTabBarCell *)cell
@@ -537,7 +759,9 @@
 					NSRectFill(aRect);
 				}
 			} else {
-				[_gradientImage drawInRect:NSMakeRect(aRect.origin.x, aRect.origin.y, aRect.size.width, aRect.size.height) fromRect:NSMakeRect(0, 0, [_gradientImage size].width, [_gradientImage size].height) operation:NSCompositeSourceOver fraction:1.0];
+				NSBezierPath *path = [NSBezierPath bezierPathWithRect:aRect];
+				[path linearVerticalGradientFillWithStartColor:[NSColor colorWithCalibratedWhite:0.98 alpha:1.0]
+													  endColor:[NSColor colorWithCalibratedWhite:0.92 alpha:1.0]];
 			}
 			
 			// frame
@@ -586,18 +810,11 @@
 				//draw the tab divider
 				[bezier lineToPoint:NSMakePoint(aRect.origin.x + aRect.size.width, aRect.origin.y + aRect.size.height)];
 			}
+			[bezier stroke];
+
 		} else {
-			if (!([cell tabState] & PSMTab_LeftIsSelectedMask)) {
-				[bezier moveToPoint:NSMakePoint(aRect.origin.x, aRect.origin.y)];
-				[bezier lineToPoint:NSMakePoint(aRect.origin.x + aRect.size.width, aRect.origin.y)];
-			}
-			
-			if (!([cell tabState] & PSMTab_RightIsSelectedMask)) {
-				[bezier moveToPoint:NSMakePoint(aRect.origin.x, aRect.origin.y + aRect.size.height)];
-				[bezier lineToPoint:NSMakePoint(aRect.origin.x + aRect.size.width, aRect.origin.y + aRect.size.height)];
-			}
+			//No outline for vertical
 		}
-		[bezier stroke];
 	}
 	
 	[NSGraphicsContext restoreGraphicsState];
@@ -610,58 +827,80 @@
 {
 	//Draw for our whole bounds; it'll be automatically clipped to fit the appropriate drawing area
 	rect = [tabBar bounds];
-
+	
 	NSBezierPath *path = [NSBezierPath bezierPath];
 	[path setLineWidth:1.0];
 	
-	if (_drawsUnified && [[[tabBar tabView] window] isKeyWindow]) {
-		if ([[[tabBar tabView] window] isKeyWindow]) {
-			NSBezierPath *path = [NSBezierPath bezierPathWithRect:rect];
-			[path linearGradientFillWithStartColor:[NSColor colorWithCalibratedWhite:0.835 alpha:1.0]
-										endColor:[NSColor colorWithCalibratedWhite:0.843 alpha:1.0]];
-		} else {
-			[[NSColor windowBackgroundColor] set];
+	switch (orientation) {
+		case PSMTabBarHorizontalOrientation:
+			if (_drawsUnified && [[[tabBar tabView] window] isKeyWindow]) {
+				if ([[[tabBar tabView] window] isKeyWindow]) {
+					NSBezierPath *path = [NSBezierPath bezierPathWithRect:rect];
+					[path linearGradientFillWithStartColor:[NSColor colorWithCalibratedWhite:0.835 alpha:1.0]
+												  endColor:[NSColor colorWithCalibratedWhite:0.843 alpha:1.0]];
+				} else {
+					[[NSColor windowBackgroundColor] set];
+					NSRectFill(rect);
+				}
+			} else {
+				[[NSColor colorWithCalibratedWhite:0.85 alpha:0.6] set];
+				[NSBezierPath fillRect:rect];
+			}
+			break;
+
+		case PSMTabBarVerticalOrientation:
+			//This is the Mail.app source list background color... which differs from the iTunes one.
+			[[NSColor colorWithCalibratedRed:.9059
+									   green:.9294
+										blue:.9647
+									   alpha:1.0] set];
 			NSRectFill(rect);
-		}
-	} else {
-		[[NSColor colorWithCalibratedWhite:0.85 alpha:0.6] set];
-		[NSBezierPath fillRect:rect];
-	}
+			break;
+	}			
 	
 	NSShadow *shadow = [[NSShadow alloc] init];
 	[shadow setShadowBlurRadius:2];
 	[shadow setShadowColor:[NSColor colorWithCalibratedWhite:0.6 alpha:1.0]];
 	
-	if (orientation == PSMTabBarHorizontalOrientation) {
-		rect.origin.y++;
-		[path moveToPoint:NSMakePoint(rect.origin.x, rect.origin.y)];
-		[path lineToPoint:NSMakePoint(rect.origin.x + rect.size.width, rect.origin.y)];
-		[shadow setShadowOffset:NSMakeSize(2, -2)];
-	} else {
-		NSPoint startPoint, endPoint;
-		NSSize shadowSize;
-		
-		if (_drawsRight) {
-			startPoint = NSMakePoint(rect.origin.x, rect.origin.y);
-			endPoint = NSMakePoint(rect.origin.x, rect.origin.y + rect.size.height);
-			shadowSize = NSMakeSize(2, -2);
-		} else {
-			startPoint = NSMakePoint(rect.origin.x + rect.size.width - 1, rect.origin.y);
-			endPoint = NSMakePoint(rect.origin.x + rect.size.width - 1, rect.origin.y + rect.size.height);
-			shadowSize = NSMakeSize(-2, -2);
+	switch (orientation) {
+		case PSMTabBarHorizontalOrientation:
+			rect.origin.y++;
+			[path moveToPoint:NSMakePoint(rect.origin.x, rect.origin.y)];
+			[path lineToPoint:NSMakePoint(rect.origin.x + rect.size.width, rect.origin.y)];
+			[shadow setShadowOffset:NSMakeSize(2, -2)];
+			break;
+
+		case PSMTabBarVerticalOrientation:
+		{
+			NSPoint startPoint, endPoint;
+			NSSize shadowSize;
+			
+			if (_drawsRight) {
+				startPoint = NSMakePoint(rect.origin.x, rect.origin.y);
+				endPoint = NSMakePoint(rect.origin.x, rect.origin.y + rect.size.height);
+				shadowSize = NSMakeSize(2, -2);
+			} else {
+				startPoint = NSMakePoint(rect.origin.x + rect.size.width - 1, rect.origin.y);
+				endPoint = NSMakePoint(rect.origin.x + rect.size.width - 1, rect.origin.y + rect.size.height);
+				shadowSize = NSMakeSize(-2, -2);
+			}
+				
+			[path moveToPoint:startPoint];
+			[path lineToPoint:endPoint];
+			[shadow setShadowOffset:shadowSize];
+			
+			break;
 		}
-		
-		[path moveToPoint:startPoint];
-		[path lineToPoint:endPoint];
-		[shadow setShadowOffset:shadowSize];
 	}
 	
 	[NSGraphicsContext saveGraphicsState];
+
 	[[NSColor grayColor] set];
 	[shadow set];
 	[shadow release];
 	[[NSGraphicsContext currentContext] setShouldAntialias:NO];
 	[path stroke];
+
 	[NSGraphicsContext restoreGraphicsState];
 }
 
