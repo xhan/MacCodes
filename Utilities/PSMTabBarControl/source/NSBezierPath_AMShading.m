@@ -35,69 +35,17 @@ static void bilinearShadedColor(void *info, const float *in, float *out)
 
 - (void)linearGradientFillWithStartColor:(NSColor *)startColor endColor:(NSColor *)endColor
 {
-	/*
-	CGColorSpaceRef colorspace;
-	CGShadingRef shading;
-	CGPoint startPoint = {0, 0};
-	CGPoint endPoint = {0, 0};
-	CGFunctionRef function;
-	float colors[12]; // pointer to color values
-	
-	// get my context
-	CGContextRef currentContext = (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
-	
-	NSColor *deviceDependentStartColor = [startColor colorUsingColorSpaceName:NSDeviceRGBColorSpace];
-	NSColor *deviceDependentEndColor = [endColor colorUsingColorSpaceName:NSDeviceRGBColorSpace];
-	
-	// set up colors for gradient
-	colors[0] = [deviceDependentStartColor redComponent];
-	colors[1] = [deviceDependentStartColor greenComponent];
-	colors[2] = [deviceDependentStartColor blueComponent];
-	colors[3] = [deviceDependentStartColor alphaComponent];
-	
-	colors[4] = [deviceDependentEndColor redComponent];
-	colors[5] = [deviceDependentEndColor greenComponent];
-	colors[6] = [deviceDependentEndColor blueComponent];
-	colors[7] = [deviceDependentEndColor alphaComponent];
-	
-	// difference between start and end color for each color components
-	colors[8] = (colors[4]-colors[0]);
-	colors[9] = (colors[5]-colors[1]);
-	colors[10] = (colors[6]-colors[2]);
-	colors[11] = (colors[7]-colors[3]);
-	
-	// draw gradient
-	colorspace = CGColorSpaceCreateDeviceRGB();
-	
-	size_t components = 1 + CGColorSpaceGetNumberOfComponents(colorspace);
-	static const float  domain[2] = {0.0, 1.0};
-	static const float  range[10] = {0, 1, 0, 1, 0, 1, 0, 1, 0, 1};
-	static const CGFunctionCallbacks callbacks = {0, &shadedColor, NULL};
-
-	// Create a CGFunctionRef that describes a function taking 1 input and kChannelsPerColor outputs.
-	function = CGFunctionCreate(colors, 1, domain, components, range, &callbacks);
-	
-	startPoint.x=0;
-	startPoint.y=[self bounds].origin.y;
-	endPoint.x=0;
-	endPoint.y=NSMaxY([self bounds]);
-	
-	shading = CGShadingCreateAxial(colorspace, startPoint, endPoint, function, NO, NO);
-	
-	CGContextSaveGState(currentContext);
-	[self addClip];
-	CGContextDrawShading(currentContext, shading);
-	CGContextRestoreGState(currentContext);
-	
-	CGShadingRelease(shading);
-	CGFunctionRelease(function);
-	CGColorSpaceRelease(colorspace);
-	 */
-
 	static const CGFunctionCallbacks callbacks = {0, &linearShadedColor, NULL};
 	
 	[self customHorizontalFillWithCallbacks:callbacks firstColor:startColor secondColor:endColor];
-};
+}
+
+- (void)linearVerticalGradientFillWithStartColor:(NSColor *)startColor endColor:(NSColor *)endColor
+{
+	static const CGFunctionCallbacks callbacks = {0, &linearShadedColor, NULL};
+	
+	[self customVerticalFillWithCallbacks:callbacks firstColor:startColor secondColor:endColor];
+}
 
 - (void)bilinearGradientFillWithOuterColor:(NSColor *)outerColor innerColor:(NSColor *)innerColor
 {
@@ -106,12 +54,10 @@ static void bilinearShadedColor(void *info, const float *in, float *out)
 	[self customHorizontalFillWithCallbacks:callbacks firstColor:innerColor secondColor:outerColor];
 }
 
-- (void)customHorizontalFillWithCallbacks:(CGFunctionCallbacks)functionCallbacks firstColor:(NSColor *)firstColor secondColor:(NSColor *)secondColor
+- (void)customFillWithCallbacks:(CGFunctionCallbacks)functionCallbacks firstColor:(NSColor *)firstColor secondColor:(NSColor *)secondColor startPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint
 {
 	CGColorSpaceRef colorspace;
 	CGShadingRef shading;
-	CGPoint startPoint = {0, 0};
-	CGPoint endPoint = {0, 0};
 	CGFunctionRef function;
 	float colors[12]; // pointer to color values
 	
@@ -147,12 +93,7 @@ static void bilinearShadedColor(void *info, const float *in, float *out)
 	
 	// Create a CGFunctionRef that describes a function taking 1 input and kChannelsPerColor outputs.
 	function = CGFunctionCreate(colors, 1, domain, components, range, &functionCallbacks);
-	
-	startPoint.x=0;
-	startPoint.y=[self bounds].origin.y;
-	endPoint.x=0;
-	endPoint.y=NSMaxY([self bounds]);
-	
+
 	shading = CGShadingCreateAxial(colorspace, startPoint, endPoint, function, NO, NO);
 	
 	CGContextSaveGState(currentContext);
@@ -165,5 +106,22 @@ static void bilinearShadedColor(void *info, const float *in, float *out)
 	CGColorSpaceRelease(colorspace);
 }
 
+- (void)customHorizontalFillWithCallbacks:(CGFunctionCallbacks)functionCallbacks firstColor:(NSColor *)firstColor secondColor:(NSColor *)secondColor
+{
+	[self customFillWithCallbacks:functionCallbacks 
+					   firstColor:firstColor
+					  secondColor:secondColor
+					   startPoint:CGPointMake(0, NSMinY([self bounds]))
+						 endPoint:CGPointMake(0, NSMaxY([self bounds]))];
+}
+
+- (void)customVerticalFillWithCallbacks:(CGFunctionCallbacks)functionCallbacks firstColor:(NSColor *)firstColor secondColor:(NSColor *)secondColor
+{
+	[self customFillWithCallbacks:functionCallbacks 
+					   firstColor:firstColor
+					  secondColor:secondColor
+					   startPoint:CGPointMake(NSMinX([self bounds]), 0)
+						 endPoint:CGPointMake(NSMaxX([self bounds]), 0)];
+}
 
 @end
