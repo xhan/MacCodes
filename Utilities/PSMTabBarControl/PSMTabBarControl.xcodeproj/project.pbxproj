@@ -28,6 +28,8 @@
 		148279B50B8B6F1800076718 /* TabClose_Dirty_Pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 148279B20B8B6F1800076718 /* TabClose_Dirty_Pressed.png */; };
 		148279B60B8B6F1800076718 /* TabClose_Dirty_Rollover.png in Resources */ = {isa = PBXBuildFile; fileRef = 148279B30B8B6F1800076718 /* TabClose_Dirty_Rollover.png */; };
 		148279B70B8B6F1800076718 /* TabClose_Dirty.png in Resources */ = {isa = PBXBuildFile; fileRef = 148279B40B8B6F1800076718 /* TabClose_Dirty.png */; };
+		3437A2EA0BC8E86F003A0BAE /* largeImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 3437A2E90BC8E86F003A0BAE /* largeImage.png */; };
+		346373660BCA21F800AD57AD /* NSBezierPath_AMShading.h in Headers */ = {isa = PBXBuildFile; fileRef = A2D98B0F0A2B43FA0064C6F8 /* NSBezierPath_AMShading.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34FD82880BAC685B00BBAA24 /* AquaTabsSeparator.png in Resources */ = {isa = PBXBuildFile; fileRef = 34FD82620BAC685B00BBAA24 /* AquaTabsSeparator.png */; };
 		34FD828B0BAC685B00BBAA24 /* AquaTabsDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 34FD82650BAC685B00BBAA24 /* AquaTabsDown.png */; };
 		34FD828C0BAC685B00BBAA24 /* pi.png in Resources */ = {isa = PBXBuildFile; fileRef = 34FD82660BAC685B00BBAA24 /* pi.png */; };
@@ -122,7 +124,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 0259C573FE90428111CA0C5A /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 53DF68FC067E5B5A0090B5B0 /* PSMTabBarControlFramework */;
+			remoteGlobalIDString = 53DF68FC067E5B5A0090B5B0;
 			remoteInfo = PSMTabBarControlFramework;
 		};
 		3767A65C0A2D0C5C005F7522 /* PBXContainerItemProxy */ = {
@@ -178,6 +180,7 @@
 		148279B30B8B6F1800076718 /* TabClose_Dirty_Rollover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = TabClose_Dirty_Rollover.png; path = images/TabClose_Dirty_Rollover.png; sourceTree = "<group>"; };
 		148279B40B8B6F1800076718 /* TabClose_Dirty.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = TabClose_Dirty.png; path = images/TabClose_Dirty.png; sourceTree = "<group>"; };
 		32DBCF980370C29C00C91783 /* PSMTabBarControl_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSMTabBarControl_Prefix.pch; path = source/PSMTabBarControl_Prefix.pch; sourceTree = "<group>"; };
+		3437A2E90BC8E86F003A0BAE /* largeImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = largeImage.png; path = images/largeImage.png; sourceTree = "<group>"; };
 		34FD82610BAC685B00BBAA24 /* TabControlRep.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = TabControlRep.png; path = images/TabControlRep.png; sourceTree = "<group>"; };
 		34FD82620BAC685B00BBAA24 /* AquaTabsSeparator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AquaTabsSeparator.png; path = images/AquaTabsSeparator.png; sourceTree = "<group>"; };
 		34FD82650BAC685B00BBAA24 /* AquaTabsDown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AquaTabsDown.png; path = images/AquaTabsDown.png; sourceTree = "<group>"; };
@@ -307,6 +310,7 @@
 		0259C582FE90428111CA0C5A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3437A2E90BC8E86F003A0BAE /* largeImage.png */,
 				148279B20B8B6F1800076718 /* TabClose_Dirty_Pressed.png */,
 				148279B30B8B6F1800076718 /* TabClose_Dirty_Rollover.png */,
 				148279B40B8B6F1800076718 /* TabClose_Dirty.png */,
@@ -529,6 +533,7 @@
 				A2D98B0A0A2B432C0064C6F8 /* PSMUnifiedTabStyle.h in Headers */,
 				3767A7590A2D449B005F7522 /* PSMAdiumTabStyle.h in Headers */,
 				3748D19E0B17834D002D71C0 /* PSMTabBarController.h in Headers */,
+				346373660BCA21F800AD57AD /* NSBezierPath_AMShading.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -672,6 +677,7 @@
 				34FD82B00BAC686D00BBAA24 /* mater_large.jpg in Resources */,
 				34FD82B10BAC686D00BBAA24 /* mcqueen_large.jpg in Resources */,
 				34FD82B20BAC686D00BBAA24 /* sally_large.jpg in Resources */,
+				3437A2EA0BC8E86F003A0BAE /* largeImage.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
