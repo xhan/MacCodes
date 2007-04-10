@@ -585,7 +585,7 @@
 					break;
 			}
 
-			closeButtonRect.origin.y = cellFrame.origin.y + ((NSHeight(cellFrame) - NSHeight(closeButtonRect)) / 2) - Adium_CellPadding;
+			closeButtonRect.origin.y = cellFrame.origin.y + ((NSHeight(cellFrame) - NSHeight(closeButtonRect)) / 2);
 		} else {
 			closeButton = ([cell isEdited] ? _closeDirtyButton : _closeButton);
 		}
@@ -760,33 +760,40 @@
 				}
 			} else {
 				NSBezierPath *path = [NSBezierPath bezierPathWithRect:aRect];
-				[path linearVerticalGradientFillWithStartColor:[NSColor colorWithCalibratedWhite:0.98 alpha:1.0]
-													  endColor:[NSColor colorWithCalibratedWhite:0.92 alpha:1.0]];
+				if (_drawsRight) {
+					[path linearVerticalGradientFillWithStartColor:[NSColor colorWithCalibratedWhite:0.92 alpha:1.0]
+														  endColor:[NSColor colorWithCalibratedWhite:0.98 alpha:1.0]];
+				} else {
+					[path linearVerticalGradientFillWithStartColor:[NSColor colorWithCalibratedWhite:0.98 alpha:1.0]
+														  endColor:[NSColor colorWithCalibratedWhite:0.92 alpha:1.0]];					
+				}
 			}
 			
 			// frame
-			//bottom line
+			//top line
 			[lineColor set];
 			[bezier setLineWidth:1.0];
-			[bezier moveToPoint:NSMakePoint(aRect.origin.x + aRect.size.width, aRect.origin.y)];
-			[bezier lineToPoint:NSMakePoint(aRect.origin.x, aRect.origin.y)];
-			[shadow setShadowOffset:NSMakeSize(_drawsRight ? 2 : -2, 2)];
-			[shadow set];
+			[bezier moveToPoint:NSMakePoint(NSMinX(aRect), NSMinY(aRect))];
+			[bezier lineToPoint:NSMakePoint(NSMaxX(aRect), NSMinY(aRect))];
 			[bezier stroke];
 			
-			//left and top lines
+			//outer edge and bottom lines
 			bezier = [NSBezierPath bezierPath];
 			[bezier setLineWidth:1.0];
 			if (_drawsRight) {
-				[bezier moveToPoint:NSMakePoint(aRect.origin.x + aRect.size.width, aRect.origin.y)];
-				[bezier lineToPoint:NSMakePoint(aRect.origin.x + aRect.size.width, aRect.origin.y + aRect.size.height)];
-				[bezier lineToPoint:NSMakePoint(aRect.origin.x, aRect.origin.y + aRect.size.height)];
+				//Right
+				[bezier moveToPoint:NSMakePoint(NSMaxX(aRect), NSMinY(aRect))];
+				[bezier lineToPoint:NSMakePoint(NSMaxX(aRect), NSMaxY(aRect))];
+				//Bottom
+				[bezier lineToPoint:NSMakePoint(NSMinX(aRect), NSMaxY(aRect))];
 			} else {
-				[bezier moveToPoint:NSMakePoint(aRect.origin.x, aRect.origin.y)];
-				[bezier lineToPoint:NSMakePoint(aRect.origin.x, aRect.origin.y + aRect.size.height)];
-				[bezier lineToPoint:NSMakePoint(aRect.origin.x + aRect.size.width, aRect.origin.y + aRect.size.height)];
+				//Left
+				[bezier moveToPoint:NSMakePoint(NSMinX(aRect), NSMinY(aRect))];
+				[bezier lineToPoint:NSMakePoint(NSMinX(aRect), NSMaxY(aRect))];
+				//Bottom
+				[bezier lineToPoint:NSMakePoint(NSMaxX(aRect), NSMaxY(aRect))];
 			}
-			[shadow setShadowOffset:NSMakeSize(_drawsRight ? 2 : -2, -2)];
+			[shadow setShadowOffset:NSMakeSize((_drawsRight ? 2 : -2), -2)];
 			[shadow set];
 			[bezier stroke];
 		}
@@ -827,17 +834,14 @@
 {
 	//Draw for our whole bounds; it'll be automatically clipped to fit the appropriate drawing area
 	rect = [tabBar bounds];
-	
-	NSBezierPath *path = [NSBezierPath bezierPath];
-	[path setLineWidth:1.0];
-	
+
 	switch (orientation) {
 		case PSMTabBarHorizontalOrientation:
 			if (_drawsUnified && [[[tabBar tabView] window] isKeyWindow]) {
 				if ([[[tabBar tabView] window] isKeyWindow]) {
-					NSBezierPath *path = [NSBezierPath bezierPathWithRect:rect];
-					[path linearGradientFillWithStartColor:[NSColor colorWithCalibratedWhite:0.835 alpha:1.0]
-												  endColor:[NSColor colorWithCalibratedWhite:0.843 alpha:1.0]];
+					NSBezierPath *backgroundPath = [NSBezierPath bezierPathWithRect:rect];
+					[backgroundPath linearGradientFillWithStartColor:[NSColor colorWithCalibratedWhite:0.835 alpha:1.0]
+															endColor:[NSColor colorWithCalibratedWhite:0.843 alpha:1.0]];
 				} else {
 					[[NSColor windowBackgroundColor] set];
 					NSRectFill(rect);
@@ -857,50 +861,76 @@
 			NSRectFill(rect);
 			break;
 	}			
-	
+
+	//Draw the border and shadow around the tab bar itself
+	[NSGraphicsContext saveGraphicsState];
+	[[NSGraphicsContext currentContext] setShouldAntialias:NO];
+
 	NSShadow *shadow = [[NSShadow alloc] init];
 	[shadow setShadowBlurRadius:2];
 	[shadow setShadowColor:[NSColor colorWithCalibratedWhite:0.6 alpha:1.0]];
 	
+	[[NSColor grayColor] set];
+	
+	NSBezierPath *path = [NSBezierPath bezierPath];
+	[path setLineWidth:1.0];
+				
 	switch (orientation) {
 		case PSMTabBarHorizontalOrientation:
+		{
 			rect.origin.y++;
 			[path moveToPoint:NSMakePoint(rect.origin.x, rect.origin.y)];
 			[path lineToPoint:NSMakePoint(rect.origin.x + rect.size.width, rect.origin.y)];
 			[shadow setShadowOffset:NSMakeSize(2, -2)];
+			
+			[shadow set];
+			[path stroke];
+
 			break;
+		}
 
 		case PSMTabBarVerticalOrientation:
 		{
 			NSPoint startPoint, endPoint;
-			NSSize shadowSize;
+			NSSize shadowOffset;
 			
+			//Draw vertical shadow
 			if (_drawsRight) {
-				startPoint = NSMakePoint(rect.origin.x, rect.origin.y);
-				endPoint = NSMakePoint(rect.origin.x, rect.origin.y + rect.size.height);
-				shadowSize = NSMakeSize(2, -2);
+				startPoint = NSMakePoint(NSMinX(rect), NSMinY(rect));
+				endPoint = NSMakePoint(NSMinX(rect), NSMaxY(rect));
+				shadowOffset = NSMakeSize(2, -2);
 			} else {
-				startPoint = NSMakePoint(rect.origin.x + rect.size.width - 1, rect.origin.y);
-				endPoint = NSMakePoint(rect.origin.x + rect.size.width - 1, rect.origin.y + rect.size.height);
-				shadowSize = NSMakeSize(-2, -2);
+				startPoint = NSMakePoint(NSMaxX(rect) - 1, NSMinY(rect));
+				endPoint = NSMakePoint(NSMaxX(rect) - 1, NSMaxY(rect));
+				shadowOffset = NSMakeSize(-2, -2);
 			}
 				
 			[path moveToPoint:startPoint];
 			[path lineToPoint:endPoint];
-			[shadow setShadowOffset:shadowSize];
+			[shadow setShadowOffset:shadowOffset];
+			
+			[shadow set];
+			[path stroke];
+
+			[path removeAllPoints];
+			
+			//Draw top horizontal shadow
+			startPoint = NSMakePoint(NSMinX(rect), NSMinY(rect));
+			endPoint = NSMakePoint(NSMaxX(rect), NSMinY(rect));
+			shadowOffset = NSMakeSize(0, -1);
+			
+			[path moveToPoint:startPoint];
+			[path lineToPoint:endPoint];
+			[shadow setShadowOffset:shadowOffset];
+			
+			[shadow set];
+			[path stroke];
 			
 			break;
 		}
 	}
-	
-	[NSGraphicsContext saveGraphicsState];
 
-	[[NSColor grayColor] set];
-	[shadow set];
 	[shadow release];
-	[[NSGraphicsContext currentContext] setShouldAntialias:NO];
-	[path stroke];
-
 	[NSGraphicsContext restoreGraphicsState];
 }
 
