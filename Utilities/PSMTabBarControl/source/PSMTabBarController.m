@@ -30,7 +30,7 @@
 - (id)initWithTabBarControl:(PSMTabBarControl *)control
 {
     if ( (self = [super init]) ) {
-        _control = [control retain];
+        _control = control;
         _cellTrackingRects = [[NSMutableArray alloc] init];
         _closeButtonTrackingRects = [[NSMutableArray alloc] init];
         _cellFrames = [[NSMutableArray alloc] init];
@@ -40,7 +40,6 @@
 
 - (void)dealloc
 {
-    [_control release];
     [_cellTrackingRects release];
     [_closeButtonTrackingRects release];
     [_cellFrames release];
