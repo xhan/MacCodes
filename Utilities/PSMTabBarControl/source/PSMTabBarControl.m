@@ -571,7 +571,6 @@
     if ([_cells count] == [tabView numberOfTabViewItems]) {
         [self update]; // don't update unless all are accounted for!
     }
-	NSLog(@"%i %i",[_cells count],[tabView numberOfTabViewItems]);
 }
 
 - (void)removeTabForCell:(PSMTabBarCell *)cell
@@ -1651,7 +1650,7 @@
             [self addTabViewItem:item];
         }
     }
-  
+
     // pass along for other delegate responses
     if ([[self delegate] respondsToSelector:@selector(tabViewDidChangeNumberOfTabViewItems:)]) {
         [[self delegate] performSelector:@selector(tabViewDidChangeNumberOfTabViewItems:) withObject:aTabView];
