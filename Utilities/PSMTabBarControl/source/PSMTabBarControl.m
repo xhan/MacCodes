@@ -665,13 +665,7 @@
 	}
 	
     [[self subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    
-	if (!hide && ([self orientation] == PSMTabBarVerticalOrientation)) {
-		if ([[self delegate] respondsToSelector:@selector(tabView:desiredWidthAfterUnhiding:)]) {
-			_tabBarWidth = [[self delegate] tabView:[self tabView] desiredWidthAfterUnhiding:_tabBarWidth];
-		}
-	}
-	
+
     _isHidden = hide;
     _currentStep = 0;
     if (!animate) {
