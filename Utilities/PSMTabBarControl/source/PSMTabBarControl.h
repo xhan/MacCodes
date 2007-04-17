@@ -202,6 +202,7 @@ enum {
 //tab bar hiding methods
 - (void)tabView:(NSTabView *)aTabView tabBarDidHide:(PSMTabBarControl *)tabBarControl;
 - (void)tabView:(NSTabView *)aTabView tabBarDidUnhide:(PSMTabBarControl *)tabBarControl;
+- (float)tabView:(NSTabView *)aTabView desiredWidthAfterUnhiding:(float)suggestedWidth;
 
 //closing
 - (BOOL)tabView:(NSTabView *)aTabView disableTabCloseForTabViewItem:(NSTabViewItem *)tabViewItem;
