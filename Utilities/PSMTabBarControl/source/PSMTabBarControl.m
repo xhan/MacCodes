@@ -236,7 +236,6 @@
 - (void)viewWillMoveToWindow:(NSWindow *)aWindow {
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
     NSWindow *myWindow = [self window];
-	_awakenedFromNib = YES;
 	
     if (myWindow) {
         [center removeObserver:self name:NSWindowDidBecomeKeyNotification object:myWindow];
@@ -1550,6 +1549,7 @@
 		}
     }
 	
+	_awakenedFromNib = YES;
 	[self setNeedsDisplay:YES];
 }
 
