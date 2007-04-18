@@ -988,36 +988,35 @@
     NSAnimation *animation = [[timer userInfo] objectAtIndex:1];
 	NSArray *targetFrames = [[timer userInfo] objectAtIndex:0];
     PSMTabBarCell *currentCell;
+	int cellCount = [_cells count];
 	
-    if ([animation isAnimating]) {
-        if ([_cells count] > 0) {
-			//compare our target position with the current position and move towards the target
-			for (int i = 0; i < [targetFrames count] && i < [_cells count]; i++) {
-				currentCell = [_cells objectAtIndex:i];
-				NSRect cellFrame = [currentCell frame], targetFrame = [[targetFrames objectAtIndex:i] rectValue];
-				float sizeChange;
-				float originChange;
-				
-                if ([self orientation] == PSMTabBarHorizontalOrientation) {
-                    sizeChange = (targetFrame.size.width - cellFrame.size.width) * [animation currentProgress];
-                    originChange = (targetFrame.origin.x - cellFrame.origin.x) * [animation currentProgress];
-                    cellFrame.size.width += sizeChange;
-                    cellFrame.origin.x += originChange;
-                } else {
-                    sizeChange = (targetFrame.size.height - cellFrame.size.height) * [animation currentProgress];
-                    originChange = (targetFrame.origin.y - cellFrame.origin.y) * [animation currentProgress];
-                    cellFrame.size.height += sizeChange;
-                    cellFrame.origin.y += originChange;
-                }
-				
-				[currentCell setFrame:cellFrame];
-                
-                //highlight the cell if the mouse is over it
-                NSPoint mousePoint = [self convertPoint:[[self window] mouseLocationOutsideOfEventStream] fromView:nil];
-                NSRect closeRect = [currentCell closeButtonRectForFrame:cellFrame];
-                [currentCell setHighlighted:NSMouseInRect(mousePoint, cellFrame, [self isFlipped])];
-                [currentCell setCloseButtonOver:NSMouseInRect(mousePoint, closeRect, [self isFlipped])];
+    if ((cellCount > 0) && [animation isAnimating]) {
+		//compare our target position with the current position and move towards the target
+		for (int i = 0; i < [targetFrames count] && i < cellCount; i++) {
+			currentCell = [_cells objectAtIndex:i];
+			NSRect cellFrame = [currentCell frame], targetFrame = [[targetFrames objectAtIndex:i] rectValue];
+			float sizeChange;
+			float originChange;
+			
+			if ([self orientation] == PSMTabBarHorizontalOrientation) {
+				sizeChange = (targetFrame.size.width - cellFrame.size.width) * [animation currentProgress];
+				originChange = (targetFrame.origin.x - cellFrame.origin.x) * [animation currentProgress];
+				cellFrame.size.width += sizeChange;
+				cellFrame.origin.x += originChange;
+			} else {
+				sizeChange = (targetFrame.size.height - cellFrame.size.height) * [animation currentProgress];
+				originChange = (targetFrame.origin.y - cellFrame.origin.y) * [animation currentProgress];
+				cellFrame.size.height += sizeChange;
+				cellFrame.origin.y += originChange;
 			}
+			
+			[currentCell setFrame:cellFrame];
+			
+			//highlight the cell if the mouse is over it
+			NSPoint mousePoint = [self convertPoint:[[self window] mouseLocationOutsideOfEventStream] fromView:nil];
+			NSRect closeRect = [currentCell closeButtonRectForFrame:cellFrame];
+			[currentCell setHighlighted:NSMouseInRect(mousePoint, cellFrame, [self isFlipped])];
+			[currentCell setCloseButtonOver:NSMouseInRect(mousePoint, closeRect, [self isFlipped])];
 		}
         
         if (_showAddTabButton) {
@@ -1028,8 +1027,8 @@
         }
     } else { 
 		//put all the cells where they should be in their final position
-		if ([_cells count] > 0) {
-			for (int i = 0; i < [targetFrames count] && i < [_cells count]; i++) {
+		if (cellCount > 0) {
+			for (int i = 0; i < [targetFrames count] && i < cellCount; i++) {
 				PSMTabBarCell *currentCell = [_cells objectAtIndex:i];
 				NSRect cellFrame = [currentCell frame], targetFrame = [[targetFrames objectAtIndex:i] rectValue];
 				
@@ -1061,7 +1060,7 @@
 		 [_animationTimer invalidate], _animationTimer = nil;
 		[animation release];
 		
-        for (int i = 0; i < [_cells count]; i++) {
+        for (int i = 0; i < cellCount; i++) {
             currentCell = [_cells objectAtIndex:i];
             
             //we've hit the cells that are in overflow, stop setting up tracking rects
