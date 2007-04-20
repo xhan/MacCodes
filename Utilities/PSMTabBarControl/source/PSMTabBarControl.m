@@ -48,7 +48,7 @@
 	// notification handlers
 - (void)frameDidChange:(NSNotification *)notification;
 - (void)windowDidMove:(NSNotification *)aNotification;
-- (void)windowStatusDidChange:(NSNotification *)notification;
+- (void)windowDidUpdate:(NSNotification *)notification;
 
     // NSTabView delegate
 - (void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem;
@@ -238,13 +238,10 @@
     NSWindow *myWindow = [self window];
 	
     if (myWindow) {
-        [center removeObserver:self name:NSWindowDidBecomeKeyNotification object:myWindow];
-        [center removeObserver:self name:NSWindowDidResignKeyNotification object:myWindow];
         [center removeObserver:self name:NSWindowDidMoveNotification object:myWindow];
     } 
     if (aWindow) {
-		[center addObserver:self selector:@selector(windowStatusDidChange:) name:NSWindowDidBecomeKeyNotification object:aWindow];
-		[center addObserver:self selector:@selector(windowStatusDidChange:) name:NSWindowDidResignKeyNotification object:aWindow];
+		[center addObserver:self selector:@selector(windowStatusDidChange:) name:NSWindowDidUpdateNotification object:aWindow];
 		[center addObserver:self selector:@selector(windowDidMove:) name:NSWindowDidMoveNotification object:aWindow];
     }
 }
@@ -1489,7 +1486,7 @@
     [self setNeedsDisplay:YES];
 }
 
-- (void)windowStatusDidChange:(NSNotification *)notification
+- (void)windowDidUpdate:(NSNotification *)notification
 {
     // hide? must readjust things if I'm not supposed to be showing
     // this block of code only runs when the app launches
@@ -1550,6 +1547,9 @@
 	
 	_awakenedFromNib = YES;
 	[self setNeedsDisplay:YES];
+	
+	//we only need to do this once
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidUpdateNotification object:nil];
 }
 
 #pragma mark -
