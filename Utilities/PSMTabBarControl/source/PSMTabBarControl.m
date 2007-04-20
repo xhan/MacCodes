@@ -241,7 +241,7 @@
         [center removeObserver:self name:NSWindowDidMoveNotification object:myWindow];
     } 
     if (aWindow) {
-		[center addObserver:self selector:@selector(windowStatusDidChange:) name:NSWindowDidUpdateNotification object:aWindow];
+		[center addObserver:self selector:@selector(windowDidUpdate:) name:NSWindowDidUpdateNotification object:aWindow];
 		[center addObserver:self selector:@selector(windowDidMove:) name:NSWindowDidMoveNotification object:aWindow];
     }
 }
