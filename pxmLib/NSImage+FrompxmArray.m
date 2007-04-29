@@ -19,35 +19,32 @@
 	NSLog(@"Creating NSImage from pxm# data that is %u bytes long (structure type: %u bytes long)", [data length], sizeof(struct pxmData));
 	const struct pxmData *pxmBytes = [data bytes];
 
-	//We don't need the right version, which is a good thing because the version is wrong…
-	//NSAssert1(pxmBytes->version == pxmVersionOSX, @"Incorrect pxm# version: %hi", pxmBytes->version);
-	NSLog(@"Version of pxm#: %hu", pxmBytes->version);
-	NSAssert1(pxmBytes->pixelType == pxmTypeDirect16 || pxmBytes->pixelType == pxmTypeDirect32, @"Incorrect pxm# pixel-type: %hi", pxmBytes->pixelType);
+	NSAssert1(pxmPixelType(pxmBytes) == pxmTypeDirect16 || pxmPixelType(pxmBytes) == pxmTypeDirect32, @"Incorrect pxm# pixel-type: %hi", pxmPixelType(pxmBytes));
 
+	Rect bounds;
+	pxmBounds(pxmBytes, &bounds);
 	NSSize size = {
-		.width  = pxmBytes->bounds.right - pxmBytes->bounds.left,
+		.width  = bounds.right - bounds.left,
 		//QuickDraw Rects are oriented from the top-left, not bottom-left, so bottom is the greater number.
-		.height = pxmBytes->bounds.bottom - pxmBytes->bounds.top
+		.height = bounds.bottom - bounds.top
 	};
 
 	NSImage *image = [[[NSImage alloc] initWithSize:size] autorelease];
 
-	NSLog(@"bitfield number: %hx; singleMask: %hu; imageCount: %hu", pxmBytes->bitfield.number, pxmBytes->bitfield.bits.singleMask, pxmBytes->imageCount);
+	NSLog(@"bitfield number: %hx; multiMask: %hu; imageCount: %hu", pxmBytes->bitfield.number, pxmIsMultiMask(pxmBytes), pxmImageCount(pxmBytes));
 	
-	size_t bitsPerPixel = pxmBytes->pixelSize;
+	size_t bitsPerPixel = pxmPixelSize(pxmBytes);
 	size_t bytesPerPixel = bitsPerPixel / 8U;
 
 	size_t bytesPerRow = size.width * bytesPerPixel;
 	size_t bytesPerFrame = bytesPerRow * size.height;
 	NSLog(@"Size of structure %u + first frame %u: %u", sizeof(struct pxmData), bytesPerFrame, sizeof(struct pxmData) + bytesPerFrame);
 
-	size_t samplesPerPixel = pxmBytes->bitfield.bits.hasAlpha ? 4U : 3U;
+	size_t samplesPerPixel = pxmHasAlpha(pxmBytes) ? 4U : 3U;
 
-	NSLog(@"wah: %f by %f; bps: 8; spp: %u; has alpha: %u (%u according to pxmHasAlpha); planar: no; bytes per row: %u; bitsPerPixel: %u", size.width, size.height, samplesPerPixel, (unsigned)pxmBytes->bitfield.bits.hasAlpha, pxmHasAlpha(pxmBytes), bytesPerRow, bitsPerPixel);
+	NSLog(@"wah: %f by %f; bps: 8; spp: %u; has alpha: %u; planar: no; bytes per row: %u; bitsPerPixel: %u", size.width, size.height, samplesPerPixel, (unsigned)pxmHasAlpha(pxmBytes), bytesPerRow, bitsPerPixel);
 
-	void *dataStart = pxmBytes->data + bytesPerRow * 12U;
-
-	unsigned numFrames = pxmBytes->imageCount;
+	unsigned numFrames = pxmImageCount(pxmBytes);
 	NSMutableArray *reps = [NSMutableArray arrayWithCapacity:numFrames];
 	for(unsigned i = 0U; i < numFrames; ++i) {
 		unsigned char *planes[1] = { (unsigned char *)pxmBaseAddressForFrame(pxmBytes, i) };
@@ -57,7 +54,7 @@
 			pixelsHigh:size.height
 			bitsPerSample:8U
 			samplesPerPixel:samplesPerPixel
-			hasAlpha:pxmBytes->bitfield.bits.hasAlpha
+			hasAlpha:pxmHasAlpha(pxmBytes)
 			isPlanar:NO
 			colorSpaceName:NSDeviceRGBColorSpace
 			bytesPerRow:bytesPerRow
