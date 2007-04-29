@@ -142,13 +142,13 @@
 	return outImage;
 }
 
-+ (NSImage *)imageFromSystemwidepxmArrayWithResourceID:(short)resID
++ (NSImage *)imageFrompxmArrayInSearchPathWithResourceID:(short)resID
 {
 	//Now retrieve the resource from the freshly-opened file.
 	Handle pxmH = GetResource(FOUR_CHAR_CODE('pxm#'), resID);
 	if(!pxmH) {
 		OSStatus err = ResError();
-		NSLog(@"In +[NSImage imageFromSystemwidepxmArrayWithResourceID:]: Could not get 'pxm#' resource with ID %hi: %s\n", resID, GetMacOSStatusCommentString(err));
+		NSLog(@"In +[NSImage imageFrompxmArrayInSearchPathWithResourceID:]: Could not get 'pxm#' resource with ID %hi: %s\n", resID, GetMacOSStatusCommentString(err));
 		return nil;
 	}
 
