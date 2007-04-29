@@ -18,8 +18,10 @@
 + (NSImage *)imageFrompxmArrayData:(NSData *)data {
 	const struct pxmData *pxmBytes = [data bytes];
 
+	//We currently only know how to deal with direct (RGB/RGBA) pixels. We don't know about indexed pixels yet. That will involve adding clut-handling logic.
 	NSAssert1(pxmPixelType(pxmBytes) == pxmTypeDirect16 || pxmPixelType(pxmBytes) == pxmTypeDirect32, @"Incorrect pxm# pixel-type: %hi", pxmPixelType(pxmBytes));
 
+	//Get the bounds by reference, and compute the width and height from them.
 	Rect bounds;
 	pxmBounds(pxmBytes, &bounds);
 	NSSize size = {
@@ -30,6 +32,7 @@
 
 	NSImage *image = [[[NSImage alloc] initWithSize:size] autorelease];
 
+	//Assemble information needed by NSBitmapImageRep.
 	size_t bitsPerPixel = pxmPixelSize(pxmBytes);
 	size_t bytesPerPixel = bitsPerPixel / 8U;
 
@@ -38,9 +41,11 @@
 
 	size_t samplesPerPixel = pxmHasAlpha(pxmBytes) ? 4U : 3U;
 
+    //Iterate through our “frames”
 	unsigned numFrames = pxmImageCount(pxmBytes);
 	NSMutableArray *reps = [NSMutableArray arrayWithCapacity:numFrames];
 	for(unsigned i = 0U; i < numFrames; ++i) {
+		//Passing NULL here makes NSBitmapImageRep allocate its own storage…
 		NSBitmapImageRep *bitmapRep = [[NSBitmapImageRep alloc]
 			initWithBitmapDataPlanes:NULL
 			pixelsWide:size.width
@@ -53,12 +58,15 @@
 			bytesPerRow:bytesPerRow
 			bitsPerPixel:bitsPerPixel];
 
+        //…which we copy into here, from the pixels' address within the pxmRef.
 		memcpy([bitmapRep bitmapData], pxmBaseAddressForFrame(pxmBytes, i), bytesPerRow * size.height);
 
+		//Add our new Bitmap Image Rep to the array of representations that will be put in the image.
 		[reps addObject:bitmapRep];
 		[bitmapRep release];
 	}
 
+	//Outfit our image with its representations.
 	[image addRepresentations:reps];
 
 	return image;
