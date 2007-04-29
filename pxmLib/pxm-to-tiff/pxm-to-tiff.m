@@ -27,17 +27,23 @@ int main(int argc, char **argv) {
 	FSRef inputFileRef;
 	Boolean isDirectory_unused;
 	FSPathMakeRef(argv[1], &inputFileRef, &isDirectory_unused);
+	OSStatus err;
+	//First, try the resource fork.
 	short resFileHandle = FSOpenResFile(&inputFileRef, fsRdPerm);
-	OSStatus err = FSOpenResourceFile(
-		&inputFileRef,
-		//A fork name of "" means the data fork.
-		/*forkNameLength*/ 0U,
-		/*forkName*/ NULL,
-		fsRdPerm,
-		&resFileHandle);
 	if(resFileHandle < 0) {
-		fprintf(stderr, "%s: FSOpenResFile failed: %s\n", argc > 0 ? argv[0] : "pxm-to-TIFF", GetMacOSStatusCommentString(err));
-		return EXIT_FAILURE;
+		//OK, no resource fork. Try the data fork.
+		err = FSOpenResourceFile(
+			&inputFileRef,
+			//A fork name of "" means the data fork.
+			/*forkNameLength*/ 0U,
+			/*forkName*/ NULL,
+			fsRdPerm,
+			&resFileHandle);
+
+		if(resFileHandle < 0) {
+			fprintf(stderr, "%s: FSOpenResourceFile failed: %s\n", argc > 0 ? argv[0] : "pxm-to-TIFF", GetMacOSStatusCommentString(err));
+			return EXIT_FAILURE;
+		}
 	}
 
 	//Get the requested pxm# resource
