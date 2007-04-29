@@ -50,7 +50,7 @@
 	unsigned numFrames = pxmBytes->imageCount;
 	NSMutableArray *reps = [NSMutableArray arrayWithCapacity:numFrames];
 	for(unsigned i = 0U; i < numFrames; ++i) {
-		unsigned char *planes[1] = { (unsigned char *)pxmGetBaseAddressForFrame(pxmBytes, i) };
+		unsigned char *planes[1] = { (unsigned char *)pxmBaseAddressForFrame(pxmBytes, i) };
 		NSBitmapImageRep *bitmapRep = [[NSBitmapImageRep alloc]
 			initWithBitmapDataPlanes:planes
 			pixelsWide:size.width
