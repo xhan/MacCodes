@@ -93,7 +93,7 @@ typedef struct pxmData
 					mystery:1,
 					hasAlpha:1,
 					__unknown1:1,
-					maskCount:1;
+					singleMask:1;
 		} bits;
 		UInt16 number;
 	} bitfield;

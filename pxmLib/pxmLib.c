@@ -177,7 +177,7 @@ bool
 pxmIsMultiMask( pxmRef inRef )
 {
 	if( inRef )
-		return inRef->maskCount == pxmMultiMask;
+		return inRef->singleMask == pxmMultiMask;
 	return false;
 }
 
@@ -353,7 +353,7 @@ _HardMaskSize( pxmRef inRef )
 	union pxmDataBitfield bitfield = { .number = ntohs(inRef->bitfield.number) };
 
 	//Now, do we have a mask up front? If so, then multiply by 1. If not, multiply by the number of images. (???????)
-	a = bitfield.bits.maskCount ? 1 : ntohs(inRef->imageCount);
+	a = bitfield.bits.singleMask ? 1 : ntohs(inRef->imageCount);
 	out = out * a;
 	
 	return out;
@@ -461,7 +461,7 @@ _RenderMask32( pxmRef inRef, UInt16 imageIndex, GWorldPtr inOS )
 	dstRB = GetPixRowBytes(GetGWorldPixMap(inOS));
 	srcBA = (UInt16*)((char*)inRef + pxmDataSize);
 	srcRL = (inRef->bounds.right >> 4) + ((inRef->bounds.right & 0x000F) != 0);
-	if( inRef->maskCount == pxmMultiMask )
+	if( inRef->singleMask == pxmMultiMask )
 		srcBA += (srcRL*inRef->bounds.bottom)*imageIndex;
 	
 	for( i = 0; i < inRef->bounds.bottom; i++ )
@@ -492,7 +492,7 @@ _RenderMask16( pxmRef inRef, UInt16 imageIndex, GWorldPtr inOS )
 	dstRB = GetPixRowBytes(GetGWorldPixMap(inOS));
 	srcBA = (UInt16*)((char*)inRef + pxmDataSize);
 	srcRL = (inRef->bounds.right >> 4) + ((inRef->bounds.right & 0x000F) != 0);
-	if( inRef->maskCount == pxmMultiMask )
+	if( inRef->singleMask == pxmMultiMask )
 		srcBA += (srcRL*inRef->bounds.bottom)*imageIndex;
 	
 	for( i = 0; i < inRef->bounds.bottom; i++ )
@@ -632,7 +632,7 @@ _WriteMask32( pxmRef inRef, UInt16 imageIndex, GWorldPtr inOS )
 	srcRB = GetPixRowBytes(GetGWorldPixMap(inOS));
 	dstBA = (UInt16*)((Ptr)inRef + pxmDataSize);
 	dstRL = (inRef->bounds.right >> 4) + ((inRef->bounds.right & 0x000F) != 0);
-	if( inRef->maskCount == pxmMultiMask )
+	if( inRef->singleMask == pxmMultiMask )
 		dstBA += (dstRL * inRef->bounds.bottom) * imageIndex;
 	
 	for( i = 0; i < inRef->bounds.bottom; i++ )

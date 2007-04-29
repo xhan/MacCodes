@@ -21,11 +21,11 @@ union pxmDataBitfield {
 				mystery:1,
 				hasAlpha:1,
 				__unknown1:1,
-				maskCount:1;
+				singleMask:1;
 #elif defined(__LITTLE_ENDIAN__)
 #warning Using little-endian layout
 		UInt16
-				maskCount:1,
+				singleMask:1,
 				__unknown1:1,
 				hasAlpha:1,
 				mystery:1,
@@ -72,7 +72,7 @@ _GetPixelDataLoc( pxmRef inRef, UInt32 imageIndex );
 
 	union pxmDataBitfield bitfield = { .number = ntohs(pxmBytes->bitfield.number) };
 //	BCOPY_OR_SWAB(((void *)pxmBytes) + sizeof(pxmBytes->version), &bitfield.number, sizeof(UInt16));
-	NSLog(@"bitfield number: %hx; maskCount: %hu; imageCount: %hu", bitfield.number, bitfield.bits.maskCount, ntohs(pxmBytes->imageCount));
+	NSLog(@"bitfield number: %hx; singleMask: %hu; imageCount: %hu", bitfield.number, bitfield.bits.singleMask, ntohs(pxmBytes->imageCount));
 	
 	size_t bitsPerPixel = ntohs(pxmBytes->pixelSize);
 	size_t bytesPerPixel = bitsPerPixel / 8U;
@@ -144,7 +144,7 @@ _HardMaskSize( pxmRef inRef )
 	union pxmDataBitfield bitfield = { .number = ntohs(inRef->bitfield.number) };
 
 	//Now, do we have a mask up front? If so, then multiply by 1. If not, multiply by the number of images. (???????)
-	a = bitfield.bits.maskCount ? 1 : ntohs(inRef->imageCount);
+	a = bitfield.bits.singleMask ? 1 : ntohs(inRef->imageCount);
 	out = out * a;
 	
 	return out;
