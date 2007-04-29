@@ -92,7 +92,9 @@
 			&resFileHandle);
 
 		if(resFileHandle < 0) {
-			NSLog(@"In +[NSImage imageFrompxmArrayWithResourceID:inResourceFileAtPath:forkName:]: Could not open resource file %@ with fork name %@: %s", path, forkName ? [NSString stringWithCharacters:forkName->unicode length:forkName->length] : nil, GetMacOSStatusCommentString(err));
+			if(err != eofErr) {
+				NSLog(@"In +[NSImage imageFrompxmArrayWithResourceID:inResourceFileAtPath:forkName:]: Could not open resource file %@ with fork name %@: %s", path, forkName ? [NSString stringWithCharacters:forkName->unicode length:forkName->length] : nil, GetMacOSStatusCommentString(err));
+			}
 			return nil;
 		}
 

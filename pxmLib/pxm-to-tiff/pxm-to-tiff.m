@@ -23,48 +23,7 @@ int main(int argc, char **argv) {
 	//No lifeguard on duty —PRH
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-	//Open our resource file
-	FSRef inputFileRef;
-	Boolean isDirectory_unused;
-	FSPathMakeRef(argv[1], &inputFileRef, &isDirectory_unused);
-	OSStatus err;
-	//First, try the resource fork.
-	short resFileHandle = FSOpenResFile(&inputFileRef, fsRdPerm);
-	if(resFileHandle < 0) {
-		//OK, no resource fork. Try the data fork.
-		err = FSOpenResourceFile(
-			&inputFileRef,
-			//A fork name of "" means the data fork.
-			/*forkNameLength*/ 0U,
-			/*forkName*/ NULL,
-			fsRdPerm,
-			&resFileHandle);
-
-		if(resFileHandle < 0) {
-			fprintf(stderr, "%s: FSOpenResourceFile failed: %s\n", argc > 0 ? argv[0] : "pxm-to-TIFF", GetMacOSStatusCommentString(err));
-			return EXIT_FAILURE;
-		}
-	}
-
-	//Get the requested pxm# resource
-	Handle pxmH = Get1Resource(FOUR_CHAR_CODE('pxm#'), strtol(argv[2], NULL, 10));
-	if(!pxmH) {
-		err = ResError();
-		fprintf(stderr, "%s: Get1Resource failed: %s\n", argc > 0 ? argv[0] : "pxm-to-TIFF", GetMacOSStatusCommentString(err));
-		return EXIT_FAILURE;
-	}
-
-	//From one container into another
-	pxmRef myPxmRef = pxmCreate(*pxmH, GetHandleSize(pxmH));
-	NSData *pxmData = [NSData dataWithBytes:myPxmRef length:GetHandleSize(pxmH)];
-	[pxmData writeToFile:[NSString stringWithFormat:@"pxm#-%li.pxma", strtol(argv[2], NULL, 10)] atomically:NO];
-
-	//We don't need the resource file anymore.
-	ReleaseResource(pxmH);
-	CloseResFile(resFileHandle);
-
-	//Take the pxmRef and create an NSImage
-	NSImage *image = [NSImage imageFrompxmArrayData:pxmData];
+	NSImage *image = [NSImage imageFrompxmArrayWithResourceID:strtol(argv[2], NULL, 10) inResourceFileAtPath:[NSString stringWithUTF8String:argv[1]]];
 	if (!image) {
 		fprintf(stderr, "%s: Unable to create image from data\n", argc > 0 ? argv[0] : "pxm-to-TIFF");
 		return EXIT_FAILURE;
@@ -74,7 +33,6 @@ int main(int argc, char **argv) {
 	[(NSFileHandle *)[NSFileHandle fileHandleWithStandardOutput] writeData:[image TIFFRepresentation]];
 
 	//Clean up
-	pxmDispose(myPxmRef);
 	[pool release];
 	return EXIT_SUCCESS;
 }
