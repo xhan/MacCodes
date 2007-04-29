@@ -8,7 +8,10 @@ ID	 	Name						x86				PPC
 	2062: bitfield is 0xd, not 0x4 (mystery and maskCount are 1)
 2203	Window Header Fill			-				-?
 	2203: bitfield is 0x5, not 0x4 (maskCount is 1)
-4000	Slider tick	 				Indexed (8) 	Ditto
+
+These resources cannot be tested at this time:
+4000	Slider tick	 				Untestable		Untestable
+	4000: pixelType is indexed-color, which is not yet supported by the NSImage category.
 
 Problems:
 -: No problem
