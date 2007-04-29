@@ -13,42 +13,6 @@
 #include <machine/endian.h>
 #import "NSImage+FrompxmArray.h"
 
-union pxmDataBitfield {
-	struct {
-#if defined(__BIG_ENDIAN__)
-		UInt16			__empty:11,
-				chaos:1,
-				mystery:1,
-				hasAlpha:1,
-				__unknown1:1,
-				singleMask:1;
-#elif defined(__LITTLE_ENDIAN__)
-#warning Using little-endian layout
-		UInt16
-				singleMask:1,
-				__unknown1:1,
-				hasAlpha:1,
-				mystery:1,
-				chaos:1,
-				__empty:11;
-#else
-#	error You don't have a CPU in your computer!
-#endif //def __BIG_ENDIAN__ or __LITTLE_ENDIAN__
-	} bits;
-	UInt16 number;
-};
-
-#if defined(__BIG_ENDIAN__)
-#	define BCOPY_OR_SWAB bcopy
-#elif defined(__LITTLE_ENDIAN__)
-#	define BCOPY_OR_SWAB swab
-#endif
-
-static UInt32
-_HardMaskSize( pxmRef inRef );
-static void*
-_GetPixelDataLoc( pxmRef inRef, UInt32 imageIndex );
-
 @implementation NSImage (CBPRHFrompxmArray)
 
 + (NSImage *)imageFrompxmArrayData:(NSData *)data {
@@ -56,62 +20,48 @@ _GetPixelDataLoc( pxmRef inRef, UInt32 imageIndex );
 	const struct pxmData *pxmBytes = [data bytes];
 
 	//We don't need the right version, which is a good thing because the version is wrong…
-	//NSAssert1(ntohs(pxmBytes->version) == pxmVersionOSX, @"Incorrect pxm# version: %hi", ntohs(pxmBytes->version));
-	NSLog(@"Version of pxm#: %hu", ntohs(pxmBytes->version));
-	NSAssert1(ntohs(pxmBytes->pixelType) == pxmTypeDirect16 || ntohs(pxmBytes->pixelType) == pxmTypeDirect32, @"Incorrect pxm# pixel-type: %hi", ntohs(pxmBytes->pixelType));
+	//NSAssert1(pxmBytes->version == pxmVersionOSX, @"Incorrect pxm# version: %hi", pxmBytes->version);
+	NSLog(@"Version of pxm#: %hu", pxmBytes->version);
+	NSAssert1(pxmBytes->pixelType == pxmTypeDirect16 || pxmBytes->pixelType == pxmTypeDirect32, @"Incorrect pxm# pixel-type: %hi", pxmBytes->pixelType);
 
-	Rect bounds;
-	BCOPY_OR_SWAB(&(pxmBytes->bounds), &bounds, sizeof(bounds));
 	NSSize size = {
-		.width  = bounds.right - bounds.left,
+		.width  = pxmBytes->bounds.right - pxmBytes->bounds.left,
 		//QuickDraw Rects are oriented from the top-left, not bottom-left, so bottom is the greater number.
-		.height = bounds.bottom - bounds.top
+		.height = pxmBytes->bounds.bottom - pxmBytes->bounds.top
 	};
 
 	NSImage *image = [[[NSImage alloc] initWithSize:size] autorelease];
 
-	union pxmDataBitfield bitfield = { .number = ntohs(pxmBytes->bitfield.number) };
-//	BCOPY_OR_SWAB(((void *)pxmBytes) + sizeof(pxmBytes->version), &bitfield.number, sizeof(UInt16));
-	NSLog(@"bitfield number: %hx; singleMask: %hu; imageCount: %hu", bitfield.number, bitfield.bits.singleMask, ntohs(pxmBytes->imageCount));
+	NSLog(@"bitfield number: %hx; singleMask: %hu; imageCount: %hu", pxmBytes->bitfield.number, pxmBytes->bitfield.bits.singleMask, pxmBytes->imageCount);
 	
-	size_t bitsPerPixel = ntohs(pxmBytes->pixelSize);
+	size_t bitsPerPixel = pxmBytes->pixelSize;
 	size_t bytesPerPixel = bitsPerPixel / 8U;
 
 	size_t bytesPerRow = size.width * bytesPerPixel;
 	size_t bytesPerFrame = bytesPerRow * size.height;
 	NSLog(@"Size of structure %u + first frame %u: %u", sizeof(struct pxmData), bytesPerFrame, sizeof(struct pxmData) + bytesPerFrame);
 
-	size_t samplesPerPixel = bitfield.bits.hasAlpha ? 4U : 3U;
+	size_t samplesPerPixel = pxmBytes->bitfield.bits.hasAlpha ? 4U : 3U;
 
-	NSLog(@"wah: %f by %f; bps: 8; spp: %u; has alpha: %u; planar: no; bytes per row: %u; bitsPerPixel: %u", size.width, size.height, samplesPerPixel, (unsigned)bitfield.bits.hasAlpha, bytesPerRow, bitsPerPixel);
+	NSLog(@"wah: %f by %f; bps: 8; spp: %u; has alpha: %u (%u according to pxmHasAlpha); planar: no; bytes per row: %u; bitsPerPixel: %u", size.width, size.height, samplesPerPixel, (unsigned)pxmBytes->bitfield.bits.hasAlpha, pxmHasAlpha(pxmBytes), bytesPerRow, bitsPerPixel);
 
 	void *dataStart = pxmBytes->data + bytesPerRow * 12U;
 
-	unsigned numFrames = ntohs(pxmBytes->imageCount);
+	unsigned numFrames = pxmBytes->imageCount;
 	NSMutableArray *reps = [NSMutableArray arrayWithCapacity:numFrames];
 	for(unsigned i = 0U; i < numFrames; ++i) {
-		unsigned char *planes[1] = { (unsigned char *)_GetPixelDataLoc(pxmBytes, i)/*(dataStart + (bytesPerFrame * i))*/ };
+		unsigned char *planes[1] = { (unsigned char *)pxmGetBaseAddressForFrame(pxmBytes, i) };
 		NSBitmapImageRep *bitmapRep = [[NSBitmapImageRep alloc]
 			initWithBitmapDataPlanes:planes
 			pixelsWide:size.width
 			pixelsHigh:size.height
 			bitsPerSample:8U
 			samplesPerPixel:samplesPerPixel
-			hasAlpha:bitfield.bits.hasAlpha
+			hasAlpha:pxmBytes->bitfield.bits.hasAlpha
 			isPlanar:NO
 			colorSpaceName:NSDeviceRGBColorSpace
 			bytesPerRow:bytesPerRow
 			bitsPerPixel:bitsPerPixel];
-
-		/*
-		[bitmapRep getBitmapDataPlanes:planes];
-		uint32_t *src = (uint32_t *)_GetPixelDataLoc(pxmBytes, i)/*(dataStart + (bytesPerFrame * i))  * /  ;
-		uint32_t *dst = (uint32_t *)planes[0];
-		for(unsigned i = 0, num = bytesPerFrame / bytesPerPixel; i < num; ++i) {
-//				dst[i] = CFSwapInt32BigToHost(src[i]);
-			dst[i] = src[i];
-		}
-		*/
 
 		[reps addObject:bitmapRep];
 		[bitmapRep release];
@@ -123,42 +73,3 @@ _GetPixelDataLoc( pxmRef inRef, UInt32 imageIndex );
 }
 
 @end
-
-#pragma mark Borrowed *cough* from pxmLib
-
-UInt32
-_HardMaskSize( pxmRef inRef )
-{
-	UInt32		out;
-	UInt32		a;
-	UInt32		b;
-
-	//Divide by 8, rounded up.
-	a = ntohs(inRef->bounds.right) / 16;
-	b = ((ntohs(inRef->bounds.right) % 16) != 0);
-
-	size_t bytesPerRow = (a + b) * 2;
-	
-	//Add (height) rows' worth of bytes to our skip distance. For example, if the image's height is four pixels, set our output to 4 * bytesPerRow.
-	out = bytesPerRow * (ntohs(inRef->bounds.bottom) - ntohs(inRef->bounds.top));
-	union pxmDataBitfield bitfield = { .number = ntohs(inRef->bitfield.number) };
-
-	//Now, do we have a mask up front? If so, then multiply by 1. If not, multiply by the number of images. (???????)
-	a = bitfield.bits.singleMask ? 1 : ntohs(inRef->imageCount);
-	out = out * a;
-	
-	return out;
-}
-
-void*
-_GetPixelDataLoc( pxmRef inRef, UInt32 imageIndex )
-{
-	char*	out = (char*)inRef;
-	
-	out += pxmDataSize;
-	out += _HardMaskSize(inRef);
-//	out += inRef->bounds.right * inRef->bounds.bottom * ( inRef->pixelSize / 8 ) * imageIndex;
-	out += ntohs(inRef->bounds.right) * ntohs(inRef->bounds.bottom) * ( 4 ) * imageIndex;
-	
-	return out;
-}

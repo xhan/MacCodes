@@ -49,10 +49,15 @@ int main(int argc, char **argv) {
 	}
 
 	//From one container into another
-	NSData *pxmData = [NSData dataWithBytes:*pxmH length:GetHandleSize(pxmH)];
+	pxmRef myPxmRef = pxmCreate(*pxmH, GetHandleSize(pxmH));
+	NSData *pxmData = [NSData dataWithBytes:myPxmRef length:GetHandleSize(pxmH)];
 	[pxmData writeToFile:[NSString stringWithFormat:@"pxm#-%li.pxma", strtol(argv[2], NULL, 10)] atomically:NO];
 
-	//Take the pxm# bytes and create an NSImage
+	//We don't need the resource file anymore.
+	ReleaseResource(pxmH);
+	CloseResFile(resFileHandle);
+
+	//Take the pxmRef and create an NSImage
 	NSImage *image = [NSImage imageFrompxmArrayData:pxmData];
 	if (!image) {
 		fprintf(stderr, "%s: Unable to create image from data\n", argc > 0 ? argv[0] : "pxm-to-TIFF");
@@ -64,8 +69,7 @@ int main(int argc, char **argv) {
 	[(NSFileHandle *)[NSFileHandle fileHandleWithStandardOutput] writeData:[image TIFFRepresentation]];
 
 	//Clean up
-	ReleaseResource(pxmH);
-	CloseResFile(resFileHandle);
+	pxmDispose(myPxmRef);
 	[pool release];
 	return EXIT_SUCCESS;
 }

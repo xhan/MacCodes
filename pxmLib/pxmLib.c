@@ -49,9 +49,18 @@
 #include <Carbon/Carbon.h>
 #include "pxmLib.h"
 
+#include <string.h>
+
+#if defined(__BIG_ENDIAN__)
+#	define BCOPY_OR_SWAB bcopy
+#elif  defined(__LITTLE_ENDIAN__)
+#	define BCOPY_OR_SWAB swab
+#else
+#	error You don't have a CPU in your computer!
+#endif
+
 static UInt32	_HardMaskSize( pxmRef inRef );
 static UInt32	_PixelDataSize( pxmRef inRef );
-static void*	_GetPixelDataLoc( pxmRef inRef, UInt32 imageIndex );
 
 static bool		_IsBlack( UInt32 inColor );
 static UInt8	_MakeGray( UInt32 inColor );
@@ -70,7 +79,11 @@ pxmCreate( void* data, UInt32 inSize )
 	newPxmRef = malloc(inSize);
 	if( newPxmRef == NULL )
 		return NULL;
-	memcpy(newPxmRef, data, inSize);
+
+	//Copy the header (with byte-swapping, if appropriate).
+	BCOPY_OR_SWAB(data, newPxmRef, sizeof(struct pxmData));
+	//Copy the pixels (without byte-swapping).
+	bcopy(data + sizeof(struct pxmData), ((void *)newPxmRef) + sizeof(struct pxmData), inSize - sizeof(struct pxmData));
 	
 	if( newPxmRef->pixelType == pxmTypeIndexed || ( newPxmRef->pixelType == pxmTypeDefault && newPxmRef->pixelSize == 8 ) )
 		newPxmRef->clutAddr = _DefaultCLUT();
@@ -100,7 +113,11 @@ pxmRead( pxmRef inRef, void* ioBuffer, UInt32* ioSize )
 	if( *ioSize > pxmSize(inRef) )
 		*ioSize = pxmSize(inRef);
 	
-	memcpy(ioBuffer, inRef, *ioSize);
+	//Copy the header (with byte-swapping, if appropriate).
+	BCOPY_OR_SWAB(inRef, ioBuffer, sizeof(struct pxmData));
+	//Copy the pixels (without byte-swapping).
+	bcopy(inRef, ioBuffer + sizeof(struct pxmData), *ioSize - sizeof(struct pxmData));
+
 	return pxmErrNone;
 }
 
@@ -162,6 +179,18 @@ pxmIsMultiMask( pxmRef inRef )
 	return false;
 }
 
+void*
+pxmBaseAddressForFrame( pxmRef inRef, UInt32 imageIndex )
+{
+	char*	out = (char*)inRef;
+	
+	out += pxmDataSize;
+	out += _HardMaskSize(inRef);
+	out += inRef->bounds.right * inRef->bounds.bottom * ( inRef->pixelSize / 8 ) * imageIndex;
+	
+	return out;
+}
+
 #pragma mark -
 
 UInt32
@@ -172,16 +201,16 @@ _HardMaskSize( pxmRef inRef )
 	UInt32		b;
 
 	//Divide width by 8, rounded up. This converts from bits-per-row (for the mask is a 1-bit-per-pixel image) to bytes-per-row.
-	a = ntohs(inRef->bounds.right) / 16;
-	b = ((ntohs(inRef->bounds.right) % 16) != 0);
+	a = inRef->bounds.right / 16;
+	b = ((inRef->bounds.right % 16) != 0);
 
 	size_t bytesPerRow = (a + b) * 2;
 	
 	//Add (height) rows' worth of bytes to our skip distance. For example, if the image's height is four pixels, set our output to 4 * bytesPerRow.
-	out = bytesPerRow * (ntohs(inRef->bounds.bottom) - ntohs(inRef->bounds.top));
+	out = bytesPerRow * (inRef->bounds.bottom - inRef->bounds.top);
 
 	//Now, do we have only one mask up front? If so, then multiply by 1. If not, multiply by the number of images.
-	a = inRef->bitfield.bits.singleMask ? 1 : ntohs(inRef->imageCount);
+	a = inRef->bitfield.bits.singleMask ? 1 : inRef->imageCount;
 	out = out * a;
 	
 	return out;
@@ -190,21 +219,9 @@ _HardMaskSize( pxmRef inRef )
 UInt32
 _PixelDataSize( pxmRef inRef )
 {
-	return ntohs(inRef->bounds.right) * ntohs(inRef->bounds.bottom) * (inRef->pixelSize/8) * inRef->imageCount;
+	return inRef->bounds.right * inRef->bounds.bottom * (inRef->pixelSize/8) * inRef->imageCount;
 }
 
-
-void*
-_GetPixelDataLoc( pxmRef inRef, UInt32 imageIndex )
-{
-	char*	out = (char*)inRef;
-	
-	out += pxmDataSize;
-	out += _HardMaskSize(inRef);
-	out += ntohs(inRef->bounds.right) * ntohs(inRef->bounds.bottom) * ( ntohs(inRef->pixelSize) / 8 ) * imageIndex;
-	
-	return out;
-}
 
 #pragma mark -
 

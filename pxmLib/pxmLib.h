@@ -86,14 +86,25 @@ typedef struct pxmData
 	SInt16			version;
 	//We use a union for easy byte-swapping of the entire structure.
 	union {
-		//This structure must always be in the big-endian layout, since that's what's on disk.
 		struct {
-			UInt16	__empty:11,
+#if defined(__BIG_ENDIAN__)
+			UInt16			__empty:11,
 					chaos:1,
 					mystery:1,
 					hasAlpha:1,
 					__unknown1:1,
 					singleMask:1;
+#elif defined(__LITTLE_ENDIAN__)
+			UInt16
+					singleMask:1,
+					__unknown1:1,
+					hasAlpha:1,
+					mystery:1,
+					chaos:1,
+					__empty:11;
+#else
+#	error You don't have a CPU in your computer!
+#endif //def __BIG_ENDIAN__ or __LITTLE_ENDIAN__
 		} bits;
 		UInt16 number;
 	} bitfield;
@@ -127,3 +138,4 @@ UInt16	pxmPixelSize( pxmRef inRef );
 UInt16	pxmPixelType( pxmRef inRef );
 UInt16	pxmImageCount( pxmRef inRef );
 bool	pxmIsMultiMask( pxmRef inRef );
+void	*pxmBaseAddressForFrame( pxmRef inRef, UInt32 imageIndex );
