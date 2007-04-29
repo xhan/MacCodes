@@ -66,10 +66,10 @@ pxmCreate( void* data, UInt32 inSize )
 	if( data == NULL || inSize == 0 )
 		return NULL;
 	
-	newPxmRef = (pxmRef)NewPtr(inSize);
+	newPxmRef = malloc(inSize);
 	if( newPxmRef == NULL )
 		return NULL;
-	BlockMoveData( data, newPxmRef, inSize );
+	memcpy(newPxmRef, data, inSize);
 	
 	if( newPxmRef->pixelType == pxmTypeIndexed || ( newPxmRef->pixelType == pxmTypeDefault && newPxmRef->pixelSize == 8 ) )
 		newPxmRef->clutAddr = _DefaultCLUT();
@@ -86,7 +86,7 @@ pxmDispose( pxmRef inRef )
 	if( inRef->clutAddr != _DefaultCLUT() )
 		DisposePtr( (Ptr)inRef->clutAddr );
 	
-	DisposePtr( (Ptr)inRef );
+	free(inRef);
 	return pxmErrNone;
 }
 
@@ -99,7 +99,7 @@ pxmRead( pxmRef inRef, void* ioBuffer, UInt32* ioSize )
 	if( *ioSize > pxmSize(inRef) )
 		*ioSize = pxmSize(inRef);
 	
-	BlockMoveData( inRef, ioBuffer, *ioSize );
+	memcpy(ioBuffer, inRef, *ioSize);
 	return pxmErrNone;
 }
 
