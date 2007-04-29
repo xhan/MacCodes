@@ -1,0 +1,18 @@
+'pxm#' resources from /S/L/F/Carbon.framework/F/HIToolbox.framework/R/Extras.rsrc:
+
+ID	 	Name						x86				PPC
+231		Window Single Window Mode	-				-
+2041 	V Scrollbar thumb			-				-
+	2041: bitfield is 0x5, not 0x4 (maskCount is 1)
+2062	Menu Title Selected Fill	- 				-
+	2062: bitfield is 0xd, not 0x4 (mystery and maskCount are 1)
+2203	Window Header Fill			-				-?
+	2203: bitfield is 0x5, not 0x4 (maskCount is 1)
+4000	Slider tick	 				Indexed (8) 	Ditto
+
+Problems:
+-: No problem
+<color-name>: Object that should be some other color came out <color-name> instead
+Inconsistent: Inconsistent set of values
+Indexed: Wrong pixel type (presumably indexed-color)
+Shifted: Image is shifted vertically halfway, image wraps around the top.
