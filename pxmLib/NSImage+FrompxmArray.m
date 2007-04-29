@@ -16,7 +16,6 @@
 @implementation NSImage (CBPRHFrompxmArray)
 
 + (NSImage *)imageFrompxmArrayData:(NSData *)data {
-	NSLog(@"Creating NSImage from pxm# data that is %u bytes long (structure type: %u bytes long)", [data length], sizeof(struct pxmData));
 	const struct pxmData *pxmBytes = [data bytes];
 
 	NSAssert1(pxmPixelType(pxmBytes) == pxmTypeDirect16 || pxmPixelType(pxmBytes) == pxmTypeDirect32, @"Incorrect pxm# pixel-type: %hi", pxmPixelType(pxmBytes));
@@ -31,18 +30,13 @@
 
 	NSImage *image = [[[NSImage alloc] initWithSize:size] autorelease];
 
-	NSLog(@"bitfield number: %hx; multiMask: %hu; imageCount: %hu", pxmBytes->bitfield.number, pxmIsMultiMask(pxmBytes), pxmImageCount(pxmBytes));
-	
 	size_t bitsPerPixel = pxmPixelSize(pxmBytes);
 	size_t bytesPerPixel = bitsPerPixel / 8U;
 
 	size_t bytesPerRow = size.width * bytesPerPixel;
 	size_t bytesPerFrame = bytesPerRow * size.height;
-	NSLog(@"Size of structure %u + first frame %u: %u", sizeof(struct pxmData), bytesPerFrame, sizeof(struct pxmData) + bytesPerFrame);
 
 	size_t samplesPerPixel = pxmHasAlpha(pxmBytes) ? 4U : 3U;
-
-	NSLog(@"wah: %f by %f; bps: 8; spp: %u; has alpha: %u; planar: no; bytes per row: %u; bitsPerPixel: %u", size.width, size.height, samplesPerPixel, (unsigned)pxmHasAlpha(pxmBytes), bytesPerRow, bitsPerPixel);
 
 	unsigned numFrames = pxmImageCount(pxmBytes);
 	NSMutableArray *reps = [NSMutableArray arrayWithCapacity:numFrames];

@@ -63,7 +63,6 @@ int main(int argc, char **argv) {
 		fprintf(stderr, "%s: Unable to create image from data\n", argc > 0 ? argv[0] : "pxm-to-TIFF");
 		return EXIT_FAILURE;
 	}
-	NSLog(@"image has %u representations", [[image representations] count]);
 
 	//Write it out to disk
 	[(NSFileHandle *)[NSFileHandle fileHandleWithStandardOutput] writeData:[image TIFFRepresentation]];
