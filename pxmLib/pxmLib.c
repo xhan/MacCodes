@@ -125,7 +125,7 @@ bool
 pxmHasAlpha( pxmRef inRef )
 {
 	if( inRef )
-		return inRef->hasAlpha;
+		return inRef->bitfield.bits.hasAlpha;
 	return NULL;
 }
 
@@ -157,7 +157,7 @@ bool
 pxmIsMultiMask( pxmRef inRef )
 {
 	if( inRef )
-		return !(inRef->singleMask);
+		return !(inRef->bitfield.bits.singleMask);
 	return false;
 }
 
@@ -234,7 +234,7 @@ _SetBit16( UInt16 data, UInt16 index, bool newState )
 	if( newState == true )
 		return data | mask[index];
 	else
-		return (data | mask[index]) xor mask[index];
+		return (data | mask[index]) ^ mask[index];
 }
 
 bool
