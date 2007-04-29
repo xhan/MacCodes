@@ -10,7 +10,7 @@
  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <machine/endian.h>
+#include <Carbon/Carbon.h>
 #import "NSImage+FrompxmArray.h"
 
 @implementation NSImage (CBPRHFrompxmArray)
@@ -68,6 +68,95 @@
 
 	//Outfit our image with its representations.
 	[image addRepresentations:reps];
+
+	return image;
+}
+
++ (NSImage *)imageFrompxmArrayWithResourceID:(short)resID inResourceFileAtPath:(NSString *)path forkName:(struct HFSUniStr255 *)forkName
+{
+	//First try to convert the path to a FSRef.
+	NSURL *URL = [NSURL fileURLWithPath:path];
+	FSRef inputFileRef;
+	if(!CFURLGetFSRef((CFURLRef)URL, &inputFileRef)) {
+		NSLog(@"In +[NSImage imageFrompxmArrayWithResourceID:inResourceFileAtPath:forkName:]: Could not convert NSURL %@ to FSRef", URL);
+		return nil;
+	} else {
+		//Now try to open the file.
+		short resFileHandle = -1;
+		OSStatus err = FSOpenResourceFile(
+			&inputFileRef,
+			//A fork name of "" means the data fork.
+			/*forkNameLength*/ forkName ? forkName->length : 0U,
+			/*forkName*/ forkName ? forkName->unicode : NULL,
+			fsRdPerm,
+			&resFileHandle);
+
+		if(resFileHandle < 0) {
+			NSLog(@"In +[NSImage imageFrompxmArrayWithResourceID:inResourceFileAtPath:forkName:]: Could not open resource file %@ with fork name %@: %s", path, forkName ? [NSString stringWithCharacters:forkName->unicode length:forkName->length] : nil, GetMacOSStatusCommentString(err));
+			return nil;
+		}
+
+		//Now retrieve the resource from the freshly-opened file.
+		Handle pxmH = Get1Resource(FOUR_CHAR_CODE('pxm#'), resID);
+		if(!pxmH) {
+			err = ResError();
+			NSLog(@"In +[NSImage imageFrompxmArrayWithResourceID:inResourceFileAtPath:forkName:]: Could not get 'pxm#' resource with ID %hi from resource file %@: %s\n", resID, path, GetMacOSStatusCommentString(err));
+			CloseResFile(resFileHandle);
+			return nil;
+		}
+
+		//Create a pxmRef from the resource data.
+		pxmRef myPxmRef = pxmCreate(*pxmH, GetHandleSize(pxmH));
+
+		//Create the image that we'll return.
+		NSImage *image = [self imageFrompxmArrayData:[NSData dataWithBytesNoCopy:myPxmRef length:GetHandleSize(pxmH) freeWhenDone:NO]];
+
+		//Clean up.
+		pxmDispose(myPxmRef);
+		ReleaseResource(pxmH);
+		CloseResFile(resFileHandle);
+
+		return image;
+	}
+}
+
++ (NSImage *)imageFrompxmArrayWithResourceID:(short)resID inResourceFileAtPath:(NSString *)path
+{
+	NSImage *outImage = nil;
+	struct HFSUniStr255 forkNameStorage;
+
+	//First try the resource fork.
+	FSGetResourceForkName(&forkNameStorage);
+	outImage = [self imageFrompxmArrayWithResourceID:resID inResourceFileAtPath:path forkName:&forkNameStorage];
+
+	//If we manage to create a valid image, return it.
+	if(outImage) return outImage;
+
+	//Next, try the data fork.
+	FSGetDataForkName(&forkNameStorage);
+	outImage = [self imageFrompxmArrayWithResourceID:resID inResourceFileAtPath:path forkName:&forkNameStorage];
+
+	//Return whatever we have.
+	return outImage;
+}
+
++ (NSImage *)imageFromSystemwidepxmArrayWithResourceID:(short)resID
+{
+	//Now retrieve the resource from the freshly-opened file.
+	Handle pxmH = GetResource(FOUR_CHAR_CODE('pxm#'), resID);
+	if(!pxmH) {
+		OSStatus err = ResError();
+		NSLog(@"In +[NSImage imageFromSystemwidepxmArrayWithResourceID:]: Could not get 'pxm#' resource with ID %hi: %s\n", resID, GetMacOSStatusCommentString(err));
+		return nil;
+	}
+
+	//Create the image that we'll return.
+	pxmRef myPxmRef = pxmCreate(*pxmH, GetHandleSize(pxmH));
+	NSImage *image = [self imageFrompxmArrayData:[NSData dataWithBytesNoCopy:myPxmRef length:GetHandleSize(pxmH) freeWhenDone:NO]];
+
+	//Clean up.
+	pxmDispose(myPxmRef);
+	ReleaseResource(pxmH);
 
 	return image;
 }
