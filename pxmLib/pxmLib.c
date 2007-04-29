@@ -1,5 +1,6 @@
 /*
  Copyright (c) 2001, Blackhole Media
+ Copyright (c) 2007, Peter Hosey and Colin Barrett
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without modification,
@@ -34,6 +35,16 @@
  would appreciate a mention in the credits of your application if you use our
  source.
 */
+/*
+ Intel compatibility by Peter Hosey <http://boredzo.org/> and Colin Barrett <timber@lava.net>. These changes are provided with the following license (also a BSD-style license):
+
+ Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+ * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+ * Neither the name of Peter Hosey, nor the name of Colin Barrett, nor the names of his contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 
 #include "pxmLib.h"
 
@@ -330,13 +341,19 @@ _HardMaskSize( pxmRef inRef )
 	UInt32		out;
 	UInt32		a;
 	UInt32		b;
+
+	//Divide width by 8, rounded up. This converts from bits-per-row (for the mask is a 1-bit-per-pixel image) to bytes-per-row.
+	a = ntohs(inRef->bounds.right) / 16;
+	b = ((ntohs(inRef->bounds.right) % 16) != 0);
+
+	size_t bytesPerRow = (a + b) * 2;
 	
-	a = inRef->bounds.right >> 4;
-	b = ((inRef->bounds.right & 0x000F) != 0);
-	out = (a + b) * 2;
-	
-	out = out * inRef->bounds.bottom;
-	a = inRef->maskCount ? 1 : (inRef->imageCount);
+	//Add (height) rows' worth of bytes to our skip distance. For example, if the image's height is four pixels, set our output to 4 * bytesPerRow.
+	out = bytesPerRow * (ntohs(inRef->bounds.bottom) - ntohs(inRef->bounds.top));
+	union pxmDataBitfield bitfield = { .number = ntohs(inRef->bitfield.number) };
+
+	//Now, do we have a mask up front? If so, then multiply by 1. If not, multiply by the number of images. (???????)
+	a = bitfield.bits.maskCount ? 1 : ntohs(inRef->imageCount);
 	out = out * a;
 	
 	return out;
@@ -345,9 +362,9 @@ _HardMaskSize( pxmRef inRef )
 UInt32
 _PixelDataSize( pxmRef inRef )
 {
-	return inRef->bounds.right * inRef->bounds.bottom * (4) * inRef->imageCount;
-	return inRef->bounds.right * inRef->bounds.bottom * (inRef->pixelSize/8) * inRef->imageCount;
+	return ntohs(inRef->bounds.right) * ntohs(inRef->bounds.bottom) * (inRef->pixelSize/8) * inRef->imageCount;
 }
+
 
 void*
 _GetPixelDataLoc( pxmRef inRef, UInt32 imageIndex )
@@ -356,8 +373,7 @@ _GetPixelDataLoc( pxmRef inRef, UInt32 imageIndex )
 	
 	out += pxmDataSize;
 	out += _HardMaskSize(inRef);
-//	out += inRef->bounds.right * inRef->bounds.bottom * ( inRef->pixelSize / 8 ) * imageIndex;
-	out += inRef->bounds.right * inRef->bounds.bottom * ( 4 ) * imageIndex;
+	out += ntohs(inRef->bounds.right) * ntohs(inRef->bounds.bottom) * ( ntohs(inRef->pixelSize) / 8 ) * imageIndex;
 	
 	return out;
 }
