@@ -46,6 +46,7 @@
  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <Carbon/Carbon.h>
 #include "pxmLib.h"
 
 static UInt32	_HardMaskSize( pxmRef inRef );
@@ -178,10 +179,9 @@ _HardMaskSize( pxmRef inRef )
 	
 	//Add (height) rows' worth of bytes to our skip distance. For example, if the image's height is four pixels, set our output to 4 * bytesPerRow.
 	out = bytesPerRow * (ntohs(inRef->bounds.bottom) - ntohs(inRef->bounds.top));
-	union pxmDataBitfield bitfield = { .number = ntohs(inRef->bitfield.number) };
 
 	//Now, do we have only one mask up front? If so, then multiply by 1. If not, multiply by the number of images.
-	a = bitfield.bits.singleMask ? 1 : ntohs(inRef->imageCount);
+	a = inRef->bitfield.bits.singleMask ? 1 : ntohs(inRef->imageCount);
 	out = out * a;
 	
 	return out;
