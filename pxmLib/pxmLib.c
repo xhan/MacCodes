@@ -80,10 +80,17 @@ pxmCreate( void* data, UInt32 inSize )
 	if( newPxmRef == NULL )
 		return NULL;
 
-	//Copy the header (with byte-swapping, if appropriate).
-	BCOPY_OR_SWAB(data, newPxmRef, sizeof(struct pxmData));
-	//Copy the pixels (without byte-swapping).
-	bcopy(data + sizeof(struct pxmData), ((void *)newPxmRef) + sizeof(struct pxmData), inSize - sizeof(struct pxmData));
+	//If the low byte of the version is clear, then we expect that the version number is in the high byte—that is, that we must byte-swap the header.
+	Boolean byteSwappingNeeded = !(((struct pxmData *)data)->version & 0xFF);
+	if(byteSwappingNeeded) {
+		//Copy the header with byte-swapping.
+		swab(data, newPxmRef, sizeof(struct pxmData));
+		//Copy the pixels without byte-swapping.
+		bcopy(data + sizeof(struct pxmData), ((void *)newPxmRef) + sizeof(struct pxmData), inSize - sizeof(struct pxmData));
+	} else {
+		//No swap needed. Do a plain old copy.
+		bcopy(data, newPxmRef, inSize);
+	}
 	
 	if( newPxmRef->pixelType == pxmTypeIndexed || ( newPxmRef->pixelType == pxmTypeDefault && newPxmRef->pixelSize == 8 ) )
 		newPxmRef->clutAddr = _DefaultCLUT();
