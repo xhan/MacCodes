@@ -88,7 +88,7 @@ typedef struct pxmData
 	union {
 		//This structure must always be in the big-endian layout, since that's what's on disk.
 		struct {
-			UInt16	__emtpy:11,
+			UInt16	__empty:11,
 					chaos:1,
 					mystery:1,
 					hasAlpha:1,
