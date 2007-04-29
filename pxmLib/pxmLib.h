@@ -138,4 +138,5 @@ UInt16	pxmPixelSize( pxmRef inRef );
 UInt16	pxmPixelType( pxmRef inRef );
 UInt16	pxmImageCount( pxmRef inRef );
 bool	pxmIsMultiMask( pxmRef inRef );
+
 void	*pxmBaseAddressForFrame( pxmRef inRef, UInt32 imageIndex );
