@@ -16,7 +16,7 @@
 union pxmDataBitfield {
 	struct {
 #if defined(__BIG_ENDIAN__)
-		UInt16			__emtpy:11,
+		UInt16			__empty:11,
 				chaos:1,
 				mystery:1,
 				hasAlpha:1,
@@ -30,7 +30,7 @@ union pxmDataBitfield {
 				hasAlpha:1,
 				mystery:1,
 				chaos:1,
-				__emtpy:11;
+				__empty:11;
 #else
 #	error You don't have a CPU in your computer!
 #endif //def __BIG_ENDIAN__ or __LITTLE_ENDIAN__
