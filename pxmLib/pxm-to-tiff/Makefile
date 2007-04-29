@@ -1,7 +1,7 @@
 CFLAGS+=-std=c99 -I.. -g
 LDFLAGS+=-framework Cocoa -framework Carbon
 
-pxm-to-tiff: pxm-to-tiff.o ../NSImage+FrompxmArray.o
+pxm-to-tiff: pxm-to-tiff.o ../NSImage+FrompxmArray.o ../pxmLib.o
 
 .PHONY: clean
 clean:
