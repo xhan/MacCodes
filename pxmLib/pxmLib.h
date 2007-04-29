@@ -127,13 +127,3 @@ UInt16	pxmPixelSize( pxmRef inRef );
 UInt16	pxmPixelType( pxmRef inRef );
 UInt16	pxmImageCount( pxmRef inRef );
 bool	pxmIsMultiMask( pxmRef inRef );
-
-pxmErr	pxmMakeGWorld( pxmRef inRef, GWorldPtr* outGWorld );
-
-pxmErr	pxmRenderImage( pxmRef inRef, UInt16 imageIndex, GWorldPtr inOffscreen );
-pxmErr	pxmRenderMask( pxmRef inRef, UInt16 imageIndex, GWorldPtr inOffscreen );
-pxmErr	pxmRenderAlpha( pxmRef inRef, UInt16 imageIndex, GWorldPtr inOffscreen );
-
-pxmErr	pxmWriteImage( pxmRef, UInt16 imageIndex, GWorldPtr inOffscreen );
-pxmErr	pxmWriteMask( pxmRef, UInt16 imageIndex, GWorldPtr inOffscreen );
-pxmErr	pxmWriteAlpha( pxmRef, UInt16 imageIndex, GWorldPtr inOffscreen );
