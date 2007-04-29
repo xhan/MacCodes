@@ -157,7 +157,7 @@ bool
 pxmIsMultiMask( pxmRef inRef )
 {
 	if( inRef )
-		return inRef->singleMask == pxmMultiMask;
+		return !(inRef->singleMask);
 	return false;
 }
 
@@ -180,7 +180,7 @@ _HardMaskSize( pxmRef inRef )
 	out = bytesPerRow * (ntohs(inRef->bounds.bottom) - ntohs(inRef->bounds.top));
 	union pxmDataBitfield bitfield = { .number = ntohs(inRef->bitfield.number) };
 
-	//Now, do we have a mask up front? If so, then multiply by 1. If not, multiply by the number of images. (???????)
+	//Now, do we have only one mask up front? If so, then multiply by 1. If not, multiply by the number of images.
 	a = bitfield.bits.singleMask ? 1 : ntohs(inRef->imageCount);
 	out = out * a;
 	
