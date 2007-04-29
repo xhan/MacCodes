@@ -41,9 +41,8 @@
 	unsigned numFrames = pxmImageCount(pxmBytes);
 	NSMutableArray *reps = [NSMutableArray arrayWithCapacity:numFrames];
 	for(unsigned i = 0U; i < numFrames; ++i) {
-		unsigned char *planes[1] = { (unsigned char *)pxmBaseAddressForFrame(pxmBytes, i) };
 		NSBitmapImageRep *bitmapRep = [[NSBitmapImageRep alloc]
-			initWithBitmapDataPlanes:planes
+			initWithBitmapDataPlanes:NULL
 			pixelsWide:size.width
 			pixelsHigh:size.height
 			bitsPerSample:8U
@@ -53,6 +52,8 @@
 			colorSpaceName:NSDeviceRGBColorSpace
 			bytesPerRow:bytesPerRow
 			bitsPerPixel:bitsPerPixel];
+
+		memcpy([bitmapRep bitmapData], pxmBaseAddressForFrame(pxmBytes, i), bytesPerRow * size.height);
 
 		[reps addObject:bitmapRep];
 		[bitmapRep release];
