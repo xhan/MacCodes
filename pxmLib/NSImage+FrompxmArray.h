@@ -19,6 +19,7 @@
 + (NSImage *)imageFrompxmArrayWithResourceID:(short)resID inResourceFileAtPath:(NSString *)path forkName:(struct HFSUniStr255 *)forkName;
 + (NSImage *)imageFrompxmArrayWithResourceID:(short)resID inResourceFileAtPath:(NSString *)path;
 + (NSImage *)imageFrompxmArrayInSearchPathWithResourceID:(short)resID;
++ (NSImage *)imageFromSystemwidepxmArrayWithResourceID:(short)resID;
 
 + (NSImage *)imageFrompxmArrayData:(NSData *)data;
 

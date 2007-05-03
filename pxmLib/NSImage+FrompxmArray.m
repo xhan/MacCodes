@@ -13,6 +13,15 @@
 #include <Carbon/Carbon.h>
 #import "NSImage+FrompxmArray.h"
 
+#if defined(__BIG_ENDIAN__)
+#	define EXTRAS_DOT_RSRC_PATH @"/System/Library/Frameworks/Carbon.framework/Frameworks/HIToolbox.framework/Resources/Extras.rsrc"
+#elif  defined(__LITTLE_ENDIAN__)
+#	define EXTRAS_DOT_RSRC_PATH @"/System/Library/Frameworks/Carbon.framework/Frameworks/HIToolbox.framework/Resources/Extras2.rsrc"
+#else
+#	error You don't have a CPU in your computer!
+#endif
+
+
 @implementation NSImage (CBPRHFrompxmArray)
 
 + (NSImage *)imageFrompxmArrayData:(NSData *)data {
@@ -161,6 +170,12 @@
 	ReleaseResource(pxmH);
 
 	return image;
+}
+
++ (NSImage *)imageFromSystemwidepxmArrayWithResourceID:(short)resID
+{
+  //Extras.rsrc stores its resources in the data fork, which we can get by passing NULL
+  return [self imageFrompxmArrayWithResourceID:resID inResourceFileAtPath:EXTRAS_DOT_RSRC_PATH forkName:NULL];
 }
 
 @end
