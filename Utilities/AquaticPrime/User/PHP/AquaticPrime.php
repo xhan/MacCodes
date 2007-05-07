@@ -120,7 +120,7 @@ function getSignature($dict, $key, $privKey)
     
     // Escape apostrophes by un-quoting, adding apos, then re-quoting
     // so this turns ' into '\'' ... we have to double-slash for this php.
-    $fixedApostrophes = str_replace("'", "'\\''", $total);
+    $fixedApostrophes = escapeshellarg($total);
 
     // This part is the most expensive below
     // We try to do it with native code first
@@ -203,13 +203,13 @@ function sendMail($to, $from, $subject, $message, $license, $name, $bcc='')
 	$headers .= "X-Mailer: PHP/".phpversion()."\n";
 	$headers .= "MIME-Version: 1.0\n";
 	$headers .= "Content-Type: multipart/mixed; boundary=\"$boundary\"\n";
-	$headers .= "Content-Transfer-Encoding: 7bit\n\n";
+	$headers .= "Content-Transfer-Encoding: 8bit\n\n";
 	$headers .= "This is a MIME encoded message.\n\n";
 	
 	$headers .= "--$boundary\n";
 	
-	$headers .= "Content-Type: text/plain; charset=\"iso-8859-1\"\n";
-	$headers .= "Content-Transfer-Encoding: 7bit\n\n";
+	$headers .= "Content-Type: text/plain; charset=\"utf-8\"\n";
+	$headers .= "Content-Transfer-Encoding: 8bit\n\n";
 	$headers .= "$message\n\n\n";
 	
 	$headers .= "--$boundary\n";
