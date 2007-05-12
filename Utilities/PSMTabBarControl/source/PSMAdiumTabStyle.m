@@ -335,7 +335,7 @@
 	}*/
 
 	// the label
-	resultWidth += [[cell attributedStringValue] size].width;
+	resultWidth += [[cell attributedStringValue] size].width + Adium_CellPadding;
 
 	// object counter?
 	if (([cell count] > 0) && (orientation == PSMTabBarHorizontalOrientation)){
