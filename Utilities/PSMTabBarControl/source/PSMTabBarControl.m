@@ -740,7 +740,7 @@
 				partnerTargetSize = partnerOriginalSize + 21;
 			}
 		}
-	} else {
+	} else /* vertical */ {
 		// current (original) values
 		myOriginalSize = [self frame].size.width;
 		myOriginalOrigin = [self frame].origin.x;
@@ -804,6 +804,9 @@
 				partnerTargetSize = partnerOriginalSize + _tabBarWidth - 1;
 			}
 		}
+		
+		if (!_isHidden && [[self delegate] respondsToSelector:@selector(desiredWidthForVerticalTabBar:)])
+			myTargetSize = [[self delegate] desiredWidthForVerticalTabBar:self];
 	}
 
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:myOriginalOrigin], @"myOriginalOrigin", [NSNumber numberWithFloat:partnerOriginalOrigin], @"partnerOriginalOrigin", [NSNumber numberWithFloat:myOriginalSize], @"myOriginalSize", [NSNumber numberWithFloat:partnerOriginalSize], @"partnerOriginalSize", [NSNumber numberWithFloat:myTargetOrigin], @"myTargetOrigin", [NSNumber numberWithFloat:partnerTargetOrigin], @"partnerTargetOrigin", [NSNumber numberWithFloat:myTargetSize], @"myTargetSize", [NSNumber numberWithFloat:partnerTargetSize], @"partnerTargetSize", nil];
