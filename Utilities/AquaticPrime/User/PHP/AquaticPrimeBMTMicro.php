@@ -64,6 +64,14 @@ class BMTXMLParser
 // parse the XML data
 $bmtparser = new BMTXMLParser();
 
+// Work around a PHP 5.2.2 bug preventing POST data from reaching the script.
+// See <http://bugs.php.net/bug.php?id=41293> for details.
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+	if ( !isset( $HTTP_RAW_POST_DATA ) ) {
+		$HTTP_RAW_POST_DATA = file_get_contents("php://input");
+	}
+}
+
 if($bmtparser->parse($HTTP_RAW_POST_DATA)) 
 {
     echo '<?xml version="1.0" encoding="utf-8"?>';

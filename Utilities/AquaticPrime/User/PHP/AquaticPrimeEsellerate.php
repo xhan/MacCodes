@@ -26,6 +26,14 @@ $debug = 0;
 	It makes the $HTTP_RAW_POST_DATA variable valid.
 	***************************************************/
 
+	// Work around a PHP 5.2.2 bug preventing POST data from reaching the script.
+	// See <http://bugs.php.net/bug.php?id=41293> for details.
+	if ($_SERVER["REQUEST_METHOD"] == "POST") {
+		if ( !isset( $HTTP_RAW_POST_DATA ) ) {
+			$HTTP_RAW_POST_DATA = file_get_contents("php://input");
+		}
+	}
+
 	$xml_parser = xml_parser_create();
 	xml_set_element_handler($xml_parser, "startElement", "endElement");
 	xml_set_character_data_handler($xml_parser, "characterData");
