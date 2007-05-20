@@ -257,6 +257,11 @@
 	[tabBar setAutomaticallyAnimates:[sender state]];
 }
 
+- (void)configAllowsScrubbing:(id)sender
+{
+	[tabBar setAllowsScrubbing:[sender state]];
+}
+
 #pragma mark -
 #pragma mark ---- delegate ----
 

@@ -130,6 +130,7 @@
 	_allowsResizing = NO;
 	_selectsTabsOnMouseDown = NO;
     _alwaysShowActiveTab = NO;
+	_allowsScrubbing = NO;
     _cellMinWidth = 100;
     _cellMaxWidth = 280;
     _cellOptimumWidth = 130;
@@ -535,6 +536,16 @@
 - (void)setAlwaysShowActiveTab:(BOOL)value
 {
 	_alwaysShowActiveTab = value;
+}
+
+- (BOOL)allowsScrubbing
+{
+	return _allowsScrubbing;
+}
+
+- (void)setAllowsScrubbing:(BOOL)value
+{
+	_allowsScrubbing = value;
 }
 
 #pragma mark -

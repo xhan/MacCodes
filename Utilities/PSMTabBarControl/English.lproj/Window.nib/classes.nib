@@ -13,6 +13,7 @@
                 addNewTab = id; 
                 closeTab = id; 
                 configAddTabButton = id; 
+                configAllowsScrubbing = id; 
                 configAutomaticallyAnimates = id; 
                 configCanCloseOnlyTab = id; 
                 configDisableTabClose = id; 

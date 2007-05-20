@@ -51,6 +51,7 @@
 - (void)configTabSizeToFit:(id)sender;
 - (void)configUseOverflowMenu:(id)sender;
 - (void)configAutomaticallyAnimates:(id)sender;
+- (void)configAllowsScrubbing:(id)sender;
 
 // delegate
 - (void)tabView:(NSTabView *)aTabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem;

@@ -347,7 +347,11 @@
 		[_controlView setNeedsDisplay:NO];
     }
 	
-	//tell the control we only need to redraw the affected tab
+	// scrubtastic
+	if ([_controlView allowsScrubbing] && ([theEvent modifierFlags] & NSAlternateKeyMask))
+		[_controlView performSelector:@selector(tabClick:) withObject:self];
+	
+	// tell the control we only need to redraw the affected tab
 	[_controlView setNeedsDisplayInRect:NSInsetRect([self frame], -2, -2)];
 }
 
