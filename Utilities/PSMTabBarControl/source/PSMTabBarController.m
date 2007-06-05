@@ -34,6 +34,7 @@
         _cellTrackingRects = [[NSMutableArray alloc] init];
         _closeButtonTrackingRects = [[NSMutableArray alloc] init];
         _cellFrames = [[NSMutableArray alloc] init];
+		_addButtonRect = NSZeroRect;
     }
     return self;
 }
@@ -211,7 +212,7 @@
     } else {
         _addButtonRect.origin.x = 0;
         _addButtonRect.origin.y = [[cellWidths lastObject] floatValue];
-    }
+    }	
 }
 
 /*!
