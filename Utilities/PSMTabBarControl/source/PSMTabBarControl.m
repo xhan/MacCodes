@@ -418,8 +418,12 @@
 - (void)setShowAddTabButton:(BOOL)value
 {
     _showAddTabButton = value;
-    [_addTabButton setFrame:[_controller addButtonRect]];
+	if (!NSIsEmptyRect([_controller addButtonRect]))
+		[_addTabButton setFrame:[_controller addButtonRect]];
+
     [_addTabButton setHidden:!_showAddTabButton];
+	[_addTabButton setNeedsDisplay:YES];
+
 	[self update];
 }
 
@@ -680,13 +684,15 @@
     if (!animate) {
         _currentStep = (int)kPSMHideAnimationSteps;
 	}
-    
+
 	if (hide) {
 		[_overflowPopUpButton removeFromSuperview];
+		[_addTabButton removeFromSuperview];
 	} else if (!animate) {
 		[self addSubview:_overflowPopUpButton];
+		[self addSubview:_addTabButton];
 	}
-	
+
     float partnerOriginalSize, partnerOriginalOrigin, myOriginalSize, myOriginalOrigin, partnerTargetSize, partnerTargetOrigin, myTargetSize, myTargetOrigin;
     
     // target values for partner
@@ -878,7 +884,8 @@
 			}
 		} else {
 			[self addSubview:_overflowPopUpButton];
-			
+			[self addSubview:_addTabButton];
+
 			if ([[self delegate] respondsToSelector:@selector(tabView:tabBarDidUnhide:)]) {
 				[[self delegate] tabView:[self tabView] tabBarDidUnhide:self];
 			}
