@@ -146,7 +146,7 @@
 	[self resetCursorRects];
 }
 
-- (void)setBonds:(NSRect)rect
+- (void)setBounds:(NSRect)rect
 {
 	[super setBounds:rect];
 	[self resetCursorRects];
