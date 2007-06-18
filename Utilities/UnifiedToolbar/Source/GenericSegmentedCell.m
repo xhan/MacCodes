@@ -446,6 +446,11 @@
 {
 	if ([self segmentAtPoint:currentPoint] == trackingSegment) {
 		[self setPressedSegment:trackingSegment];
+		
+		if ([self menuForSegment:trackingSegment]) {
+			[self displayMenuForSegment:trackingSegment inView:controlView];
+		}
+		
 	}else{
 		[self setPressedSegment:-1];
 	}
