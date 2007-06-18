@@ -10,9 +10,13 @@
 
 
 @interface ZDSMigrationHandler : NSObject {
-
+    id delegate;
+    NSManagedObjectContext *oldContext;
+    NSManagedObjectContext *newContext;
+    NSString *newModelPath;
+    NSURL *tempFileURL;
 }
 
-+ (BOOL)migrateContext:(NSManagedObjectContext*)oldMOC toContext:(NSManagedObjectContext*)newMOC;
++ (void)migrateContext:(NSManagedObjectContext*)oldMOC toModelAtPath:(NSString*)modelFilePath withDelegate:(id)delegate;
 
 @end
