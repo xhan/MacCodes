@@ -15,7 +15,7 @@
 
 #define kPSMTabDragAnimationSteps 8
 
-@class PSMTabBarCell, PSMTabDragWindow;
+@class PSMTabBarCell, PSMTabDragWindowController;
 
 @interface PSMTabDragAssistant : NSObject {
     PSMTabBarControl            *_sourceTabBar;
@@ -26,9 +26,11 @@
     BOOL                        _isDragging;
 	
 	// Support for dragging into new windows
-	PSMTabDragWindow			*_dragTabWindow, *_dragViewWindow;
+	PSMTabDragWindowController	*_draggedTab, *_draggedView;
 	NSSize						_dragWindowOffset;
 	NSTimer						*_fadeTimer;
+	BOOL						_centersDragWindows;
+	PSMTabBarTearOffStyle		_currentTearOffStyle;
 	
     // Animation
     NSTimer                     *_animationTimer;

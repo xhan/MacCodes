@@ -75,6 +75,12 @@
 		3767A91E0A2F7A11005F7522 /* PSMTabDragWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 3767A91A0A2F7A11005F7522 /* PSMTabDragWindow.m */; };
 		3769D0850A349FCD00D71EDA /* PSMTabBarControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DF68FD067E5B5A0090B5B0 /* PSMTabBarControl.framework */; };
 		3769D08A0A349FDD00D71EDA /* PSMTabBarControl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 53DF68FD067E5B5A0090B5B0 /* PSMTabBarControl.framework */; };
+		37A9009E0C279CAD0062045C /* PSMTabDragWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A9009D0C279CAD0062045C /* PSMTabDragWindowController.m */; };
+		37A9009F0C279CAD0062045C /* PSMTabDragWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 37A9009C0C279CAD0062045C /* PSMTabDragWindowController.h */; };
+		37A900A00C279CAD0062045C /* PSMTabDragWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A9009D0C279CAD0062045C /* PSMTabDragWindowController.m */; };
+		37A9FB6E0C25FE2B0062045C /* PSMTabDragView.h in Headers */ = {isa = PBXBuildFile; fileRef = 37A9FB6C0C25FE2B0062045C /* PSMTabDragView.h */; };
+		37A9FB6F0C25FE2B0062045C /* PSMTabDragView.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A9FB6D0C25FE2B0062045C /* PSMTabDragView.m */; };
+		37A9FB700C25FE2B0062045C /* PSMTabDragView.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A9FB6D0C25FE2B0062045C /* PSMTabDragView.m */; };
 		546DEAF1067F63070098DCC4 /* PSMTabBarControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 0259C576FE90428111CA0C5A /* PSMTabBarControl.m */; };
 		546DEAF2067F630E0098DCC4 /* PSMTabBarControl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0259C57AFE90428111CA0C5A /* PSMTabBarControl.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		54D33B2906778E3300C9C163 /* PSMTabBarControl.ibclassdescription in Resources */ = {isa = PBXBuildFile; fileRef = 54D33B2806778E3300C9C163 /* PSMTabBarControl.ibclassdescription */; };
@@ -222,6 +228,10 @@
 		3767A7560A2D449B005F7522 /* PSMAdiumTabStyle.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = PSMAdiumTabStyle.m; path = source/PSMAdiumTabStyle.m; sourceTree = "<group>"; };
 		3767A9190A2F7A11005F7522 /* PSMTabDragWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSMTabDragWindow.h; path = source/PSMTabDragWindow.h; sourceTree = "<group>"; };
 		3767A91A0A2F7A11005F7522 /* PSMTabDragWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSMTabDragWindow.m; path = source/PSMTabDragWindow.m; sourceTree = "<group>"; };
+		37A9009C0C279CAD0062045C /* PSMTabDragWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSMTabDragWindowController.h; path = source/PSMTabDragWindowController.h; sourceTree = "<group>"; };
+		37A9009D0C279CAD0062045C /* PSMTabDragWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSMTabDragWindowController.m; path = source/PSMTabDragWindowController.m; sourceTree = "<group>"; };
+		37A9FB6C0C25FE2B0062045C /* PSMTabDragView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSMTabDragView.h; path = source/PSMTabDragView.h; sourceTree = "<group>"; };
+		37A9FB6D0C25FE2B0062045C /* PSMTabDragView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSMTabDragView.m; path = source/PSMTabDragView.m; sourceTree = "<group>"; };
 		53DF68FD067E5B5A0090B5B0 /* PSMTabBarControl.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PSMTabBarControl.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		53DF68FE067E5B5A0090B5B0 /* PSMTabBarControlFramework-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "PSMTabBarControlFramework-Info.plist"; sourceTree = "<group>"; };
 		54D33B2806778E3300C9C163 /* PSMTabBarControl.ibclassdescription */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PSMTabBarControl.ibclassdescription; sourceTree = "<group>"; };
@@ -446,8 +456,12 @@
 				A2129BB009AEB58F00724E6C /* PSMProgressIndicator.m */,
 				A2082A8D09EAEB33009AC8BE /* PSMTabDragAssistant.h */,
 				A2082A8E09EAEB33009AC8BE /* PSMTabDragAssistant.m */,
+				37A9009C0C279CAD0062045C /* PSMTabDragWindowController.h */,
+				37A9009D0C279CAD0062045C /* PSMTabDragWindowController.m */,
 				3767A9190A2F7A11005F7522 /* PSMTabDragWindow.h */,
 				3767A91A0A2F7A11005F7522 /* PSMTabDragWindow.m */,
+				37A9FB6C0C25FE2B0062045C /* PSMTabDragView.h */,
+				37A9FB6D0C25FE2B0062045C /* PSMTabDragView.m */,
 				A2D98B0F0A2B43FA0064C6F8 /* NSBezierPath_AMShading.h */,
 				A2D98B100A2B43FA0064C6F8 /* NSBezierPath_AMShading.m */,
 			);
@@ -534,6 +548,8 @@
 				3767A7590A2D449B005F7522 /* PSMAdiumTabStyle.h in Headers */,
 				3748D19E0B17834D002D71C0 /* PSMTabBarController.h in Headers */,
 				346373660BCA21F800AD57AD /* NSBezierPath_AMShading.h in Headers */,
+				37A9FB6E0C25FE2B0062045C /* PSMTabDragView.h in Headers */,
+				37A9009F0C279CAD0062045C /* PSMTabDragWindowController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -701,6 +717,8 @@
 				3767A75A0A2D449B005F7522 /* PSMAdiumTabStyle.m in Sources */,
 				3767A91D0A2F7A11005F7522 /* PSMTabDragWindow.m in Sources */,
 				3748D19F0B17834D002D71C0 /* PSMTabBarController.m in Sources */,
+				37A9FB6F0C25FE2B0062045C /* PSMTabDragView.m in Sources */,
+				37A900A00C279CAD0062045C /* PSMTabDragWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -723,6 +741,8 @@
 				3767A7580A2D449B005F7522 /* PSMAdiumTabStyle.m in Sources */,
 				3767A91E0A2F7A11005F7522 /* PSMTabDragWindow.m in Sources */,
 				3748D19D0B17834D002D71C0 /* PSMTabBarController.m in Sources */,
+				37A9FB700C25FE2B0062045C /* PSMTabDragView.m in Sources */,
+				37A9009E0C279CAD0062045C /* PSMTabDragWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -41,6 +41,11 @@ typedef enum {
 	PSMTabBarVerticalOrientation
 } PSMTabBarOrientation;
 
+typedef enum {
+	PSMTabBarTearOffAlphaWindow,
+	PSMTabBarTearOffMiniwindow
+} PSMTabBarTearOffStyle;
+
 enum {
     PSMTab_SelectedMask                 = 1 << 1,
     PSMTab_LeftIsSelectedMask       = 1 << 2,
@@ -74,6 +79,7 @@ enum {
 	PSMTabBarOrientation		_orientation;
 	BOOL						_automaticallyAnimates;
 	NSTimer						*_animationTimer;
+	PSMTabBarTearOffStyle		_tearOffStyle;
 	
 	// behavior
 	BOOL						_allowsBackgroundTabClosing;
@@ -146,6 +152,8 @@ enum {
 - (void)setAlwaysShowActiveTab:(BOOL)value;
 - (BOOL)allowsScrubbing;
 - (void)setAllowsScrubbing:(BOOL)value;
+- (PSMTabBarTearOffStyle)tearOffStyle;
+- (void)setTearOffStyle:(PSMTabBarTearOffStyle)tearOffStyle;
 
 // accessors
 - (NSTabView *)tabView;

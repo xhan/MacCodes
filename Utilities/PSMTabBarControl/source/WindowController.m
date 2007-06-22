@@ -384,7 +384,10 @@
 		offset->width = 0;
 		offset->height = 22 + [(id <PSMTabStyle>)[[aTabView delegate] style] leftMarginForTabBarControl];
 	}
-	*styleMask = NSTitledWindowMask | NSTexturedBackgroundWindowMask;
+	
+	if (styleMask) {
+		*styleMask = NSTitledWindowMask | NSTexturedBackgroundWindowMask;
+	}
 	
 	return viewImage;
 }

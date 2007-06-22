@@ -7,33 +7,32 @@
 //
 
 #import "PSMTabDragWindow.h"
-#import "PSMTabBarCell.h"
+#import "PSMTabDragView.h"
 
 @implementation PSMTabDragWindow
 
-+ (PSMTabDragWindow *)dragWindowWithTabBarCell:(PSMTabBarCell *)cell image:(NSImage *)image styleMask:(unsigned int)styleMask
++ (PSMTabDragWindow *)dragWindowWithImage:(NSImage *)image styleMask:(unsigned int)styleMask
 {
-	return [[[PSMTabDragWindow alloc] initWithTabBarCell:cell image:image styleMask:styleMask] autorelease];
+	return [[[PSMTabDragWindow alloc] initWithImage:image styleMask:styleMask] autorelease];
 }
 
-- (id)initWithTabBarCell:(PSMTabBarCell *)cell image:(NSImage *)image styleMask:(unsigned int)styleMask
+- (id)initWithImage:(NSImage *)image styleMask:(unsigned int)styleMask
 {
-	if ( (self = [super initWithContentRect:NSMakeRect(0, 0, [image size].width, [image size].height) styleMask:styleMask backing:NSBackingStoreBuffered defer:NO]) ) {
-		_cell = [cell retain];
-		_imageView = [[[NSImageView alloc] initWithFrame:NSMakeRect(0, 0, [image size].width, [image size].height)] autorelease];
-		[self setContentView:_imageView];
+	NSSize size = [image size];
+	
+	if ( (self = [super initWithContentRect:NSMakeRect(0, 0, size.width, size.height) styleMask:styleMask backing:NSBackingStoreBuffered defer:NO]) ) {
+		_dragView = [[[PSMTabDragView alloc] initWithFrame:NSMakeRect(0, 0, size.width, size.height)] autorelease];
+		[self setContentView:_dragView];
 		[self setLevel:NSStatusWindowLevel];
 		[self setIgnoresMouseEvents:YES];
 		[self setOpaque:NO];
 		
-		[_imageView setImage:image];
+		[_dragView setImage:image];
 		
 		//Set the size of the window to be the exact size of the drag image
-		NSSize imageSize = [image size];
 		NSRect windowFrame = [self frame];
-		
-		windowFrame.origin.y += windowFrame.size.height - imageSize.height;
-		windowFrame.size = imageSize;
+		windowFrame.origin.y += windowFrame.size.height - size.height;
+		windowFrame.size = size;
 		
 		if (styleMask | NSBorderlessWindowMask) {
 			windowFrame.size.height += 22;
@@ -44,15 +43,9 @@
 	return self;
 }
 
-- (void)dealloc
+- (PSMTabDragView *)dragView
 {
-	[_cell release];
-	[super dealloc];
-}
-
-- (NSImage *)image
-{
-	return [[self contentView] image];
+	return _dragView;
 }
 
 @end

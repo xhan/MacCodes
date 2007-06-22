@@ -134,7 +134,8 @@
     _cellMinWidth = 100;
     _cellMaxWidth = 280;
     _cellOptimumWidth = 130;
-    style = [[PSMMetalTabStyle alloc] init];
+	_tearOffStyle = PSMTabBarTearOffAlphaWindow;
+	style = [[PSMMetalTabStyle alloc] init];
     
     // the overflow button/menu
     NSRect overflowButtonRect = NSMakeRect([self frame].size.width - [style rightMarginForTabBarControl] + 1, 0, [style rightMarginForTabBarControl] - 1, [self frame].size.height);
@@ -550,6 +551,16 @@
 - (void)setAllowsScrubbing:(BOOL)value
 {
 	_allowsScrubbing = value;
+}
+
+- (PSMTabBarTearOffStyle)tearOffStyle
+{
+	return _tearOffStyle;
+}
+
+- (void)setTearOffStyle:(PSMTabBarTearOffStyle)tearOffStyle
+{
+	_tearOffStyle = tearOffStyle;
 }
 
 #pragma mark -

@@ -8,14 +8,13 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class PSMTabBarCell;
+@class PSMTabDragView;
 
 @interface PSMTabDragWindow : NSWindow {
-	PSMTabBarCell *_cell;
-	NSImageView *_imageView;
+	PSMTabDragView *_dragView;
 }
-+ (PSMTabDragWindow *)dragWindowWithTabBarCell:(PSMTabBarCell *)cell image:(NSImage *)image styleMask:(unsigned int)styleMask;
++ (PSMTabDragWindow *)dragWindowWithImage:(NSImage *)image styleMask:(unsigned int)styleMask;
 
-- (id)initWithTabBarCell:(PSMTabBarCell *)cell image:(NSImage *)image styleMask:(unsigned int)styleMask;
-- (NSImage *)image;
+- (id)initWithImage:(NSImage *)image styleMask:(unsigned int)styleMask;
+- (PSMTabDragView *)dragView;
 @end
