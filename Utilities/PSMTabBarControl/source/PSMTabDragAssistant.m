@@ -246,6 +246,11 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
 
 - (void)draggingExitedTabBar:(PSMTabBarControl *)control
 {
+	if ([[control delegate] respondsToSelector:@selector(tabView:shouldAllowTabViewItem:toLeaveTabBar:)] &&
+		![[control delegate] tabView:[control tabView] shouldAllowTabViewItem:[[self draggedCell] representedObject] toLeaveTabBar:control]) {
+		return;
+	}
+
     [self setDestinationTabBar:nil];
     [self setCurrentMouseLoc:NSMakePoint(-1.0, -1.0)];
 	
