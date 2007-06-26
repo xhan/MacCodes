@@ -1206,7 +1206,7 @@
     PSMTabBarCell *cell = [self cellForPoint:mousePt cellFrame:&cellFrame];
     if (cell) {
 		BOOL overClose = NSMouseInRect(mousePt, [cell closeButtonRectForFrame:cellFrame], [self isFlipped]);
-        if (overClose && ![self disableTabClose] && ([self allowsBackgroundTabClosing] || [[cell representedObject] isEqualTo:[tabView selectedTabViewItem]] || [theEvent modifierFlags] & NSCommandKeyMask)) {
+        if (overClose && ![self disableTabClose] && ![cell isCloseButtonSuppressed] && ([self allowsBackgroundTabClosing] || [[cell representedObject] isEqualTo:[tabView selectedTabViewItem]] || [theEvent modifierFlags] & NSCommandKeyMask)) {
             [cell setCloseButtonOver:NO];
             [cell setCloseButtonPressed:YES];
 			_closeClicked = YES;
@@ -1293,9 +1293,10 @@
 			NSPoint trackingStartPoint = [self convertPoint:[[self lastMouseDownEvent] locationInWindow] fromView:nil];
 			NSRect iconRect = [mouseDownCell closeButtonRectForFrame:mouseDownCellFrame];
 			
-			if ((NSMouseInRect(mousePt, iconRect,[self isFlipped])) && ![self disableTabClose] && [mouseDownCell closeButtonPressed]) {
+			if ((NSMouseInRect(mousePt, iconRect,[self isFlipped])) && ![self disableTabClose] && ![cell isCloseButtonSuppressed] && [mouseDownCell closeButtonPressed]) {
 				[self performSelector:@selector(closeTabClick:) withObject:cell];
-			} else if (NSMouseInRect(mousePt, mouseDownCellFrame, [self isFlipped]) && (!NSMouseInRect(trackingStartPoint, [cell closeButtonRectForFrame:cellFrame], [self isFlipped]) || ![self allowsBackgroundTabClosing] || [self disableTabClose])) {
+			} else if (NSMouseInRect(mousePt, mouseDownCellFrame, [self isFlipped]) &&
+					   (!NSMouseInRect(trackingStartPoint, [cell closeButtonRectForFrame:cellFrame], [self isFlipped]) || ![self allowsBackgroundTabClosing] || [self disableTabClose])) {
 				[mouseDownCell setCloseButtonPressed:NO];
 				[self performSelector:@selector(tabClick:) withObject:cell];
 			} else {
