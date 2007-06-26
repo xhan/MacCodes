@@ -24,6 +24,7 @@
                 configTabMinWidth = id; 
                 configTabOptimumWidth = id; 
                 configTabSizeToFit = id; 
+                configTearOffStyle = id; 
                 configUseOverflowMenu = id; 
                 isEditedAction = id; 
                 isProcessingAction = id; 

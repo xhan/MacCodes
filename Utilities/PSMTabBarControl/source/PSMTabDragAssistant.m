@@ -604,32 +604,58 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
 
 - (NSImage *)_miniwindowImageOfWindow:(NSWindow *)window
 {
-	NSView *borderView;
-	if (window && (borderView = [window valueForKey:@"borderView"])) {
-		/*[borderView display];
-		NSImage *viewImage = [[[NSImage alloc] initWithSize:[borderView frame].size] autorelease];
-		NSEnumerator *viewEnumerator = [[borderView subviews] objectEnumerator];
-		NSView *nextView;
-		[viewImage lockFocus];
-		[borderView drawRect:[borderView bounds]];
-		NSLog(@"%@", [borderView subviews]);
-		while ( (nextView = [viewEnumerator nextObject]) ) {
-			[nextView drawRect:[nextView bounds]];
-		}
-		NSLog(@"%@", [[[borderView subviews] objectAtIndex:4] subviews]);
-		[viewImage unlockFocus];
-		[[viewImage TIFFRepresentation] writeToFile:@"/Users/kent/Desktop/test.tiff" atomically:YES];*/
-		
-		return [[[NSImage alloc] initWithData:[borderView dataWithPDFInsideRect:[borderView bounds]]] autorelease];
-	}
-	return nil;
+	NSRect rect = [window frame];
+	NSImage *image = [[[NSImage alloc] initWithSize:rect.size] autorelease];
+	[image lockFocus];
+	rect.origin = NSZeroPoint;
+	CGContextCopyWindowCaptureContentsToRect([[NSGraphicsContext currentContext] graphicsPort], *(CGRect *)&rect, [NSApp contextID], [window windowNumber], 0);
+	[image unlockFocus];
+	
+	return image;
 }
 
 - (void)_expandWindow:(NSWindow *)window atPoint:(NSPoint)point
 {
 	NSRect frame = [window frame];
 	[window setFrameTopLeftPoint:NSMakePoint(point.x - frame.size.width / 2, point.y + frame.size.height / 2)];
+	[window setAlphaValue:0.0];
 	[window makeKeyAndOrderFront:nil];
+	
+	NSAnimation *animation = [[NSAnimation alloc] initWithDuration:0.25 animationCurve:NSAnimationEaseInOut];
+	[animation setAnimationBlockingMode:NSAnimationNonblocking];
+	[animation setCurrentProgress:0.1];
+	[animation startAnimation];
+	NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:1.0 / 30.0 target:self selector:@selector(_expandWindowTimerFired:) userInfo:[NSDictionary dictionaryWithObjectsAndKeys:window, @"Window", animation, @"Animation", nil] repeats:YES];
+	[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSEventTrackingRunLoopMode];
+}
+
+- (void)_expandWindowTimerFired:(NSTimer *)timer
+{
+	NSWindow *window = [[timer userInfo] objectForKey:@"Window"];
+	NSAnimation *animation = [[timer userInfo] objectForKey:@"Animation"];
+	CGAffineTransform transform;
+	NSPoint translation;
+	NSRect winFrame = [window frame];
+	
+	translation.x = (winFrame.size.width / 2.0);
+	translation.y = (winFrame.size.height / 2.0);
+	transform = CGAffineTransformMakeTranslation(translation.x, translation.y);
+	transform = CGAffineTransformScale(transform, 1.0 / [animation currentValue], 1.0 / [animation currentValue]);
+	transform = CGAffineTransformTranslate(transform, -translation.x, -translation.y);
+	
+	translation.x = -winFrame.origin.x;
+	translation.y = winFrame.origin.y + winFrame.size.height - [[NSScreen mainScreen] frame].size.height;
+	
+	transform = CGAffineTransformTranslate(transform, translation.x, translation.y);
+	
+	CGSSetWindowTransform([NSApp contextID], [window windowNumber], transform);
+	
+	[window setAlphaValue:[animation currentValue]];
+	
+	if (![animation isAnimating]) {
+		[timer invalidate];
+		[animation release];
+	}
 }
 
 #pragma mark -

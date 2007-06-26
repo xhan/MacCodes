@@ -247,6 +247,11 @@
     [tabBar setSizeCellsToFit:[sender state]];
 }
 
+- (void)configTearOffStyle:(id)sender
+{
+	[tabBar setTearOffStyle:([sender indexOfSelectedItem] == 0) ? PSMTabBarTearOffAlphaWindow : PSMTabBarTearOffMiniwindow];
+}
+
 - (void)configUseOverflowMenu:(id)sender
 {
     [tabBar setUseOverflowMenu:[sender state]];

@@ -91,3 +91,10 @@
 - (int)numberOfVisibleTabs;
 
 @end
+
+void CGContextCopyWindowCaptureContentsToRect(void *grafport, CGRect rect, int cid, int wid, int zero);
+OSStatus CGSSetWindowTransform(int cid, int wid, CGAffineTransform transform); 
+
+@interface NSApplication (CoreGraphicsUndocumented)
+- (int)contextID;
+@end

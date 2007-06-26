@@ -49,6 +49,7 @@
 - (void)configTabMaxWidth:(id)sender;
 - (void)configTabOptimumWidth:(id)sender;
 - (void)configTabSizeToFit:(id)sender;
+- (void)configTearOffStyle:(id)sender;
 - (void)configUseOverflowMenu:(id)sender;
 - (void)configAutomaticallyAnimates:(id)sender;
 - (void)configAllowsScrubbing:(id)sender;
