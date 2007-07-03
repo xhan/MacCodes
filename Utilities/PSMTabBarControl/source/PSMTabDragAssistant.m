@@ -268,11 +268,13 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
 				[[_draggedView window] setAlphaValue:0.0];
 			}
 			
-			NSPoint windowOrigin = [[_draggedView window] frame].origin;
+			NSPoint windowOrigin = [[control window] frame].origin;
+
 			windowOrigin.x -= _dragWindowOffset.width;
 			windowOrigin.y += _dragWindowOffset.height;
-			[[_draggedView window] setFrameTopLeftPoint:windowOrigin];
+			[[_draggedView window] setFrameOrigin:windowOrigin];
 			[[_draggedView window] orderWindow:NSWindowBelow relativeTo:[[_draggedTab window] windowNumber]];
+
 		} else if (_currentTearOffStyle == PSMTabBarTearOffMiniwindow && ![_draggedTab alternateImage]) {
 			NSImage *image;
 			unsigned int mask; //we don't need this but we can't pass nil in for the style mask, as some delegate implementations will crash
