@@ -124,8 +124,9 @@ function getSignature($dict, $key, $privKey)
 
     // This part is the most expensive below
     // We try to do it with native code first
+    $aquatic_root = preg_replace('!((/[A-Za-z._-]+)+)/AquaticPrime\.php!', '$1', __FILE__);
     ob_start();
-    $passthruString = "aquaticprime $key $privKey '$fixedApostrophes'";
+    $passthruString = $aquatic_root."/aquaticprime $key $privKey '$fixedApostrophes'";
 
     passthru($passthruString, $err);
     $sig = ob_get_contents();
