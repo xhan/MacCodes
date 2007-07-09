@@ -66,7 +66,7 @@ static int const kSaveMarker = 100;
     NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
     NSString *currentEntityName;
     
-    int objectCounter = 0;
+    uint objectCounter = 0;
     
     while (currentEntityName = [entityNamesEnum nextObject]) {
         NSLog(@"Starting on entity: %@", currentEntityName);
