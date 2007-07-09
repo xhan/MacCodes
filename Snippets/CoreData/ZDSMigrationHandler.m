@@ -52,10 +52,11 @@ static int const kSaveMarker = 100;
 {
     [self initializeNewContext];
     
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    //NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     
     NSLog(@"Starting migration");
     NSDictionary *oldEntityDict = [[[oldContext persistentStoreCoordinator] managedObjectModel] entitiesByName];
+    NSLog(@"entityDictionaryKeys: %@", [oldEntityDict allKeys]);
     NSEnumerator *entityNamesEnum = [[oldEntityDict allKeys] objectEnumerator];
     
     NSMutableDictionary *newEntitiesReference = [[NSMutableDictionary alloc] init];
@@ -70,7 +71,8 @@ static int const kSaveMarker = 100;
     while (currentEntityName = [entityNamesEnum nextObject]) {
         NSLog(@"Starting on entity: %@", currentEntityName);
         [request setEntity:[oldEntityDict valueForKey:currentEntityName]];
-        NSArray *oldEntities = [[oldContext executeFetchRequest:request error:&error] retain];
+        NSArray *oldEntities = [[oldContext executeFetchRequest:request
+                                                          error:&error] retain];
         NSAssert(oldEntities != nil, ([NSString stringWithFormat:@"Error retrieving entity %@:%@", currentEntityName, error]));
         
         if (![oldEntities count]) {
@@ -82,20 +84,24 @@ static int const kSaveMarker = 100;
         id oldEntity;
         
         while (oldEntity = [oldEntitiesEnum nextObject]) {
-            ZDSManagedObject *newEntity = [NSEntityDescription insertNewObjectForEntityForName:currentEntityName inManagedObjectContext:newContext];
+            ZDSManagedObject *newEntity = [NSEntityDescription insertNewObjectForEntityForName:currentEntityName
+                                                                        inManagedObjectContext:newContext];
             ++objectCounter;
             
             if (![newEntity isKindOfClass:[ZDSManagedObject class]]) {
-                @throw [NSException exceptionWithName:@"Invalid object type" reason:[NSString stringWithFormat:@"Unknown class in the context: %@", oldEntity] userInfo:nil];
+                @throw [NSException exceptionWithName:@"Invalid object type"
+                                               reason:[NSString stringWithFormat:@"Unknown class in the context: %@", oldEntity]
+                                             userInfo:nil];
             }
             
-            [newEntity copyFromManagedObject:oldEntity withReference:newEntitiesReference];
+            [newEntity copyFromManagedObject:oldEntity
+                               withReference:newEntitiesReference];
             
             if ((objectCounter % kSaveMarker) == 0) {
                 NSLog(@"Saving context");
                 NSAssert([newContext save:&error], ([NSString stringWithFormat:@"Save marker failed: %@", error]));
-                [pool release], pool = nil;
-                pool = [[NSAutoreleasePool alloc] init];
+                // [pool release], pool = nil;
+                // pool = [[NSAutoreleasePool alloc] init];
             }
         }
         [oldEntities release], oldEntities = nil;
@@ -104,9 +110,11 @@ static int const kSaveMarker = 100;
     
     NSLog(@"Saving the new context");
     if (![newContext save:&error]) {
-        @throw [NSException exceptionWithName:@"Failed to save new context" reason:@"There was an error " userInfo:[NSDictionary dictionaryWithObjectsAndKeys:error, @"error"]];
+        @throw [NSException exceptionWithName:@"Failed to save new context"
+                                       reason:@"There was an error "
+                                     userInfo:[NSDictionary dictionaryWithObjectsAndKeys:error, @"error"]];
     }
-    [pool release], pool = nil;
+    // [pool release], pool = nil;
     [newEntitiesReference release], newEntitiesReference = nil;
     
     NSLog(@"Migration complete.");
