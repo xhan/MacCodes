@@ -10,7 +10,7 @@
     
     totalEntities = 3;
     currentEntityIndex = 0;
-    totalInstances = 1000;
+    totalInstances = 100;
     currentInstanceIndex = 0;
     
     return self;
@@ -172,9 +172,10 @@
     }
     
     NSError *error;
-    [moc save:&error];
+    NSAssert([moc save:&error], ([NSString stringWithFormat:@"Error saving context: %@", error]));
+    [moc reset]; // Flush memory and fault all of the objects
     [waitSheet orderOut:nil];
     [NSApp endSheet:waitSheet];
-}
+}    
 
 @end
