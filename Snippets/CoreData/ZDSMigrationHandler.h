@@ -16,12 +16,22 @@
     NSManagedObjectModel *newModel;
     NSManagedObjectModel *noRelationshipModel;
     NSURL *tempFileURL;
-    void* contextInfo;
+    id contextInfo;
 }
 
 + (void)migrateContext:(NSManagedObjectContext*)oldContext
                toModel:(NSManagedObjectModel*)model
           withDelegate:(id)delegate
-           contextInfo:(void*)contextInfo;
+           context:(void*)contextInfo;
+
+@end
+
+@interface NSObject(ZDSMigrationHandlerDelegate)
+
+- (void)migrationCompletedSuccessfully:(id)migrationHandler filePath:(NSString*)filePath context:(void*)contextInfo;
+- (void)migrationFailed:(id)migrationHandler error:(NSError*)error context:(void*)contextInfo;
+- (void)migrationUpdate:(id)migrationHandler entity:(NSString*)entityName count:(unsigned)numberOfEntities context:(void*)contextInfo;
+- (void)migrationProgress:(id)migrationHandler currentCount:(unsigned)current context:(void*)contextInfo;
+- (void)migrationStage:(id)migrationHandler stage:(NSString*)stageName context:(void*)contextInfo;
 
 @end

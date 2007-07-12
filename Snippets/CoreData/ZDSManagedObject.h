@@ -15,6 +15,11 @@
 
 }
 
++ (void)setZdsMigrationActive:(BOOL)b;
++ (bool)zdsMigrationActive;
+
+- (BOOL)orphan;
+
 - (void)copyFromManagedObject:(id)object;
 - (void)copyRelationshipsFromManagedObject:(id)object withReference:(NSMutableDictionary *)reference;
 

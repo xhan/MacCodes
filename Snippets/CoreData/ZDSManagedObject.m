@@ -7,8 +7,24 @@
 
 #import "ZDSManagedObject.h"
 
+static BOOL zdsMigrationActive = NO;
 
 @implementation ZDSManagedObject
+
++ (bool)zdsMigrationActive;
+{
+    return zdsMigrationActive;
+}
+
++ (void)setZdsMigrationActive:(BOOL)b;
+{
+    zdsMigrationActive = b;
+}
+
+- (BOOL)orphan;
+{
+    return NO;
+}
 
 - (void)copyFromManagedObject:(id)object
 {
