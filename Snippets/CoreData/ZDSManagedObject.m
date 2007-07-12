@@ -10,17 +10,13 @@
 
 @implementation ZDSManagedObject
 
-- (void)copyFromManagedObject:(id)object withReference:(NSMutableDictionary *)reference 
+- (void)copyFromManagedObject:(id)object
 {
     NSEntityDescription *entity = [object entity];
     
     NSArray *attributeKeys = [[entity attributesByName] allKeys]; 
     NSDictionary *attributeValues = [object dictionaryWithValuesForKeys:attributeKeys];
     [self setValuesForKeysWithDictionary:attributeValues];
-    
-    [self copyRelationshipsFromManagedObject:object withReference:reference];
-    //Add myself to the relationship dictionary
-    [reference setValue:self forKey:[[[object objectID] URIRepresentation] absoluteString]];
 }
 
 - (void)copyRelationshipsFromManagedObject:(id)object withReference:(NSMutableDictionary *)reference 

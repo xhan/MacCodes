@@ -13,10 +13,15 @@
     id delegate;
     NSManagedObjectContext *oldContext;
     NSManagedObjectContext *newContext;
-    NSString *newModelPath;
+    NSManagedObjectModel *newModel;
+    NSManagedObjectModel *noRelationshipModel;
     NSURL *tempFileURL;
+    void* contextInfo;
 }
 
-+ (void)migrateContext:(NSManagedObjectContext*)oldMOC toModelAtPath:(NSString*)modelFilePath withDelegate:(id)delegate;
++ (void)migrateContext:(NSManagedObjectContext*)oldContext
+               toModel:(NSManagedObjectModel*)model
+          withDelegate:(id)delegate
+           contextInfo:(void*)contextInfo;
 
 @end

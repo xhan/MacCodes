@@ -15,7 +15,7 @@
 
 }
 
-- (void)copyFromManagedObject:(id)object withReference:(NSMutableDictionary *)reference;
+- (void)copyFromManagedObject:(id)object;
 - (void)copyRelationshipsFromManagedObject:(id)object withReference:(NSMutableDictionary *)reference;
 
 @end

@@ -14,15 +14,14 @@ static int const kSaveMarker = 100;
 
 - (void)initializeNewContext;
 {
-    //build the new context
+    NSString *guid = [[NSProcessInfo processInfo] globallyUniqueString];
+    NSString *tempFilename = NSTemporaryDirectory();
+    tempFilename = [tempFilename stringByAppendingPathComponent:guid];
+    tempFileURL = [[NSURL fileURLWithPath:tempFilename] retain];
     
-    NSString *filePath = NSTemporaryDirectory();
-    filePath = [filePath stringByAppendingPathComponent:[[NSProcessInfo processInfo] globallyUniqueString]];
-    tempFileURL = [NSURL fileURLWithPath:filePath];
-    
-    NSManagedObjectModel *mom = [[NSManagedObjectModel alloc] initWithContentsOfURL:[NSURL fileURLWithPath:newModelPath]];
     //Release all of the relationship constraints now
-    NSEnumerator *entityEnum = [[mom entities] objectEnumerator];
+    noRelationshipModel = [newModel copy];
+    NSEnumerator *entityEnum = [[noRelationshipModel entities] objectEnumerator];
     NSEntityDescription *entity;
     while (entity = [entityEnum nextObject]) {
         NSEnumerator *relationshipEnum = [[[entity relationshipsByName] allKeys] objectEnumerator];
@@ -30,13 +29,12 @@ static int const kSaveMarker = 100;
         NSString *relationshipKey;
         while (relationshipKey = [relationshipEnum nextObject]) {
             relationship = [[entity relationshipsByName] valueForKey:relationshipKey];
-            NSLog(@"optional: %@", ([relationship isOptional] ? @"YES" : @"NO"));
             [relationship setOptional:YES];
         }
     }
     
     NSError *error;
-    id store = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:mom];
+    NSPersistentStoreCoordinator *store = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:noRelationshipModel];
     if (![store addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:tempFileURL options:nil error:&error]) {
         NSLog(@"Error creating new store: %@", error);
         @throw [NSException exceptionWithName:@"Migration Error" reason:[error localizedDescription] userInfo:nil];
@@ -44,7 +42,6 @@ static int const kSaveMarker = 100;
     
     newContext = [[NSManagedObjectContext alloc] init];
     [newContext setPersistentStoreCoordinator:store];
-    [mom release];
     [store release];
 }
 
@@ -52,107 +49,144 @@ static int const kSaveMarker = 100;
 {
     [self initializeNewContext];
     
-<<<<<<< .mine
-    NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
-=======
-    //NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
->>>>>>> .r138
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
     
     NSLog(@"Starting migration");
     NSDictionary *oldEntityDict = [[[oldContext persistentStoreCoordinator] managedObjectModel] entitiesByName];
-    NSLog(@"entityDictionaryKeys: %@", [oldEntityDict allKeys]);
     NSEnumerator *entityNamesEnum = [[oldEntityDict allKeys] objectEnumerator];
     
     NSMutableDictionary *newEntitiesReference = [NSMutableDictionary dictionary];
-    
-    NSError *error;
-    
-    NSString *currentEntityName;
+    NSError *error = nil;
+    ZDSManagedObject* oldEntity = nil;
+    ZDSManagedObject* newEntity = nil;
     
     uint objectCounter = 0;
-    id oldEntity, newEntity;
     
+    NSLog(@"Doing attributes pass");
+    NSString *currentEntityName;
     while (currentEntityName = [entityNamesEnum nextObject]) {
-        NSLog(@"Starting on entity: %@", currentEntityName);
+        NSLog(@"\tEntity: %@", currentEntityName);
         [request setEntity:[oldEntityDict valueForKey:currentEntityName]];
-<<<<<<< .mine
-        NSArray *oldEntities = [oldContext executeFetchRequest:request error:&error];
         
-=======
-        NSArray *oldEntities = [[oldContext executeFetchRequest:request
-                                                          error:&error] retain];
->>>>>>> .r138
-        NSAssert(oldEntities != nil, ([NSString stringWithFormat:@"Error retrieving entity %@:%@", currentEntityName, error]));
+        error = nil;
+        NSArray *oldEntities = [oldContext executeFetchRequest:request error:&error];
+        if (error) {
+            //TODO Notify delegate of failure
+        }
         
         if (![oldEntities count]) continue;
         
         NSEnumerator *oldEntitiesEnum = [oldEntities objectEnumerator];
         
         while (oldEntity = [oldEntitiesEnum nextObject]) {
-<<<<<<< .mine
             newEntity = [NSEntityDescription insertNewObjectForEntityForName:currentEntityName inManagedObjectContext:newContext];
-=======
-            ZDSManagedObject *newEntity = [NSEntityDescription insertNewObjectForEntityForName:currentEntityName
-                                                                        inManagedObjectContext:newContext];
->>>>>>> .r138
             ++objectCounter;
-            
-            if (![newEntity isKindOfClass:[ZDSManagedObject class]]) {
-                @throw [NSException exceptionWithName:@"Invalid object type"
-                                               reason:[NSString stringWithFormat:@"Unknown class in the context: %@", oldEntity]
-                                             userInfo:nil];
-            }
-            
-            [newEntity copyFromManagedObject:oldEntity
-                               withReference:newEntitiesReference];
-            
-            /*
-            if ((objectCounter % kSaveMarker) == 0) {
-                NSLog(@"Saving context");
-                NSEnumerator *insertedEnum = [[newContext insertedObjects] objectEnumerator];
-                NSAssert([newContext save:&error], ([NSString stringWithFormat:@"Save marker failed: %@", error]));
-<<<<<<< .mine
-                id insertedObject;
-                while (insertedObject = [insertedEnum nextObject]) {
-                    [newContext refreshObject:insertedObject mergeChanges:NO];
-                }
-            }*/
-=======
-                // [pool release], pool = nil;
-                // pool = [[NSAutoreleasePool alloc] init];
-            }
->>>>>>> .r138
+            [newEntity copyFromManagedObject:oldEntity];
+            [newEntitiesReference setValue:newEntity forKey:[[[oldEntity objectID] URIRepresentation] absoluteString]];
+        }
+    }
+    
+    NSLog(@"Doing relationships pass");
+    entityNamesEnum = [[oldEntityDict allKeys] objectEnumerator];
+    while (currentEntityName = [entityNamesEnum nextObject]) {
+        NSLog(@"\tEntity: %@", currentEntityName);
+        [request setEntity:[oldEntityDict valueForKey:currentEntityName]];
+        
+        error = nil;
+        NSArray *oldEntities = [oldContext executeFetchRequest:request error:&error];
+        if (error) {
+            //TODO Notify delegate of failure
+        }
+        
+        if (![oldEntities count]) continue;
+        
+        NSEnumerator *oldEntitiesEnum = [oldEntities objectEnumerator];
+        
+        while (oldEntity = [oldEntitiesEnum nextObject]) {
+            newEntity = [newEntitiesReference valueForKey:[[[oldEntity objectID] URIRepresentation] absoluteString]];
+            [newEntity copyRelationshipsFromManagedObject:oldEntity withReference:newEntitiesReference];
         }
     }
     
     NSLog(@"Saving the new context");
+    error = nil;
     if (![newContext save:&error]) {
-        @throw [NSException exceptionWithName:@"Failed to save new context"
-                                       reason:@"There was an error "
-                                     userInfo:[NSDictionary dictionaryWithObjectsAndKeys:error, @"error"]];
+        //TODO Notify delegate of failure
     }
-<<<<<<< .mine
-    //[oldContext reset];
-    //[newContext reset];
-=======
-    // [pool release], pool = nil;
+    
     [newEntitiesReference release], newEntitiesReference = nil;
->>>>>>> .r138
+    //release the temporary context
+    [newContext release], newContext = nil;
+    
+    NSLog(@"Validating new context");
+    error = nil;
+    NSPersistentStoreCoordinator *store = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:newModel];
+    if (![store addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:tempFileURL options:nil error:&error]) {
+        NSLog(@"Error creating new store: %@", error);
+        //TODO Notify delegate of failure
+    }
+    
+    NSManagedObjectContext *validateContext = [[NSManagedObjectContext alloc] init];
+    [validateContext setPersistentStoreCoordinator:store];
+    [store release];
+    
+    NSDictionary *newEntitiesByName = [newModel entitiesByName];
+    entityNamesEnum = [[newEntitiesByName allKeys] objectEnumerator];
+    while (currentEntityName = [entityNamesEnum nextObject]) {
+        NSLog(@"\tEntity: %@", currentEntityName);
+        [request setEntity:[newEntitiesByName valueForKey:currentEntityName]];
+
+        error = nil;
+        NSArray *entities = [validateContext executeFetchRequest:request error:&error];
+        NSAssert(error == nil, ([NSString stringWithFormat:@"Error retrieving entity %@:%@", currentEntityName, error]));
+        if (![entities count]) continue;
+        
+        NSEnumerator *entitiesEnum = [entities objectEnumerator];
+        
+        while (newEntity = [entitiesEnum nextObject]) {
+            error = nil;
+            if (![newEntity validateForUpdate:&error]) {
+                NSLog(@"Failed to validate: %@", error);
+                //TODO Notify delegate of failure
+            }
+        }
+    }
     
     NSLog(@"Migration complete.");
+    
+    //TODO Notify delegate of success
 }
 
 @end
 
 @implementation ZDSMigrationHandler
 
-+ (void)migrateContext:(NSManagedObjectContext*)oldContext toModelAtPath:(NSString*)modelFilePath withDelegate:(id)delegate;
++ (void)migrateContext:(NSManagedObjectContext*)oldContext
+               toModel:(NSManagedObjectModel*)model
+          withDelegate:(id)delegate
+           contextInfo:(void*)contextInfo;
 {
     id migrationHandler = [[ZDSMigrationHandler alloc] init];
+    
     [migrationHandler setValue:delegate forKey:@"delegate"];
-    [migrationHandler setValue:modelFilePath forKey:@"newModelPath"];
+    [migrationHandler setValue:model forKey:@"newModel"];
     [migrationHandler setValue:oldContext forKey:@"oldContext"];
+    [migrationHandler setValue:contextInfo forKey:@"contextInfo"];
+    
     [migrationHandler performMigration];
+    
+    [migrationHandler release];
+}
+
+- (void)dealloc
+{
+    [delegate release], delegate = nil;
+    [newModel release], newModel = nil;
+    [oldContext release], oldContext = nil;
+    [tempFileURL release], tempFileURL = nil;
+    [newContext release], newContext = nil;
+    [noRelationshipModel release], noRelationshipModel = nil;
+    [super dealloc];
 }
 
 @end
