@@ -178,11 +178,12 @@ static SEL kSELmigrationStage;
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     NSEnumerator *entityNamesEnum = [[[oldEntityDict allKeys] objectEnumerator] retain];
+    NSMutableArray *oldObjectsToFlush = [[NSMutableArray alloc] init];
     [newEntitiesReference retain];
     @try {
         NSError *error = nil;
         NSLog(@"Doing relationships pass");
-        entityNamesEnum = [[oldEntityDict allKeys] objectEnumerator];
+        entityNamesEnum = [[[oldEntityDict allKeys] objectEnumerator] retain];
         ZDSManagedObject* oldEntity = nil;
         ZDSManagedObject* newEntity = nil;
         
@@ -230,25 +231,29 @@ static SEL kSELmigrationStage;
                     [delegate migrationProgress:self currentCount:migrationCounter context:contextInfo];
                 }
                 [newEntity copyRelationshipsFromManagedObject:oldEntity withReference:newEntitiesReference];
-                if (![oldEntity isFault]) {
-                    NSLog(@"%@:%s old entity now in memory!", [self class], _cmd);
-                }
-                if ([newEntity isFault]) {
-                    NSLog(@"%@:%s new entity is NOT in memory!", [self class], _cmd);
-                }
+                [oldObjectsToFlush addObject:oldEntity];
                 if (objectCounter % kSaveMarker == 0) {
                     NSLog(@"Save fired: %u", objectCounter);
                     error = nil;
                     if (![newContext save:&error]) {
                         [oldEntitiesEnum release], oldEntitiesEnum = nil;
-                        //[oldEntities release], oldEntities = nil;
-                        @throw [NSException exceptionWithName:@"Migration Failed" reason:[error localizedDescription] userInfo:[NSDictionary dictionaryWithObject:error forKey:@"error"]];
+                        @throw [NSException exceptionWithName:@"Migration Failed" 
+                                                       reason:[error localizedDescription] 
+                                                     userInfo:[NSDictionary dictionaryWithObject:error forKey:@"error"]];
                     }
                     NSEnumerator *toFlushEnum = [[newContext updatedObjects] objectEnumerator];
                     NSManagedObject *entity;
                     while (entity = [toFlushEnum nextObject]) {
                         [newContext refreshObject:entity mergeChanges:NO];
                     }
+                    toFlushEnum = [oldObjectsToFlush objectEnumerator];
+                    while (entity = [toFlushEnum nextObject]) {
+                        [oldContext refreshObject:entity mergeChanges:NO];
+                        if (![entity isFault]) {
+                            NSLog(@"%@:%s old entity still in memory!", [self class], _cmd);
+                        }
+                    }
+                    [oldObjectsToFlush removeAllObjects];
                     //Pop the autorelease pool
                     [pool release];
                     pool = [[NSAutoreleasePool alloc] init];
@@ -265,6 +270,7 @@ static SEL kSELmigrationStage;
     } @finally {
         [entityNamesEnum release], entityNamesEnum = nil;
         [request release], request = nil;
+        [oldObjectsToFlush release], oldObjectsToFlush = nil;
         [newEntitiesReference release];
         [pool release], pool = nil;
     }
