@@ -10,14 +10,29 @@
 
 
 @interface ZDSMigrationHandler : NSObject {
-    id delegate;
+    NSError *error;
+    
+    NSString *currentEntityName;
+    unsigned currentObjectIndex;
+    unsigned totalObjectsForEntity;
+    
     NSManagedObjectContext *oldContext;
     NSManagedObjectContext *newContext;
     NSManagedObjectModel *newModel;
-    NSManagedObjectModel *noRelationshipModel;
+    NSManagedObjectModel *modelWithoutConstraints;
+    
     NSURL *tempFileURL;
+
+    id delegate;
     id contextInfo;
 }
+
+- (NSString*)tempFilePath;
+- (NSError*)error;
+- (id)contextInfo;
+- (NSString*)currentEntityName;
+- (unsigned)currentObjectIndex;
+- (unsigned)totalObjectsForEntity;
 
 + (void)migrateContext:(NSManagedObjectContext*)oldContext
                toModel:(NSManagedObjectModel*)model
@@ -28,10 +43,9 @@
 
 @interface NSObject(ZDSMigrationHandlerDelegate)
 
-- (void)migrationCompletedSuccessfully:(id)migrationHandler filePath:(NSString*)filePath context:(void*)contextInfo;
-- (void)migrationFailed:(id)migrationHandler error:(NSError*)error context:(void*)contextInfo;
-- (void)migrationUpdate:(id)migrationHandler entity:(NSString*)entityName count:(unsigned)numberOfEntities context:(void*)contextInfo;
-- (void)migrationProgress:(id)migrationHandler currentCount:(unsigned)current context:(void*)contextInfo;
-- (void)migrationStage:(id)migrationHandler stage:(NSString*)stageName context:(void*)contextInfo;
+- (void)migrationCompletedSuccessfully:(id)migrationHandler;
+- (void)migrationFailed:(id)migrationHandler;
+- (void)migrationUpdate:(id)migrationHandler;
+- (void)migrationProgress:(id)migrationHandler;
 
 @end

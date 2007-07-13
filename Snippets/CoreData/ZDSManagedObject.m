@@ -26,6 +26,22 @@ static BOOL zdsMigrationActive = NO;
     return NO;
 }
 
+- (NSString*)objectIDString;
+{
+    return [[[self objectID] URIRepresentation] absoluteString];
+}
+
+- (void)fault;
+{
+    if ([self isFault]) return;
+    if (![self isInserted]) return;
+    if ([self isUpdated]) NSLog(@"%@ marked as updated", [[self entity] name]);
+    if ([self isDeleted]) NSLog(@"%@ marked as deleted", [[self entity] name]);
+    NSManagedObjectContext* moc = [self managedObjectContext];
+    if (!moc) return;
+    [moc refreshObject:self mergeChanges:NO];
+}
+
 - (void)copyFromManagedObject:(id)object
 {
     NSEntityDescription *entity = [object entity];
@@ -50,21 +66,23 @@ static BOOL zdsMigrationActive = NO;
         NSRelationshipDescription *relationshipDescription = [relationships valueForKey:relationshipName];
         if ([relationshipDescription isToMany]) {
             //To many relationship
-            NSEnumerator *toManyEnum = [[object valueForKey:relationshipName] objectEnumerator];
-            NSManagedObject *toMany;
-            NSMutableSet *toManySet = [self mutableSetValueForKey:relationshipName];
+            NSEnumerator *toManyEnum = [[object primitiveValueForKey:relationshipName] objectEnumerator];
+            NSMutableSet *toManySet = [self primitiveValueForKey:relationshipName];
+            ZDSManagedObject *toMany;
             while (toMany = [toManyEnum nextObject]) {
                 NSString *uid = [[[toMany objectID] URIRepresentation] absoluteString];
-                ZDSManagedObject *toManyNew = [reference valueForKey:uid];
-                if (toManyNew) [toManySet addObject:toManyNew];
+                id newReference = [reference valueForKey:uid];
+                if (newReference) [toManySet addObject:newReference];
             }
         } else {
             //To one relationship
-            //see if the receiver has already been copied, if so link
-            NSString *uid = [[[[object valueForKey:relationshipName] objectID] URIRepresentation] absoluteString];
+            ZDSManagedObject *toOneObject = [object primitiveValueForKey:relationshipName];
+            NSString *uid = [toOneObject objectIDString];
             if (uid) {
-                ZDSManagedObject *toOne = [reference valueForKey:uid];
-                if (toOne) [self setValue:toOne forKey:relationshipName];
+                id newReference = [reference valueForKey:uid];
+                if (newReference) {
+                    [self setPrimitiveValue:newReference forKey:relationshipName];
+                }
             }
         }
     }
