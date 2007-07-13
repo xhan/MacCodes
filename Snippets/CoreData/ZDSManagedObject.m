@@ -35,7 +35,7 @@ static BOOL zdsMigrationActive = NO;
     [self setValuesForKeysWithDictionary:attributeValues];
 }
 
-- (void)copyRelationshipsFromManagedObject:(id)object withReference:(NSMutableDictionary *)reference 
+- (void)copyRelationshipsFromManagedObject:(id)object withReference:(NSDictionary *)reference 
 {
     NSEntityDescription *entity = [object entity];
     NSDictionary *relationships = [entity relationshipsByName];

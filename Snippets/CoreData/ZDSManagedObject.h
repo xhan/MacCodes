@@ -21,6 +21,6 @@
 - (BOOL)orphan;
 
 - (void)copyFromManagedObject:(id)object;
-- (void)copyRelationshipsFromManagedObject:(id)object withReference:(NSMutableDictionary *)reference;
+- (void)copyRelationshipsFromManagedObject:(id)object withReference:(NSDictionary *)reference;
 
 @end

@@ -87,26 +87,27 @@ static SEL kSELmigrationStage;
                 continue;
             }
             NSLog(@"\tEntity: %@", currentEntityName);
-            [request setEntity:[oldEntityDict valueForKey:currentEntityName]];
+            [request setEntity:entityDescription];
             
             error = nil;
-            NSArray *oldEntities = [[oldContext executeFetchRequest:request error:&error] retain];
+            NSArray *oldEntities = [oldContext executeFetchRequest:request error:&error];
+            unsigned oldEntitiesCount = [oldEntities count];
             if (error) {
-                [oldEntities release], oldEntities = nil;
                 @throw [NSException exceptionWithName:@"Migration Failed" 
                                                reason:[error localizedDescription] 
                                              userInfo:[NSDictionary dictionaryWithObject:error forKey:@"error"]];
             }
             
-            if (![oldEntities count]) continue;
-            if ([delegate respondsToSelector:kSELmigrationUpdate]) {
-                [delegate migrationUpdate:self entity:currentEntityName count:[oldEntities count] context:contextInfo];
+            if (!oldEntitiesCount) {
+                continue;
             }
-            int migrationUpdateMarker = [oldEntities count] / 10;
+            if ([delegate respondsToSelector:kSELmigrationUpdate]) {
+                [delegate migrationUpdate:self entity:currentEntityName count:oldEntitiesCount context:contextInfo];
+            }
+            unsigned migrationUpdateMarker = ((oldEntitiesCount / 10) < 2 ? 2 : (oldEntitiesCount / 10));
             unsigned migrationCounter = 0;
             
             NSEnumerator *oldEntitiesEnum = [[oldEntities objectEnumerator] retain];
-            
             while (oldEntity = [oldEntitiesEnum nextObject]) {
                 if ([oldEntity orphan]) continue;
                 newEntity = [NSEntityDescription insertNewObjectForEntityForName:currentEntityName inManagedObjectContext:newContext];
@@ -123,17 +124,22 @@ static SEL kSELmigrationStage;
                     error = nil;
                     if (![newContext save:&error]) {
                         [oldEntitiesEnum release], oldEntitiesEnum = nil;
-                        [oldEntities release], oldEntities = nil;
                         @throw [NSException exceptionWithName:@"Migration Failed" reason:[error localizedDescription] userInfo:[NSDictionary dictionaryWithObject:error forKey:@"error"]];
                     }
                     NSEnumerator *toFlushEnum = [[newContext insertedObjects] objectEnumerator];
                     NSManagedObject *entity;
                     while (entity = [toFlushEnum nextObject]) {
                         [newContext refreshObject:entity mergeChanges:NO];
+                        if (![entity isFault]) {
+                            NSLog(@"%@:%s new entity still in memory!", [self class], _cmd);
+                        }
                     }
                     toFlushEnum = [oldObjectsToFlush objectEnumerator];
                     while (entity = [toFlushEnum nextObject]) {
                         [oldContext refreshObject:entity mergeChanges:NO];
+                        if (![entity isFault]) {
+                            NSLog(@"%@:%s old entity still in memory!", [self class], _cmd);
+                        }
                     }
                     [oldObjectsToFlush removeAllObjects];
                     //Pop the autorelease pool
@@ -142,14 +148,15 @@ static SEL kSELmigrationStage;
                 }
             }
             [oldEntitiesEnum release], oldEntitiesEnum = nil;
-            [oldEntities release], oldEntities = nil;
         }
         
         
         NSLog(@"Saving the new context");
         error = nil;
         if (![newContext save:&error]) {
-            @throw [NSException exceptionWithName:@"Migration Failed" reason:[error localizedDescription] userInfo:[NSDictionary dictionaryWithObject:error forKey:@"error"]];
+            @throw [NSException exceptionWithName:@"Migration Failed" 
+                                           reason:[error localizedDescription] 
+                                         userInfo:[NSDictionary dictionaryWithObject:error forKey:@"error"]];
         }
         return newEntitiesReference;
     } @finally {
@@ -160,60 +167,119 @@ static SEL kSELmigrationStage;
     }
 }
 
+- (void)linkRelationships:(NSDictionary*)newEntitiesReference;
+{
+    if ([delegate respondsToSelector:kSELmigrationStage]) {
+        [delegate migrationStage:self stage:NSLocalizedString(@"Relationships", @"relationship migration stage name") context:contextInfo];
+    }
+    
+    NSDictionary *oldEntityDict = [[[oldContext persistentStoreCoordinator] managedObjectModel] entitiesByName];
+    
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    NSEnumerator *entityNamesEnum = [[[oldEntityDict allKeys] objectEnumerator] retain];
+    [newEntitiesReference retain];
+    @try {
+        NSError *error = nil;
+        NSLog(@"Doing relationships pass");
+        entityNamesEnum = [[oldEntityDict allKeys] objectEnumerator];
+        ZDSManagedObject* oldEntity = nil;
+        ZDSManagedObject* newEntity = nil;
+        
+        unsigned objectCounter = 0;
+        
+        NSLog(@"Doing attributes pass");
+        NSString *currentEntityName;
+        while (currentEntityName = [entityNamesEnum nextObject]) {
+            if (![[newModel entitiesByName] valueForKey:currentEntityName]) {
+                NSLog(@"\tSkipping: %@", currentEntityName);
+                continue;
+            }
+            NSEntityDescription *entityDescription = [oldEntityDict valueForKey:currentEntityName];
+            if ([entityDescription isAbstract]) {
+                NSLog(@"\tAbstract: %@", currentEntityName);
+                continue;
+            }
+            if ([NSClassFromString([entityDescription managedObjectClassName]) isKindOfClass:[ZDSManagedObject class]]) {
+                NSLog(@"\tNot a ZDSManagedObject: %@", currentEntityName);
+                continue;
+            }
+            NSLog(@"\tEntity: %@", currentEntityName);
+            [request setEntity:entityDescription];
+            
+            error = nil;
+            NSArray *oldEntities = [oldContext executeFetchRequest:request error:&error];
+            if (error) {
+                @throw [NSException exceptionWithName:@"Migration Failed" 
+                                               reason:[error localizedDescription] 
+                                             userInfo:[NSDictionary dictionaryWithObject:error forKey:@"error"]];
+            }
+            
+            if (![oldEntities count]) continue;
+            
+            int migrationUpdateMarker = [oldEntities count] / 10;
+            unsigned migrationCounter = 0;
+            
+            NSEnumerator *oldEntitiesEnum = [[oldEntities objectEnumerator] retain];
+            
+            while (oldEntity = [oldEntitiesEnum nextObject]) {
+                newEntity = [newEntitiesReference valueForKey:[[[oldEntity objectID] URIRepresentation] absoluteString]];
+                ++objectCounter;
+                ++migrationCounter;
+                if (migrationUpdateMarker > 1 && migrationCounter % migrationUpdateMarker == 0 && [delegate respondsToSelector:kSELmigrationProgress]) {
+                    [delegate migrationProgress:self currentCount:migrationCounter context:contextInfo];
+                }
+                [newEntity copyRelationshipsFromManagedObject:oldEntity withReference:newEntitiesReference];
+                if (![oldEntity isFault]) {
+                    NSLog(@"%@:%s old entity now in memory!", [self class], _cmd);
+                }
+                if ([newEntity isFault]) {
+                    NSLog(@"%@:%s new entity is NOT in memory!", [self class], _cmd);
+                }
+                if (objectCounter % kSaveMarker == 0) {
+                    NSLog(@"Save fired: %u", objectCounter);
+                    error = nil;
+                    if (![newContext save:&error]) {
+                        [oldEntitiesEnum release], oldEntitiesEnum = nil;
+                        //[oldEntities release], oldEntities = nil;
+                        @throw [NSException exceptionWithName:@"Migration Failed" reason:[error localizedDescription] userInfo:[NSDictionary dictionaryWithObject:error forKey:@"error"]];
+                    }
+                    NSEnumerator *toFlushEnum = [[newContext updatedObjects] objectEnumerator];
+                    NSManagedObject *entity;
+                    while (entity = [toFlushEnum nextObject]) {
+                        [newContext refreshObject:entity mergeChanges:NO];
+                    }
+                    //Pop the autorelease pool
+                    [pool release];
+                    pool = [[NSAutoreleasePool alloc] init];
+                }
+            }
+            [oldEntitiesEnum release], oldEntitiesEnum = nil;
+        }
+        
+        NSLog(@"Saving the new context");
+        error = nil;
+        if (![newContext save:&error]) {
+            @throw [NSException exceptionWithName:@"Migration Failed" reason:[error localizedDescription] userInfo:[NSDictionary dictionaryWithObject:error forKey:@"error"]];
+        }
+    } @finally {
+        [entityNamesEnum release], entityNamesEnum = nil;
+        [request release], request = nil;
+        [newEntitiesReference release];
+        [pool release], pool = nil;
+    }
+}
+
 - (void)performMigration;
 {
     [ZDSManagedObject setZdsMigrationActive:YES];
     [self initializeNewContext];
     
     NSDictionary *entityLookup = [self copyAttributes];
-    NSLog(@"count: %u", [[entityLookup allKeys] count]);
-    
     NSLog(@"%@:%s Phase one complete", [self class], _cmd);
+    [self linkRelationships:entityLookup];
+    NSLog(@"%@:%s Phase two complete", [self class], _cmd);
     /*
-    if ([delegate respondsToSelector:kSELmigrationStage]) {
-        [delegate migrationStage:self stage:NSLocalizedString(@"Relationships", @"relationship migration stage name") context:contextInfo];
-    }
-    NSLog(@"Doing relationships pass");
-    entityNamesEnum = [[oldEntityDict allKeys] objectEnumerator];
-    objectCounter = 0;
-    while (currentEntityName = [entityNamesEnum nextObject]) {
-        NSLog(@"\tEntity: %@", currentEntityName);
-        [request setEntity:[oldEntityDict valueForKey:currentEntityName]];
-        
-        error = nil;
-        NSArray *oldEntities = [oldContext executeFetchRequest:request error:&error];
-        if (error) {
-            @throw [NSException exceptionWithName:@"Migration Failed" 
-                                           reason:[error localizedDescription] 
-                                         userInfo:[NSDictionary dictionaryWithObject:error forKey:@"error"]];
-        }
-        
-        if (![oldEntities count]) continue;
-        
-        int migrationUpdateMarker = [oldEntities count] / 10;
-        unsigned migrationCounter = 0;
-        
-        NSEnumerator *oldEntitiesEnum = [oldEntities objectEnumerator];
-        
-        while (oldEntity = [oldEntitiesEnum nextObject]) {
-            newEntity = [newEntitiesReference valueForKey:[[[oldEntity objectID] URIRepresentation] absoluteString]];
-            ++objectCounter;
-            ++migrationCounter;
-            if (migrationCounter % migrationUpdateMarker == 0 && [delegate respondsToSelector:kSELmigrationProgress]) {
-                [delegate migrationProgress:self currentCount:migrationCounter context:contextInfo];
-            }
-            [newEntity copyRelationshipsFromManagedObject:oldEntity withReference:newEntitiesReference];
-            if (objectCounter % kSaveMarker == 0) {
-                NSLog(@"Save fired: %u", objectCounter);
-            }
-        }
-    }
-    
-    NSLog(@"Saving the new context");
-    error = nil;
-    if (![newContext save:&error]) {
-        @throw [NSException exceptionWithName:@"Migration Failed" reason:[error localizedDescription] userInfo:[NSDictionary dictionaryWithObject:error forKey:@"error"]];
-    }
     
     [newEntitiesReference release], newEntitiesReference = nil;
     //release the temporary context
