@@ -10,6 +10,9 @@
 #import "PSMTabBarControl.h"
 #import "PSMTabBarCell.h"
 #import "PSMTabStyle.h"
+#import "NSString_AITruncation.h"
+
+#define MAX_OVERFLOW_MENUITEM_TITLE_LENGTH	60
 
 @interface PSMTabBarController (Private)
 - (NSArray *)_generateWidthsFromCells:(NSArray *)cells;
@@ -493,7 +496,10 @@
                 [_overflowMenu insertItemWithTitle:@"" action:nil keyEquivalent:@"" atIndex:0]; // Because the overflowPupUpButton is a pull down menu
             }
             
-            menuItem = [_overflowMenu addItemWithTitle:[[cell attributedStringValue] string] action:@selector(overflowMenuAction:) keyEquivalent:@""];
+			// Each item's title is limited to 60 characters. If more than 60 characters, use an ellipsis to indicate that more exists.
+            menuItem = [_overflowMenu addItemWithTitle:[[[cell attributedStringValue] string] stringWithEllipsisByTruncatingToLength:MAX_OVERFLOW_MENUITEM_TITLE_LENGTH]
+												action:@selector(overflowMenuAction:) 
+										 keyEquivalent:@""];
             [menuItem setTarget:_control];
             [menuItem setRepresentedObject:[cell representedObject]];
             
