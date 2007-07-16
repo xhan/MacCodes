@@ -13,7 +13,6 @@
 		B62F6EDB0C21DB3600F61B2A /* TestModel.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = B62F6EDA0C21DB3500F61B2A /* TestModel.xcdatamodel */; };
 		B62F6F0B0C21FCBD00F61B2A /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = B62F6F0A0C21FCBD00F61B2A /* MainMenu.nib */; };
 		B672151B0C21D66D00A49057 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B672151A0C21D66D00A49057 /* AppDelegate.m */; };
-		B682111A0C21CBF000C0F3A4 /* ZDSManagedObject.m in Sources */ = {isa = PBXBuildFile; fileRef = B68211170C21CBF000C0F3A4 /* ZDSManagedObject.m */; };
 		B682111B0C21CBF000C0F3A4 /* ZDSMigrationHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = B68211190C21CBF000C0F3A4 /* ZDSMigrationHandler.m */; };
 /* End PBXBuildFile section */
 
@@ -26,13 +25,11 @@
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* MigrationTest_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MigrationTest_Prefix.pch; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		8D1107320486CEB800E47090 /* MigrationTest.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = MigrationTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D1107320486CEB800E47090 /* MigrationTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MigrationTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B62F6EDA0C21DB3500F61B2A /* TestModel.xcdatamodel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.xcdatamodel; path = TestModel.xcdatamodel; sourceTree = "<group>"; };
 		B62F6F0A0C21FCBD00F61B2A /* MainMenu.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = MainMenu.nib; sourceTree = "<group>"; };
 		B67215190C21D66D00A49057 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B672151A0C21D66D00A49057 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		B68211160C21CBF000C0F3A4 /* ZDSManagedObject.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ZDSManagedObject.h; sourceTree = "<group>"; };
-		B68211170C21CBF000C0F3A4 /* ZDSManagedObject.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ZDSManagedObject.m; sourceTree = "<group>"; };
 		B68211180C21CBF000C0F3A4 /* ZDSMigrationHandler.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ZDSMigrationHandler.h; sourceTree = "<group>"; };
 		B68211190C21CBF000C0F3A4 /* ZDSMigrationHandler.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ZDSMigrationHandler.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -52,8 +49,6 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				B68211160C21CBF000C0F3A4 /* ZDSManagedObject.h */,
-				B68211170C21CBF000C0F3A4 /* ZDSManagedObject.m */,
 				B68211180C21CBF000C0F3A4 /* ZDSMigrationHandler.h */,
 				B68211190C21CBF000C0F3A4 /* ZDSMigrationHandler.m */,
 				B67215190C21D66D00A49057 /* AppDelegate.h */,
@@ -193,7 +188,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
-				B682111A0C21CBF000C0F3A4 /* ZDSManagedObject.m in Sources */,
 				B682111B0C21CBF000C0F3A4 /* ZDSMigrationHandler.m in Sources */,
 				B672151B0C21D66D00A49057 /* AppDelegate.m in Sources */,
 				B62F6EDB0C21DB3600F61B2A /* TestModel.xcdatamodel in Sources */,

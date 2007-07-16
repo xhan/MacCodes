@@ -1,3 +1,35 @@
+// AppDelegate.m
+// ZDSMigration Framework
+//
+// Copyright (c) 2007, Zarra Studios LLC
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// Redistributions in binary form must reproduce the above copyright notice,
+// this list of conditions and the following disclaimer in the documentation
+// and/or other materials provided with the distribution.
+//
+// Neither the name of Zarra Studios LLC nor the names of its contributors may
+// be used to endorse or promote products derived from this software without
+// specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+
 #import "AppDelegate.h"
 
 #import "ZDSMigrationHandler.h"
@@ -7,6 +39,12 @@
 - (id)init;
 {
     if (![super init]) return nil;
+    
+    persistentStoreCoordinator = nil;
+    managedObjectModel = nil;
+    managedObjectContext = nil;
+    
+    currentEntityName = @"Preparing Migration...";
     
     totalEntities = 3;
     currentEntityIndex = 0;
@@ -39,12 +77,67 @@
     [self performSelector:@selector(populateDatabase) withObject:nil afterDelay:0.01];
 }
 
+#pragma mark -
+#pragma mark Migration Delegate calls
+
+- (void)migrationCompletedSuccessfully:(id)migrationHandler;
+{
+    [progressWindow orderOut:nil];
+    NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+    [alert setMessageText:@"Migration successful"];
+    [alert addButtonWithTitle:@"OK"];
+    [alert runModal];
+    exit(0);
+}
+
+- (void)migrationFailed:(id)migrationHandler;
+{
+    NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+    [alert setMessageText:@"Migration failed"];
+    [alert setInformativeText:[[migrationHandler error] localizedDescription]];
+    [alert addButtonWithTitle:@"OK"];
+    [alert runModal];
+    exit(0);
+}
+
+- (void)migrationUpdate:(id)migrationHandler;
+{
+    [entityIndicator setMaxValue:[migrationHandler totalEntities]];
+    [entityIndicator setDoubleValue:[migrationHandler currentEntityIndex]];
+    [instanceIndicator setMaxValue:[migrationHandler totalInstances]];
+    [instanceIndicator setDoubleValue:[migrationHandler currentInstanceIndex]];
+    [self setCurrentEntityName:[migrationHandler currentEntityName]];
+}
+
+#pragma mark -
+#pragma mark accessors
+
+- (NSString *)currentEntityName
+{
+    return [[currentEntityName retain] autorelease]; 
+}
+
+- (void)setCurrentEntityName:(NSString *)aCurrentEntityName
+{
+    [currentEntityName release];
+    currentEntityName = [aCurrentEntityName copy];
+}
+
+#pragma mark -
+#pragma mark GUI Handlers
+
 - (IBAction)startMigration:(id)sender;
 {
     //Find the new model path
     NSString *modelFilePath = [[NSBundle mainBundle] pathForResource:@"TestModel" ofType:@"mom"];
     
-    [ZDSMigrationHandler migrateContext:[self managedObjectContext] toModelAtPath:modelFilePath withDelegate:self];
+    ZDSMigrationHandler *handler = [[ZDSMigrationHandler alloc] initWithDelegate:self];
+    [handler setPathToModelToMigrateFrom:modelFilePath];
+    [handler setPathToModelToMigrateTo:modelFilePath];
+    [handler setPathForFileToMigrate:[[self applicationSupportFolder] stringByAppendingPathComponent:@"Test.zds"]];
+    [handler setWarnings:YES];
+    [handler setThreaded:YES];
+    [handler startMigration];
 }
 
 - (NSString*)applicationSupportFolder;
@@ -79,14 +172,15 @@
     
     databaseURL = [[NSURL fileURLWithPath:[applicationSupportFolder stringByAppendingPathComponent:@"Test.zds"]] retain];
     persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: [self managedObjectModel]];
-    if (![persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:databaseURL options:nil error:&error]){
+    id store = [persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:databaseURL options:nil error:&error];
+    if (!store) {
         [[NSApplication sharedApplication] presentError:error];
     }    
     
     return persistentStoreCoordinator;
 }
 
-- (NSManagedObjectContext *) managedObjectContext;
+- (NSManagedObjectContext*)managedObjectContext;
 {
     if (managedObjectContext) return managedObjectContext;
     
@@ -137,11 +231,22 @@
 - (id)createEntity:(NSString*)entityName inContext:(NSManagedObjectContext*)moc;
 {
     id entityA = [NSEntityDescription insertNewObjectForEntityForName:entityName inManagedObjectContext:moc];
-    [entityA setValue:[[NSProcessInfo processInfo] globallyUniqueString] forKey:@"data1"];
-    [entityA setValue:[[NSProcessInfo processInfo] globallyUniqueString] forKey:@"data2"];
-    [entityA setValue:[[NSProcessInfo processInfo] globallyUniqueString] forKey:@"data3"];
-    [entityA setValue:[[NSProcessInfo processInfo] globallyUniqueString] forKey:@"data4"];
-    [entityA setValue:[[NSProcessInfo processInfo] globallyUniqueString] forKey:@"data5"];
+    
+    id guid = [[NSProcessInfo processInfo] globallyUniqueString];
+    [entityA setValue:guid forKey:@"data1"];
+    //[guid release], guid = nil;
+    guid = [[NSProcessInfo processInfo] globallyUniqueString];
+    [entityA setValue:guid forKey:@"data2"];
+    //[guid release], guid = nil;
+    guid = [[NSProcessInfo processInfo] globallyUniqueString];
+    [entityA setValue:guid forKey:@"data3"];
+    //[guid release], guid = nil;
+    guid = [[NSProcessInfo processInfo] globallyUniqueString];
+    [entityA setValue:guid forKey:@"data4"];
+    //[guid release], guid = nil;
+    guid = [[NSProcessInfo processInfo] globallyUniqueString];
+    [entityA setValue:guid forKey:@"data5"];
+    //[guid release], guid = nil;
     
     return entityA;
 }
@@ -153,7 +258,7 @@
     [NSApp beginSheet:waitSheet modalForWindow:progressWindow modalDelegate:nil didEndSelector:NULL contextInfo:nil];
     srandom([NSDate timeIntervalSinceReferenceDate]);
     int count;
-    for (count = 0; count < 1000; ++count) {
+    for (count = 0; count < 200; ++count) {
         id entityA = [self createEntity:@"EntityA" inContext:moc];
         
         int countB;
@@ -173,9 +278,14 @@
     
     NSError *error;
     NSAssert([moc save:&error], ([NSString stringWithFormat:@"Error saving context: %@", error]));
-    [moc reset]; // Flush memory and fault all of the objects
+    
     [waitSheet orderOut:nil];
     [NSApp endSheet:waitSheet];
+    
+    //Drop the Core Data Stack
+    [managedObjectContext release], managedObjectContext = nil;
+    [persistentStoreCoordinator release], persistentStoreCoordinator = nil;
+    [managedObjectModel release], managedObjectModel = nil;
 }    
 
 @end
