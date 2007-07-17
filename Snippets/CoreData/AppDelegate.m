@@ -129,7 +129,7 @@
 - (IBAction)startMigration:(id)sender;
 {
     //Find the new model path
-    NSString *modelFilePath = [[NSBundle mainBundle] pathForResource:@"TestModel" ofType:@"mom"];
+    NSString *modelFilePath = [[NSBundle mainBundle] pathForResource:@"UpgradeModel" ofType:@"mom"];
     
     ZDSMigrationHandler *handler = [[ZDSMigrationHandler alloc] initWithDelegate:self];
     [handler setPathToModelToMigrateFrom:modelFilePath];
@@ -232,21 +232,13 @@
 {
     id entityA = [NSEntityDescription insertNewObjectForEntityForName:entityName inManagedObjectContext:moc];
     
-    id guid = [[NSProcessInfo processInfo] globallyUniqueString];
-    [entityA setValue:guid forKey:@"data1"];
-    //[guid release], guid = nil;
-    guid = [[NSProcessInfo processInfo] globallyUniqueString];
-    [entityA setValue:guid forKey:@"data2"];
-    //[guid release], guid = nil;
-    guid = [[NSProcessInfo processInfo] globallyUniqueString];
-    [entityA setValue:guid forKey:@"data3"];
-    //[guid release], guid = nil;
-    guid = [[NSProcessInfo processInfo] globallyUniqueString];
-    [entityA setValue:guid forKey:@"data4"];
-    //[guid release], guid = nil;
-    guid = [[NSProcessInfo processInfo] globallyUniqueString];
-    [entityA setValue:guid forKey:@"data5"];
-    //[guid release], guid = nil;
+    [entityA setValue:[[NSProcessInfo processInfo] globallyUniqueString] forKey:@"data1"];
+    [entityA setValue:[[NSProcessInfo processInfo] globallyUniqueString] forKey:@"data2"];
+    [entityA setValue:[[NSProcessInfo processInfo] globallyUniqueString] forKey:@"data3"];
+    [entityA setValue:[[NSProcessInfo processInfo] globallyUniqueString] forKey:@"data4"];
+    [entityA setValue:[[NSProcessInfo processInfo] globallyUniqueString] forKey:@"data5"];
+    
+    [entityA setValue:[NSNumber numberWithDouble:(random())] forKey:@"number1"];
     
     return entityA;
 }
@@ -258,7 +250,7 @@
     [NSApp beginSheet:waitSheet modalForWindow:progressWindow modalDelegate:nil didEndSelector:NULL contextInfo:nil];
     srandom([NSDate timeIntervalSinceReferenceDate]);
     int count;
-    for (count = 0; count < 200; ++count) {
+    for (count = 0; count < 2000; ++count) {
         id entityA = [self createEntity:@"EntityA" inContext:moc];
         
         int countB;

@@ -14,6 +14,7 @@
 		B62F6F0B0C21FCBD00F61B2A /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = B62F6F0A0C21FCBD00F61B2A /* MainMenu.nib */; };
 		B672151B0C21D66D00A49057 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B672151A0C21D66D00A49057 /* AppDelegate.m */; };
 		B682111B0C21CBF000C0F3A4 /* ZDSMigrationHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = B68211190C21CBF000C0F3A4 /* ZDSMigrationHandler.m */; };
+		B68542F20C4BFF1E00C255E1 /* UpgradeModel.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = B68542F10C4BFF1E00C255E1 /* UpgradeModel.xcdatamodel */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		B672151A0C21D66D00A49057 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		B68211180C21CBF000C0F3A4 /* ZDSMigrationHandler.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ZDSMigrationHandler.h; sourceTree = "<group>"; };
 		B68211190C21CBF000C0F3A4 /* ZDSMigrationHandler.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ZDSMigrationHandler.m; sourceTree = "<group>"; };
+		B68542F10C4BFF1E00C255E1 /* UpgradeModel.xcdatamodel */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = wrapper.xcdatamodel; path = UpgradeModel.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +129,7 @@
 		B62F6ED70C21DB1600F61B2A /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B68542F10C4BFF1E00C255E1 /* UpgradeModel.xcdatamodel */,
 				B62F6EDA0C21DB3500F61B2A /* TestModel.xcdatamodel */,
 			);
 			name = Models;
@@ -159,7 +162,6 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "MigrationTest" */;
-			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			mainGroup = 29B97314FDCFA39411CA2CEA /* MigrationTest */;
 			projectDirPath = "";
@@ -191,6 +193,7 @@
 				B682111B0C21CBF000C0F3A4 /* ZDSMigrationHandler.m in Sources */,
 				B672151B0C21D66D00A49057 /* AppDelegate.m in Sources */,
 				B62F6EDB0C21DB3600F61B2A /* TestModel.xcdatamodel in Sources */,
+				B68542F20C4BFF1E00C255E1 /* UpgradeModel.xcdatamodel in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -302,12 +302,11 @@ static SEL kSELmigrationStopped;
         }
     }
     
-    NSURL *url = [NSURL fileURLWithPath:[self pathForFileToMigrate]];
     NSString *databaseType = [self storeTypeToMigrateFrom];
     NSPersistentStoreCoordinator *coordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:newModel];
     id store = [coordinator addPersistentStoreWithType:databaseType
                                    configuration:nil
-                                             URL:url
+                                             URL:tempFileURL
                                          options:nil
                                            error:&error];
     if (!store) {
