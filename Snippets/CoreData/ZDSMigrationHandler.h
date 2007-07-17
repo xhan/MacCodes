@@ -112,3 +112,16 @@
 - (void)migrationStopped:(id)migrationHandler;
 
 @end
+
+
+@interface NSManagedObject (ZDSMigration)
+
+- (NSString*)objectIDString;
+
+- (BOOL)orphan;
+- (void)fault;
+
+- (void)copyFromManagedObject:(id)object;
+- (void)copyRelationshipsFromManagedObject:(id)object withReference:(NSDictionary *)reference;
+
+@end

@@ -32,17 +32,8 @@
 
 #import "ZDSMigrationHandler.h"
 
-@interface NSManagedObject (ZDSMigration)
-
-- (NSString*)objectIDString;
-
-- (BOOL)orphan;
-- (void)fault;
-
-- (void)copyFromManagedObject:(id)object;
-- (void)copyRelationshipsFromManagedObject:(id)object withReference:(NSDictionary *)reference;
-
-@end
+static NSString* const relationMethodName = @"%@_copyRelationshipsFromManagedObject:toObject:withReference:";
+static NSString* const attributeMethodName = @"%@_copyFromManagedObject:toObject:";
 
 @implementation NSManagedObject (ZDSMigration)
 
@@ -212,10 +203,26 @@ static SEL kSELmigrationStopped;
                                            withObject:self
                                         waitUntilDone:NO];
             }
-            //TODO check against the migration handler
-            [newEntity copyFromManagedObject:oldEntity];
-            //TODO check against the migration handler
-            [newEntity copyRelationshipsFromManagedObject:oldEntity withReference:newEntitiesReference];
+            //Check to see if the migration helper has an override for this entity for copying attributes
+            SEL copySEL = NSSelectorFromString([NSString stringWithFormat:attributeMethodName, [currentEntityName lowercaseString]]);
+            if ([[self migrationHelper] respondsToSelector:copySEL]) {
+                [[self migrationHelper] performSelector:copySEL withObject:oldEntity withObject:newEntity];
+            } else {
+                [newEntity copyFromManagedObject:oldEntity];
+            }
+            //Check to see if the migration helper has an override for this entity for relationships
+            SEL relationshipSEL = NSSelectorFromString([NSString stringWithFormat:relationMethodName, [currentEntityName lowercaseString]]);
+            if ([[self migrationHelper] respondsToSelector:relationshipSEL]) {
+                NSMethodSignature *signature = [[self migrationHelper] methodSignatureForSelector:relationshipSEL];
+                NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+                //[invocation setSelector:relationshipSEL];
+                [invocation setArgument:oldEntity atIndex:1];
+                [invocation setArgument:newEntity atIndex:2];
+                [invocation setArgument:newEntitiesReference atIndex:3];
+                [invocation invokeWithTarget:[self migrationHelper]];
+            } else {
+                [newEntity copyRelationshipsFromManagedObject:oldEntity withReference:newEntitiesReference];
+            }
             [oldEntity fault];
             [newEntitiesReference setValue:newEntity forKey:[oldEntity objectIDString]];
             
@@ -292,7 +299,7 @@ static SEL kSELmigrationStopped;
                                        reason:@"pathToModelToMigrateTo not set"
                                      userInfo:nil];
     }
-    newModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:[NSURL fileURLWithPath:pathToModelToMigrateFrom]];
+    newModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:[NSURL fileURLWithPath:pathToModelToMigrateTo]];
     NSEnumerator *entityEnum = [[newModel entities] objectEnumerator];
     NSEntityDescription *entity;
     while (entity = [entityEnum nextObject]) {
