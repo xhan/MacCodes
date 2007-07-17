@@ -149,7 +149,6 @@
 - (NSString*)applicationSupportFolder;
 {
     NSString *temp = NSTemporaryDirectory();
-    NSLog(@"%@", temp);
     return temp;
 }
 
@@ -218,23 +217,7 @@
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender;
 {
-    /*
-    if (!managedObjectContext) return NSTerminateNow;
-    if (![managedObjectContext commitEditing]) return NSTerminateCancel;
-    if (![managedObjectContext hasChanges]) return NSTerminateNow;
-    
-    NSError *error;
-    if ([managedObjectContext save:&error]) return NSTerminateNow;
-    NSLog(@"Save failed: %@", error);
-    BOOL errorResult = [[NSApplication sharedApplication] presentError:error];
-        
-    if (errorResult == YES) return NSTerminateCancel;
-        
-    int alertReturn = NSRunAlertPanel(nil, @"Could not save changes while quitting. Quit anyway?" , @"Quit anyway", @"Cancel", nil);
-    if (alertReturn == NSAlertAlternateReturn) return NSTerminateCancel;
-    */
     [[NSFileManager defaultManager] removeFileAtPath:[databaseURL path] handler:nil];
-    NSLog(@"%@:%s database removed", [self class], _cmd);
     return NSTerminateNow;
 }
 

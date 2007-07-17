@@ -437,7 +437,6 @@ static SEL kSELmigrationStopped;
 
 - (void)dealloc
 {
-    NSLog(@"%@:%s fired", [self class], _cmd);
     [delegate release], delegate = nil;
     [oldContext release], oldContext = nil;
     [tempFileURL release], tempFileURL = nil;
