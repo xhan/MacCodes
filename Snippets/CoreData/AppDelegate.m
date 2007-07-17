@@ -64,6 +64,9 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification;
 {
+    [entityIndicator setUsesThreadedAnimation:YES];
+    [instanceIndicator setUsesThreadedAnimation:YES];
+    
     NSManagedObjectContext *moc = [self managedObjectContext];
     NSAssert(moc != nil, @"MOC is nil");
     //Check to see if there is any data in this database
@@ -129,11 +132,12 @@
 - (IBAction)startMigration:(id)sender;
 {
     //Find the new model path
-    NSString *modelFilePath = [[NSBundle mainBundle] pathForResource:@"UpgradeModel" ofType:@"mom"];
+    NSString *newModelFilePath = [[NSBundle mainBundle] pathForResource:@"UpgradeModel" ofType:@"mom"];
+    NSString *oldModelFilePath = [[NSBundle mainBundle] pathForResource:@"TestModel" ofType:@"mom"];
     
     ZDSMigrationHandler *handler = [[ZDSMigrationHandler alloc] initWithDelegate:self];
-    [handler setPathToModelToMigrateFrom:modelFilePath];
-    [handler setPathToModelToMigrateTo:modelFilePath];
+    [handler setPathToModelToMigrateFrom:oldModelFilePath];
+    [handler setPathToModelToMigrateTo:newModelFilePath];
     [handler setPathForFileToMigrate:[[self applicationSupportFolder] stringByAppendingPathComponent:@"Test.zds"]];
     [handler setWarnings:YES];
     [handler setThreaded:YES];
@@ -172,7 +176,11 @@
     
     databaseURL = [[NSURL fileURLWithPath:[applicationSupportFolder stringByAppendingPathComponent:@"Test.zds"]] retain];
     persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: [self managedObjectModel]];
-    id store = [persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:databaseURL options:nil error:&error];
+    id store = [persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
+                                                        configuration:nil
+                                                                  URL:databaseURL
+                                                              options:nil
+                                                                error:&error];
     if (!store) {
         [[NSApplication sharedApplication] presentError:error];
     }    

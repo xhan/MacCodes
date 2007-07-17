@@ -179,6 +179,7 @@ static SEL kSELmigrationStopped;
         NSArray *oldEntities = [oldContext executeFetchRequest:request error:&error];
         totalInstances = [oldEntities count];
         if (!oldEntities) {
+            NSLog(@"Error: %@", error);
             [newEntitiesReference release], newEntitiesReference = nil;
             [pool release], pool = nil;
             @throw [NSException exceptionWithName:@"Migration Failed" 
@@ -211,7 +212,9 @@ static SEL kSELmigrationStopped;
                                            withObject:self
                                         waitUntilDone:NO];
             }
+            //TODO check against the migration handler
             [newEntity copyFromManagedObject:oldEntity];
+            //TODO check against the migration handler
             [newEntity copyRelationshipsFromManagedObject:oldEntity withReference:newEntitiesReference];
             [oldEntity fault];
             [newEntitiesReference setValue:newEntity forKey:[oldEntity objectIDString]];
@@ -259,7 +262,8 @@ static SEL kSELmigrationStopped;
                                        reason:@"pathForFileToMigrate not set"
                                      userInfo:nil];
     }
-    NSManagedObjectModel *model = [[NSManagedObjectModel alloc] initWithContentsOfURL:[NSURL fileURLWithPath:pathToModelToMigrateFrom]];
+    NSURL *url = [NSURL fileURLWithPath:pathToModelToMigrateFrom];
+    NSManagedObjectModel *model = [[NSManagedObjectModel alloc] initWithContentsOfURL:url];
     NSEnumerator *entityEnum = [[model entities] objectEnumerator];
     NSEntityDescription *entity;
     while (entity = [entityEnum nextObject]) {
@@ -302,9 +306,8 @@ static SEL kSELmigrationStopped;
         }
     }
     
-    NSString *databaseType = [self storeTypeToMigrateFrom];
     NSPersistentStoreCoordinator *coordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:newModel];
-    id store = [coordinator addPersistentStoreWithType:databaseType
+    id store = [coordinator addPersistentStoreWithType:[self storeTypeToMigrateFrom]
                                    configuration:nil
                                              URL:tempFileURL
                                          options:nil
