@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface ExampleMigrationHandler : NSObject {
+@interface ExampleMigrationHelper : NSObject {
 
 }
 

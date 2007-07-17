@@ -6,14 +6,14 @@
 //  Copyright 2007 Zarra Studios LLC. All rights reserved.
 //
 
-#import "ExampleMigrationHandler.h"
+#import "ExampleMigrationHelper.h"
 
 #import "ZDSMigrationHandler.h"
 
-@implementation ExampleMigrationHandler
+@implementation ExampleMigrationHelper
 
-- (void)entitya_copyFromManagedObject:(id)oldObject 
-                             toObject:(id)newObject;
+- (void)entitya_copyFromManagedObject:(NSManagedObject*)object 
+                             toObject:(NSManagedObject*)newObject;
 {
     NSEntityDescription *entity = [object entity];
     
