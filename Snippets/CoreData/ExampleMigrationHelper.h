@@ -12,11 +12,4 @@
 
 }
 
-- (void)entitya_copyFromManagedObject:(NSManagedObject*)oldObject 
-                             toObject:(NSManagedObject*)newObject;
-
-- (void)entitya_copyRelationshipsFromManagedObject:(NSManagedObject*)oldObject 
-                                          toObject:(NSManagedObject*)newObject 
-                                     withReference:(NSDictionary*)reference;
-
 @end

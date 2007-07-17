@@ -33,6 +33,7 @@
 #import "AppDelegate.h"
 
 #import "ZDSMigrationHandler.h"
+#import "ExampleMigrationHelper.h"
 
 @implementation AppDelegate
 
@@ -90,7 +91,7 @@
     [alert setMessageText:@"Migration successful"];
     [alert addButtonWithTitle:@"OK"];
     [alert runModal];
-    exit(0);
+    [NSApp terminate];
 }
 
 - (void)migrationFailed:(id)migrationHandler;
@@ -100,7 +101,7 @@
     [alert setInformativeText:[[migrationHandler error] localizedDescription]];
     [alert addButtonWithTitle:@"OK"];
     [alert runModal];
-    exit(0);
+    [NSApp terminate];
 }
 
 - (void)migrationUpdate:(id)migrationHandler;
@@ -141,6 +142,7 @@
     [handler setPathForFileToMigrate:[[self applicationSupportFolder] stringByAppendingPathComponent:@"Test.zds"]];
     [handler setWarnings:YES];
     [handler setThreaded:YES];
+    [handler setMigrationHelper:[[[ExampleMigrationHelper alloc] init] autorelease]];
     [handler startMigration];
 }
 
@@ -258,7 +260,7 @@
     [NSApp beginSheet:waitSheet modalForWindow:progressWindow modalDelegate:nil didEndSelector:NULL contextInfo:nil];
     srandom([NSDate timeIntervalSinceReferenceDate]);
     int count;
-    for (count = 0; count < 2000; ++count) {
+    for (count = 0; count < 100; ++count) {
         id entityA = [self createEntity:@"EntityA" inContext:moc];
         
         int countB;

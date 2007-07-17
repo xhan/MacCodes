@@ -113,7 +113,6 @@
 
 @end
 
-
 @interface NSManagedObject (ZDSMigration)
 
 - (NSString*)objectIDString;

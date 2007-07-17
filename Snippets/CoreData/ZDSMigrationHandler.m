@@ -34,6 +34,7 @@
 
 static NSString* const relationMethodName = @"%@_copyRelationshipsFromManagedObject:toObject:withReference:";
 static NSString* const attributeMethodName = @"%@_copyFromManagedObject:toObject:";
+static NSString* const orphanMethodName = @"%@_orphan";
 
 @implementation NSManagedObject (ZDSMigration)
 
@@ -67,7 +68,7 @@ static NSString* const attributeMethodName = @"%@_copyFromManagedObject:toObject
     [self setValuesForKeysWithDictionary:attributeValues];
 }
 
-- (void)copyRelationshipsFromManagedObject:(id)object withReference:(NSDictionary *)reference 
+- (void)copyRelationshipsFromManagedObject:(id)object withReference:(NSDictionary*)reference 
 {
     NSEntityDescription *entity = [object entity];
     NSDictionary *relationships = [entity relationshipsByName];
@@ -186,7 +187,12 @@ static SEL kSELmigrationStopped;
         }
         unsigned migrationUpdateMarker = ((totalInstances / 10) < 2 ? 2 : (totalInstances / 10));
         currentInstanceIndex = 0;
-        
+
+        //Migration helper override methods
+        SEL orphanSEL = NSSelectorFromString([NSString stringWithFormat:orphanMethodName, [currentEntityName lowercaseString]]);
+        SEL copySEL = NSSelectorFromString([NSString stringWithFormat:attributeMethodName, [currentEntityName lowercaseString]]);
+        SEL relationshipSEL = NSSelectorFromString([NSString stringWithFormat:relationMethodName, [currentEntityName lowercaseString]]);
+
         NSEnumerator *oldEntitiesEnum = [[oldEntities objectEnumerator] retain];
         NSManagedObject *oldEntity = nil;
         while (oldEntity = [oldEntitiesEnum nextObject]) {
@@ -195,7 +201,11 @@ static SEL kSELmigrationStopped;
                                                reason:@"Halt requested"
                                              userInfo:nil];
             }
-            if ([oldEntity orphan]) continue;
+            if ([migrationHelper respondsToSelector:orphanSEL]) {
+                if ([[migrationHelper performSelector:orphanSEL withObject:nil] boolValue]) continue;
+            } else {
+                if ([oldEntity orphan]) continue;
+            }
             NSManagedObject *newEntity = [NSEntityDescription insertNewObjectForEntityForName:currentEntityName
                                                                         inManagedObjectContext:newContext];
             if (currentInstanceIndex % migrationUpdateMarker == 0 && [delegate respondsToSelector:kSELmigrationUpdate]) {
@@ -203,28 +213,26 @@ static SEL kSELmigrationStopped;
                                            withObject:self
                                         waitUntilDone:NO];
             }
+            [newEntitiesReference setValue:newEntity forKey:[oldEntity objectIDString]];
             //Check to see if the migration helper has an override for this entity for copying attributes
-            SEL copySEL = NSSelectorFromString([NSString stringWithFormat:attributeMethodName, [currentEntityName lowercaseString]]);
-            if ([[self migrationHelper] respondsToSelector:copySEL]) {
-                [[self migrationHelper] performSelector:copySEL withObject:oldEntity withObject:newEntity];
+            if ([migrationHelper respondsToSelector:copySEL]) {
+                [migrationHelper performSelector:copySEL withObject:oldEntity withObject:newEntity];
             } else {
                 [newEntity copyFromManagedObject:oldEntity];
             }
             //Check to see if the migration helper has an override for this entity for relationships
-            SEL relationshipSEL = NSSelectorFromString([NSString stringWithFormat:relationMethodName, [currentEntityName lowercaseString]]);
-            if ([[self migrationHelper] respondsToSelector:relationshipSEL]) {
-                NSMethodSignature *signature = [[self migrationHelper] methodSignatureForSelector:relationshipSEL];
-                NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-                //[invocation setSelector:relationshipSEL];
-                [invocation setArgument:oldEntity atIndex:1];
-                [invocation setArgument:newEntity atIndex:2];
-                [invocation setArgument:newEntitiesReference atIndex:3];
-                [invocation invokeWithTarget:[self migrationHelper]];
+            if ([migrationHelper respondsToSelector:relationshipSEL]) {
+                NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[[self migrationHelper] methodSignatureForSelector:relationshipSEL]];
+                [invocation setSelector:relationshipSEL];
+                //[invocation setTarget:[self migrationHelper]];
+                [invocation setArgument:&oldEntity atIndex:2];
+                [invocation setArgument:&newEntity atIndex:3];
+                [invocation setArgument:&newEntitiesReference atIndex:4];
+                [invocation invokeWithTarget:migrationHelper];
             } else {
                 [newEntity copyRelationshipsFromManagedObject:oldEntity withReference:newEntitiesReference];
             }
             [oldEntity fault];
-            [newEntitiesReference setValue:newEntity forKey:[oldEntity objectIDString]];
             
             ++saveCounter;
             ++currentInstanceIndex;
@@ -528,70 +536,76 @@ static SEL kSELmigrationStopped;
     return currentEntityName;
 }
 
-- (NSString *)pathForFileToMigrate
+- (NSString*)pathForFileToMigrate
 {
-    return [[pathForFileToMigrate retain] autorelease]; 
+    return pathForFileToMigrate;
 }
 
-- (void)setPathForFileToMigrate:(NSString *)aPathForFileToMigrate
+- (void)setPathForFileToMigrate:(NSString*)aPathForFileToMigrate
 {
+    [aPathForFileToMigrate retain];
     [pathForFileToMigrate release];
-    pathForFileToMigrate = [aPathForFileToMigrate copy];
+    pathForFileToMigrate = aPathForFileToMigrate;
 }
 
-- (NSString *)pathToModelToMigrateFrom
+- (NSString*)pathToModelToMigrateFrom
 {
-    return [[pathToModelToMigrateFrom retain] autorelease]; 
+    return pathToModelToMigrateFrom; 
 }
 
-- (void)setPathToModelToMigrateFrom:(NSString *)aPathToModelToMigrateFrom
+- (void)setPathToModelToMigrateFrom:(NSString*)aPathToModelToMigrateFrom
 {
+    [aPathToModelToMigrateFrom retain];
     [pathToModelToMigrateFrom release];
-    pathToModelToMigrateFrom = [aPathToModelToMigrateFrom copy];
+    pathToModelToMigrateFrom = aPathToModelToMigrateFrom;
 }
 
-- (NSString *)pathToModelToMigrateTo
+- (NSString*)pathToModelToMigrateTo
 {
-    return [[pathToModelToMigrateTo retain] autorelease]; 
+    return pathToModelToMigrateTo; 
 }
 
-- (void)setPathToModelToMigrateTo:(NSString *)aPathToModelToMigrateTo
+- (void)setPathToModelToMigrateTo:(NSString*)aPathToModelToMigrateTo
 {
+    [aPathToModelToMigrateTo retain];
     [pathToModelToMigrateTo release];
-    pathToModelToMigrateTo = [aPathToModelToMigrateTo copy];
+    pathToModelToMigrateTo = aPathToModelToMigrateTo;
 }
 
-- (NSString *)storeTypeToMigrateFrom
+- (NSString*)storeTypeToMigrateFrom
 {
-    return [[storeTypeToMigrateFrom retain] autorelease]; 
+    return storeTypeToMigrateFrom; 
 }
 
-- (void)setStoreTypeToMigrateFrom:(NSString *)aStoreTypeToMigrateFrom
+- (void)setStoreTypeToMigrateFrom:(NSString*)aStoreTypeToMigrateFrom
 {
+    [aStoreTypeToMigrateFrom retain];
     [storeTypeToMigrateFrom release];
-    storeTypeToMigrateFrom = [aStoreTypeToMigrateFrom copy];
+    storeTypeToMigrateFrom = aStoreTypeToMigrateFrom;
 }
 
-- (NSString *)storeTypeToMigrateTo
+- (NSString*)storeTypeToMigrateTo
 {
-    return [[storeTypeToMigrateTo retain] autorelease]; 
+    return storeTypeToMigrateTo;
 }
 
-- (void)setStoreTypeToMigrateTo:(NSString *)aStoreTypeToMigrateTo
+- (void)setStoreTypeToMigrateTo:(NSString*)aStoreTypeToMigrateTo
 {
+    [aStoreTypeToMigrateTo retain];
     [storeTypeToMigrateTo release];
-    storeTypeToMigrateTo = [aStoreTypeToMigrateTo copy];
+    storeTypeToMigrateTo = aStoreTypeToMigrateTo;
 }
 
 - (id)migrationHelper
 {
-    return [[migrationHelper retain] autorelease]; 
+    return migrationHelper; 
 }
 
 - (void)setMigrationHelper:(id)aMigrationHelper
 {
+    [aMigrationHelper retain];
     [migrationHelper release];
-    migrationHelper = [aMigrationHelper copy];
+    migrationHelper = aMigrationHelper;
 }
 
 - (BOOL)warnings
@@ -614,15 +628,16 @@ static SEL kSELmigrationStopped;
     threaded = flag;
 }
 
-- (NSDictionary *)newStoreMetadata
+- (NSDictionary*)newStoreMetadata
 {
-    return [[newStoreMetadata retain] autorelease]; 
+    return newStoreMetadata;
 }
 
-- (void)setNewStoreMetadata:(NSDictionary *)aNewStoreMetadata
+- (void)setNewStoreMetadata:(NSDictionary*)aNewStoreMetadata
 {
+    [aNewStoreMetadata retain];
     [newStoreMetadata release];
-    newStoreMetadata = [aNewStoreMetadata copy];
+    newStoreMetadata = aNewStoreMetadata;
 }
 
 @end
