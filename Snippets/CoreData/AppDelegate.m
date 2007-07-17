@@ -91,7 +91,7 @@
     [alert setMessageText:@"Migration successful"];
     [alert addButtonWithTitle:@"OK"];
     [alert runModal];
-    [NSApp terminate];
+    [NSApp terminate:self];
 }
 
 - (void)migrationFailed:(id)migrationHandler;
@@ -101,7 +101,7 @@
     [alert setInformativeText:[[migrationHandler error] localizedDescription]];
     [alert addButtonWithTitle:@"OK"];
     [alert runModal];
-    [NSApp terminate];
+    [NSApp terminate:self];
 }
 
 - (void)migrationUpdate:(id)migrationHandler;
