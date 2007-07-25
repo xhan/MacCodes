@@ -1312,7 +1312,11 @@
 			} else if (NSMouseInRect(mousePt, mouseDownCellFrame, [self isFlipped]) &&
 					   (!NSMouseInRect(trackingStartPoint, [cell closeButtonRectForFrame:cellFrame], [self isFlipped]) || ![self allowsBackgroundTabClosing] || [self disableTabClose])) {
 				[mouseDownCell setCloseButtonPressed:NO];
-				[self performSelector:@selector(tabClick:) withObject:cell];
+				// If -[self selectsTabsOnMouseDown] is TRUE, we already performed tabClick: on mouseDown.
+				if (![self selectsTabsOnMouseDown]) {
+					[self performSelector:@selector(tabClick:) withObject:cell];
+				}
+
 			} else {
 				[mouseDownCell setCloseButtonPressed:NO];
 				[self performSelector:@selector(tabNothing:) withObject:cell];
