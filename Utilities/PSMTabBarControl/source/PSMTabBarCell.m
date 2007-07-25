@@ -74,6 +74,8 @@
 
 - (void)dealloc
 {
+	[_indicator removeFromSuperviewWithoutNeedingDisplay];
+
     [_indicator release];
     [super dealloc];
 }
