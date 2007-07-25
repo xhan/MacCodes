@@ -22,7 +22,6 @@
 
     // constructor/destructor
 - (void)initAddedProperties;
-- (void)dealloc;
 
     // accessors
 - (NSEvent *)lastMouseDownEvent;
@@ -198,8 +197,12 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	
 	//stop any animations that may be running
-	[_animationTimer invalidate], _animationTimer = nil;
+	[_animationTimer invalidate];
+	[_animationTimer release]; _animationTimer = nil;
 	
+	[_showHideAnimationTimer invalidate];
+	[_showHideAnimationTimer release]; _showHideAnimationTimer = nil;
+
 	//unbind all the items to prevent crashing
 	//not sure if this is necessary or not
 	NSEnumerator *enumerator = [_cells objectEnumerator];
@@ -241,6 +244,10 @@
 	
     if (myWindow) {
         [center removeObserver:self name:NSWindowDidMoveNotification object:myWindow];
+		if (_showHideAnimationTimer) {
+			[_showHideAnimationTimer invalidate];
+			[_showHideAnimationTimer release]; _showHideAnimationTimer = nil;
+		}
     } 
     if (aWindow) {
 		[center addObserver:self selector:@selector(windowDidUpdate:) name:NSWindowDidUpdateNotification object:aWindow];
@@ -838,7 +845,11 @@
 	}
 
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:myOriginalOrigin], @"myOriginalOrigin", [NSNumber numberWithFloat:partnerOriginalOrigin], @"partnerOriginalOrigin", [NSNumber numberWithFloat:myOriginalSize], @"myOriginalSize", [NSNumber numberWithFloat:partnerOriginalSize], @"partnerOriginalSize", [NSNumber numberWithFloat:myTargetOrigin], @"myTargetOrigin", [NSNumber numberWithFloat:partnerTargetOrigin], @"partnerTargetOrigin", [NSNumber numberWithFloat:myTargetSize], @"myTargetSize", [NSNumber numberWithFloat:partnerTargetSize], @"partnerTargetSize", nil];
-    [NSTimer scheduledTimerWithTimeInterval:(1.0 / 30.0) target:self selector:@selector(animateShowHide:) userInfo:userInfo repeats:YES];
+	if (_showHideAnimationTimer) {
+		[_showHideAnimationTimer invalidate];
+		[_showHideAnimationTimer release];
+	}
+    _showHideAnimationTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0 / 30.0) target:self selector:@selector(animateShowHide:) userInfo:userInfo repeats:YES] retain];
 }
 
 - (void)animateShowHide:(NSTimer *)timer
@@ -903,6 +914,7 @@
 		}
 		
 		[timer invalidate];
+		[_showHideAnimationTimer release]; _showHideAnimationTimer = nil;
     }
     [[self window] display];
 }
@@ -970,11 +982,12 @@
     NSMenu *overflowMenu = [_controller overflowMenu];
     [_overflowPopUpButton setHidden:(overflowMenu == nil)];
     [_overflowPopUpButton setMenu:overflowMenu];
-    
+
 	if (_animationTimer) {
-		[_animationTimer invalidate], _animationTimer = nil;
-	}
-	
+		[_animationTimer invalidate];
+		[_animationTimer release];
+	}	
+
     if (animate) {
         NSMutableArray *targetFrames = [NSMutableArray arrayWithCapacity:[_cells count]];
         
@@ -990,11 +1003,11 @@
         NSAnimation *animation = [[NSAnimation alloc] initWithDuration:0.50 animationCurve:NSAnimationEaseInOut];
         [animation setAnimationBlockingMode:NSAnimationNonblocking];
         [animation startAnimation];
-        _animationTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 / 30.0
-                                                           target:self
-                                                         selector:@selector(_animateCells:)
-                                                         userInfo:[NSArray arrayWithObjects:targetFrames, animation, nil]
-                                                          repeats:YES];
+        _animationTimer = [[NSTimer scheduledTimerWithTimeInterval:1.0 / 30.0
+															target:self
+														  selector:@selector(_animateCells:)
+														  userInfo:[NSArray arrayWithObjects:targetFrames, animation, nil]
+														   repeats:YES] retain];
 		[[NSRunLoop currentRunLoop] addTimer:_animationTimer forMode:NSEventTrackingRunLoopMode];
     } else {
         for (int i = 0; i < [_cells count]; i++) {
@@ -1086,7 +1099,8 @@
             [_addTabButton setFrame:frame];
         }
 		
-		 [_animationTimer invalidate], _animationTimer = nil;
+		[_animationTimer invalidate];
+		[_animationTimer release]; _animationTimer = nil;
 		[animation release];
 		
         for (int i = 0; i < cellCount; i++) {

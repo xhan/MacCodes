@@ -100,7 +100,8 @@ enum {
     IBOutlet id                 partnerView;                // gets resized when hide/show
     BOOL                        _awakenedFromNib;
 	int							_tabBarWidth;
-    
+    NSTimer						*_showHideAnimationTimer;
+
     // drag and drop
     NSEvent                     *_lastMouseDownEvent;      // keep this for dragging reference
 	BOOL						_didDrag;
