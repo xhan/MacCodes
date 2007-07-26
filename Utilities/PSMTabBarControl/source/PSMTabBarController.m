@@ -494,6 +494,7 @@
             if (_overflowMenu == nil) {
                 _overflowMenu = [[NSMenu alloc] init];
                 [_overflowMenu insertItemWithTitle:@"" action:nil keyEquivalent:@"" atIndex:0]; // Because the overflowPupUpButton is a pull down menu
+				[_overflowMenu setDelegate:self];
             }
             
 			// Each item's title is limited to 60 characters. If more than 60 characters, use an ellipsis to indicate that more exists.
@@ -502,12 +503,34 @@
 										 keyEquivalent:@""];
             [menuItem setTarget:_control];
             [menuItem setRepresentedObject:[cell representedObject]];
-            
+
             if ([cell count] > 0) {
                 [menuItem setTitle:[[menuItem title] stringByAppendingFormat:@" (%d)", [cell count]]];
 			}
         }
     }
+}
+
+- (BOOL)menu:(NSMenu *)menu updateItem:(NSMenuItem *)menuItem atIndex:(int)index shouldCancel:(BOOL)shouldCancel
+{
+	if (menu == _overflowMenu) {
+		if ([[[menuItem representedObject] identifier] respondsToSelector:@selector(icon)]) {
+			[menuItem setImage:[[[menuItem representedObject] identifier] valueForKey:@"icon"]];
+		}
+	}
+	
+	return TRUE;
+}
+
+- (int)numberOfItemsInMenu:(NSMenu *)menu
+{
+	if (menu == _overflowMenu) {
+		return [_overflowMenu numberOfItems];
+
+	} else {
+		NSLog(@"Warning: Unexpected menu delegate call for menu %@",menu);
+		return 0;
+	}
 }
 
 @end
