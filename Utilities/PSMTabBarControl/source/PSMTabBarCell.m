@@ -174,7 +174,12 @@
 
 - (void)setIsInOverflowMenu:(BOOL)value
 {
-    _isInOverflowMenu = value;
+	if (_isInOverflowMenu != value) {
+		_isInOverflowMenu = value;
+		if ([[[self controlView] delegate] respondsToSelector:@selector(tabView:tabViewItem:isInOverflowMenu:)]) {
+			[[[self controlView] delegate] tabView:[self controlView] tabViewItem:[self representedObject] isInOverflowMenu:_isInOverflowMenu];
+		}
+	}
 }
 
 - (BOOL)closeButtonPressed
