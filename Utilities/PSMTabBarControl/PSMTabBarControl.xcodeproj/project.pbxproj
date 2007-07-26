@@ -31,6 +31,9 @@
 		3437A2EA0BC8E86F003A0BAE /* largeImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 3437A2E90BC8E86F003A0BAE /* largeImage.png */; };
 		344D9A8C0C3D37A100498CA1 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = A251BEC30959BC0E0058BC7F /* MainMenu.nib */; };
 		346373660BCA21F800AD57AD /* NSBezierPath_AMShading.h in Headers */ = {isa = PBXBuildFile; fileRef = A2D98B0F0A2B43FA0064C6F8 /* NSBezierPath_AMShading.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		346A5E080C58E38B004563F0 /* Folder.png in Resources */ = {isa = PBXBuildFile; fileRef = 34FD82790BAC685B00BBAA24 /* Folder.png */; };
+		346A5E100C58E3C5004563F0 /* Globe.png in Resources */ = {isa = PBXBuildFile; fileRef = 34FD82860BAC685B00BBAA24 /* Globe.png */; };
+		346A5E110C58E3C5004563F0 /* Warning.png in Resources */ = {isa = PBXBuildFile; fileRef = 34FD827C0BAC685B00BBAA24 /* Warning.png */; };
 		347545B00C4944DA003E81B8 /* NSString_AITruncation.h in Headers */ = {isa = PBXBuildFile; fileRef = 347545AE0C4944DA003E81B8 /* NSString_AITruncation.h */; };
 		347545B10C4944DB003E81B8 /* NSString_AITruncation.m in Sources */ = {isa = PBXBuildFile; fileRef = 347545AF0C4944DA003E81B8 /* NSString_AITruncation.m */; };
 		34FD82880BAC685B00BBAA24 /* AquaTabsSeparator.png in Resources */ = {isa = PBXBuildFile; fileRef = 34FD82620BAC685B00BBAA24 /* AquaTabsSeparator.png */; };
@@ -52,9 +55,7 @@
 		34FD829C0BAC685B00BBAA24 /* AquaTabClose_Front_Rollover.png in Resources */ = {isa = PBXBuildFile; fileRef = 34FD82760BAC685B00BBAA24 /* AquaTabClose_Front_Rollover.png */; };
 		34FD829D0BAC685B00BBAA24 /* AquaTabsDownNonKey.png in Resources */ = {isa = PBXBuildFile; fileRef = 34FD82770BAC685B00BBAA24 /* AquaTabsDownNonKey.png */; };
 		34FD829E0BAC685B00BBAA24 /* AquaTabsSeparatorDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 34FD82780BAC685B00BBAA24 /* AquaTabsSeparatorDown.png */; };
-		34FD829F0BAC685B00BBAA24 /* Folder.png in Resources */ = {isa = PBXBuildFile; fileRef = 34FD82790BAC685B00BBAA24 /* Folder.png */; };
 		34FD82A10BAC685B00BBAA24 /* AquaTabCloseDirty_Front.png in Resources */ = {isa = PBXBuildFile; fileRef = 34FD827B0BAC685B00BBAA24 /* AquaTabCloseDirty_Front.png */; };
-		34FD82A20BAC685B00BBAA24 /* Warning.png in Resources */ = {isa = PBXBuildFile; fileRef = 34FD827C0BAC685B00BBAA24 /* Warning.png */; };
 		34FD82A30BAC685B00BBAA24 /* AquaTabCloseDirty_Front_Pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 34FD827D0BAC685B00BBAA24 /* AquaTabCloseDirty_Front_Pressed.png */; };
 		34FD82A50BAC685B00BBAA24 /* AquaTabNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 34FD827F0BAC685B00BBAA24 /* AquaTabNew.png */; };
 		34FD82A60BAC685B00BBAA24 /* AquaTabCloseDirty_Front_Rollover.png in Resources */ = {isa = PBXBuildFile; fileRef = 34FD82800BAC685B00BBAA24 /* AquaTabCloseDirty_Front_Rollover.png */; };
@@ -62,7 +63,6 @@
 		34FD82A80BAC685B00BBAA24 /* TabClose_Front_Pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 34FD82820BAC685B00BBAA24 /* TabClose_Front_Pressed.png */; };
 		34FD82A90BAC685B00BBAA24 /* AdiumGradient.png in Resources */ = {isa = PBXBuildFile; fileRef = 34FD82830BAC685B00BBAA24 /* AdiumGradient.png */; };
 		34FD82AB0BAC685B00BBAA24 /* TabClose_Front.png in Resources */ = {isa = PBXBuildFile; fileRef = 34FD82850BAC685B00BBAA24 /* TabClose_Front.png */; };
-		34FD82AC0BAC685B00BBAA24 /* Globe.png in Resources */ = {isa = PBXBuildFile; fileRef = 34FD82860BAC685B00BBAA24 /* Globe.png */; };
 		34FD82B00BAC686D00BBAA24 /* mater_large.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 34FD827E0BAC685B00BBAA24 /* mater_large.jpg */; };
 		34FD82B10BAC686D00BBAA24 /* mcqueen_large.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 34FD82840BAC685B00BBAA24 /* mcqueen_large.jpg */; };
 		34FD82B20BAC686D00BBAA24 /* sally_large.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 34FD82670BAC685B00BBAA24 /* sally_large.jpg */; };
@@ -663,9 +663,7 @@
 				34FD829C0BAC685B00BBAA24 /* AquaTabClose_Front_Rollover.png in Resources */,
 				34FD829D0BAC685B00BBAA24 /* AquaTabsDownNonKey.png in Resources */,
 				34FD829E0BAC685B00BBAA24 /* AquaTabsSeparatorDown.png in Resources */,
-				34FD829F0BAC685B00BBAA24 /* Folder.png in Resources */,
 				34FD82A10BAC685B00BBAA24 /* AquaTabCloseDirty_Front.png in Resources */,
-				34FD82A20BAC685B00BBAA24 /* Warning.png in Resources */,
 				34FD82A30BAC685B00BBAA24 /* AquaTabCloseDirty_Front_Pressed.png in Resources */,
 				34FD82A50BAC685B00BBAA24 /* AquaTabNew.png in Resources */,
 				34FD82A60BAC685B00BBAA24 /* AquaTabCloseDirty_Front_Rollover.png in Resources */,
@@ -673,7 +671,6 @@
 				34FD82A80BAC685B00BBAA24 /* TabClose_Front_Pressed.png in Resources */,
 				34FD82A90BAC685B00BBAA24 /* AdiumGradient.png in Resources */,
 				34FD82AB0BAC685B00BBAA24 /* TabClose_Front.png in Resources */,
-				34FD82AC0BAC685B00BBAA24 /* Globe.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -701,6 +698,9 @@
 				34FD82B10BAC686D00BBAA24 /* mcqueen_large.jpg in Resources */,
 				34FD82B20BAC686D00BBAA24 /* sally_large.jpg in Resources */,
 				3437A2EA0BC8E86F003A0BAE /* largeImage.png in Resources */,
+				346A5E080C58E38B004563F0 /* Folder.png in Resources */,
+				346A5E100C58E3C5004563F0 /* Globe.png in Resources */,
+				346A5E110C58E3C5004563F0 /* Warning.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
