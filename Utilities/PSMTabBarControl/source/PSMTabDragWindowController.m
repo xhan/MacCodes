@@ -21,6 +21,7 @@
 		
 		if (tearOffStyle == PSMTabBarTearOffMiniwindow) {
 			[window setBackgroundColor:[NSColor clearColor]];
+			[window setHasShadow:YES];
 		}
 		
 		[window setAlphaValue:kPSMTabDragWindowAlpha];
@@ -79,7 +80,7 @@
 	}
 	
 	//begin animating
-	_animation = [[NSAnimation alloc] initWithDuration:0.25 animationCurve:NSAnimationLinear];
+	_animation = [[NSAnimation alloc] initWithDuration:0.25 animationCurve:NSAnimationEaseInOut];
 	[_animation setAnimationBlockingMode:NSAnimationNonblocking];
 	[_animation setCurrentProgress:progress];
 	[_animation startAnimation];

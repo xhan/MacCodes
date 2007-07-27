@@ -277,13 +277,22 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
 
 		} else if (_currentTearOffStyle == PSMTabBarTearOffMiniwindow && ![_draggedTab alternateImage]) {
 			NSImage *image;
+			NSSize imageSize;
 			unsigned int mask; //we don't need this but we can't pass nil in for the style mask, as some delegate implementations will crash
 			
 			if ( !(image = [self _miniwindowImageOfWindow:[control window]]) ) {
 				image = [[self _imageForViewOfCell:[self draggedCell] styleMask:&mask] copy];
 			}
+			
+			imageSize = [image size];
 			[image setScalesWhenResized:YES];
-			[image setSize:NSMakeSize(125, 125)];
+			
+			if (imageSize.width > imageSize.height) {
+				[image setSize:NSMakeSize(125, 125 * (imageSize.height / imageSize.width))];
+			} else {
+				[image setSize:NSMakeSize(125 * (imageSize.width / imageSize.height), 125)];
+			}
+			
 			[_draggedTab setAlternateImage:image];
 		}
 		
@@ -296,7 +305,7 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
 			if ([_sourceTabBar tearOffStyle] == PSMTabBarTearOffAlphaWindow) {
 				[[_draggedView window] setAlphaValue:kPSMTabDragWindowAlpha];
 			} else {
-				#warning fix me
+				#warning fix me - what should we do when the last tab is dragged as a miniwindow?
 			}
 		} else {
 			if ([_sourceTabBar tearOffStyle] == PSMTabBarTearOffAlphaWindow) {
