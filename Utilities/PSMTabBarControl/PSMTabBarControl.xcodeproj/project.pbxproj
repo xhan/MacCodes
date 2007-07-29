@@ -36,6 +36,8 @@
 		346A5E110C58E3C5004563F0 /* Warning.png in Resources */ = {isa = PBXBuildFile; fileRef = 34FD827C0BAC685B00BBAA24 /* Warning.png */; };
 		347545B00C4944DA003E81B8 /* NSString_AITruncation.h in Headers */ = {isa = PBXBuildFile; fileRef = 347545AE0C4944DA003E81B8 /* NSString_AITruncation.h */; };
 		347545B10C4944DB003E81B8 /* NSString_AITruncation.m in Sources */ = {isa = PBXBuildFile; fileRef = 347545AF0C4944DA003E81B8 /* NSString_AITruncation.m */; };
+		3482DF100C5BF90700426F15 /* PSMAdiumTabStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 3767A7560A2D449B005F7522 /* PSMAdiumTabStyle.m */; };
+		3482DF150C5BF90E00426F15 /* PSMAdiumTabStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 3767A7560A2D449B005F7522 /* PSMAdiumTabStyle.m */; };
 		34FD82880BAC685B00BBAA24 /* AquaTabsSeparator.png in Resources */ = {isa = PBXBuildFile; fileRef = 34FD82620BAC685B00BBAA24 /* AquaTabsSeparator.png */; };
 		34FD828B0BAC685B00BBAA24 /* AquaTabsDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 34FD82650BAC685B00BBAA24 /* AquaTabsDown.png */; };
 		34FD828C0BAC685B00BBAA24 /* pi.png in Resources */ = {isa = PBXBuildFile; fileRef = 34FD82660BAC685B00BBAA24 /* pi.png */; };
@@ -71,9 +73,7 @@
 		3748D19D0B17834D002D71C0 /* PSMTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3748D19C0B17834D002D71C0 /* PSMTabBarController.m */; };
 		3748D19E0B17834D002D71C0 /* PSMTabBarController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3748D19B0B17834D002D71C0 /* PSMTabBarController.h */; };
 		3748D19F0B17834D002D71C0 /* PSMTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3748D19C0B17834D002D71C0 /* PSMTabBarController.m */; };
-		3767A7580A2D449B005F7522 /* PSMAdiumTabStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 3767A7560A2D449B005F7522 /* PSMAdiumTabStyle.m */; };
 		3767A7590A2D449B005F7522 /* PSMAdiumTabStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = 3767A7550A2D449B005F7522 /* PSMAdiumTabStyle.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		3767A75A0A2D449B005F7522 /* PSMAdiumTabStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 3767A7560A2D449B005F7522 /* PSMAdiumTabStyle.m */; };
 		3767A91D0A2F7A11005F7522 /* PSMTabDragWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 3767A91A0A2F7A11005F7522 /* PSMTabDragWindow.m */; };
 		3767A91E0A2F7A11005F7522 /* PSMTabDragWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 3767A91A0A2F7A11005F7522 /* PSMTabDragWindow.m */; };
 		3769D0850A349FCD00D71EDA /* PSMTabBarControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DF68FD067E5B5A0090B5B0 /* PSMTabBarControl.framework */; };
@@ -721,12 +721,12 @@
 				A2082A9109EAEB34009AC8BE /* PSMTabDragAssistant.m in Sources */,
 				A2D98B0B0A2B432C0064C6F8 /* PSMUnifiedTabStyle.m in Sources */,
 				A2D98B130A2B43FA0064C6F8 /* NSBezierPath_AMShading.m in Sources */,
-				3767A75A0A2D449B005F7522 /* PSMAdiumTabStyle.m in Sources */,
 				3767A91D0A2F7A11005F7522 /* PSMTabDragWindow.m in Sources */,
 				3748D19F0B17834D002D71C0 /* PSMTabBarController.m in Sources */,
 				37A9FB6F0C25FE2B0062045C /* PSMTabDragView.m in Sources */,
 				37A900A00C279CAD0062045C /* PSMTabDragWindowController.m in Sources */,
 				347545B10C4944DB003E81B8 /* NSString_AITruncation.m in Sources */,
+				3482DF100C5BF90700426F15 /* PSMAdiumTabStyle.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -746,11 +746,11 @@
 				A2082A9209EAEB34009AC8BE /* PSMTabDragAssistant.m in Sources */,
 				A2D98B0C0A2B432C0064C6F8 /* PSMUnifiedTabStyle.m in Sources */,
 				A2D98B140A2B43FA0064C6F8 /* NSBezierPath_AMShading.m in Sources */,
-				3767A7580A2D449B005F7522 /* PSMAdiumTabStyle.m in Sources */,
 				3767A91E0A2F7A11005F7522 /* PSMTabDragWindow.m in Sources */,
 				3748D19D0B17834D002D71C0 /* PSMTabBarController.m in Sources */,
 				37A9FB700C25FE2B0062045C /* PSMTabDragView.m in Sources */,
 				37A9009E0C279CAD0062045C /* PSMTabDragWindowController.m in Sources */,
+				3482DF150C5BF90E00426F15 /* PSMAdiumTabStyle.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
