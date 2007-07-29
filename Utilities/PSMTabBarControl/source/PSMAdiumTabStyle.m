@@ -164,14 +164,14 @@
 	return dragRect;
 }
 
-- (BOOL)closeButtonIsVisibleForCell:(PSMTabBarCell *)cell
+- (BOOL)closeButtonIsEnabledForCell:(PSMTabBarCell *)cell
 {
 	return ([cell hasCloseButton] && ![cell isCloseButtonSuppressed]);
 	
 }
 - (NSRect)closeButtonRectForTabCell:(PSMTabBarCell *)cell withFrame:(NSRect)cellFrame
 {
-	if ([self closeButtonIsVisibleForCell:cell] == NO) {
+	if ([self closeButtonIsEnabledForCell:cell] == NO) {
 		return NSZeroRect;
 	}
 
@@ -202,19 +202,36 @@
 
 - (NSRect)iconRectForTabCell:(PSMTabBarCell *)cell
 {
-	NSRect cellFrame = [cell frame];
-
 	if ([cell hasIcon] == NO) {
 		return NSZeroRect;
 	}
 
-	NSRect result;
-	result.size = NSMakeSize(kPSMTabBarIconWidth, kPSMTabBarIconWidth);
-	result.origin.x = cellFrame.origin.x + Adium_MARGIN_X;
-	result.origin.y = cellFrame.origin.y + MARGIN_Y;
+	NSRect cellFrame = [cell frame];
+	NSImage *icon = [[[cell representedObject] identifier] icon];
+	NSSize	iconSize = [icon size];
 
-	if ([self closeButtonIsVisibleForCell:cell]) {
-		result.origin.x += [_closeButton size].width + Adium_CellPadding;
+	NSRect result;
+	result.size = iconSize;
+
+	switch (orientation)
+	{
+		case PSMTabBarHorizontalOrientation:
+			result.origin.x = cellFrame.origin.x + Adium_MARGIN_X;
+			result.origin.y = cellFrame.origin.y + MARGIN_Y;
+			break;
+
+		case PSMTabBarVerticalOrientation:
+			result.origin.x = NSMaxX(cellFrame) - (Adium_MARGIN_X * 2) - NSWidth(result);
+			result.origin.y = NSMinY(cellFrame) + (NSHeight(cellFrame) / 2) - (NSHeight(result) / 2) + 1;
+			break;
+	}
+
+	// For horizontal tabs, center in available space (in case icon image is smaller than kPSMTabBarIconWidth)
+	if (orientation == PSMTabBarHorizontalOrientation) {
+		if (iconSize.width < kPSMTabBarIconWidth)
+			result.origin.x += (kPSMTabBarIconWidth - iconSize.width) / 2.0;
+		if (iconSize.height < kPSMTabBarIconWidth)
+			result.origin.y += (kPSMTabBarIconWidth - iconSize.height) / 2.0;
 	}
 
 	if ([cell state] == NSOnState) {
@@ -289,7 +306,7 @@
 	resultWidth = Adium_MARGIN_X;
 
 	// close button?
-	if ([self closeButtonIsVisibleForCell:cell]) {
+	if ([self closeButtonIsEnabledForCell:cell]) {
 		resultWidth += [_closeButton size].width + Adium_CellPadding;
 	}
 
@@ -325,7 +342,7 @@
 	resultWidth = Adium_MARGIN_X;
 
 	// close button?
-	if ([self closeButtonIsVisibleForCell:cell]) {
+	if ([self closeButtonIsEnabledForCell:cell]) {
 		resultWidth += [_closeButton size].width + Adium_CellPadding;
 	}
 
@@ -548,15 +565,30 @@
 			break;
 	}
 	
-	//draw the close button and icon combined
-	if ([self closeButtonIsVisibleForCell:cell]) {
+	if ([self closeButtonIsEnabledForCell:cell]) {
+		/* The close button and the icon (if present) are drawn combined, changing on-hover */
 		NSRect closeButtonRect = [cell closeButtonRectForFrame:cellFrame];
-		NSImage *closeButton = nil;
+		NSRect iconRect = [self iconRectForTabCell:cell];
+		NSRect drawingRect;
+		NSImage *closeButtonOrIcon = nil;
+
+		if ([cell hasIcon]) {
+			/* If the cell has an icon and a close button, determine which rect should be used and use it consistently
+			 * This only matters for horizontal tabs; vertical tabs look fine without making this adjustment.
+			 */
+			if (NSWidth(iconRect) > NSWidth(closeButtonRect)) {
+				closeButtonRect.origin.x = NSMinX(iconRect) + NSWidth(iconRect)/2 - NSWidth(closeButtonRect)/2;
+			}
+		}
 
 		if ([cell closeButtonPressed]) {
-			closeButton = [cell isEdited] ? _closeDirtyButtonDown : _closeButtonDown;
+			closeButtonOrIcon = ([cell isEdited] ? _closeDirtyButtonDown : _closeButtonDown);
+			drawingRect = closeButtonRect;
+
 		} else if ([cell closeButtonOver]) {
-            closeButton = [cell isEdited] ? _closeDirtyButtonOver : _closeButtonOver;
+            closeButtonOrIcon = ([cell isEdited] ? _closeDirtyButtonOver : _closeButtonOver);
+			drawingRect = closeButtonRect;
+	
 		} else if ((orientation == PSMTabBarVerticalOrientation) &&
 				   ([cell count] > 0)) {
 			/* In vertical tabs, the count indicator supercedes the icon */
@@ -569,68 +601,61 @@
 			closeButtonRect.origin.y = cellFrame.origin.y + ((NSHeight(cellFrame) - counterSize.height) / 2);
 			closeButtonRect.size.height = counterSize.height;
 
-			[self drawObjectCounterInCell:cell withRect:closeButtonRect];
+			drawingRect = closeButtonRect;
+			[self drawObjectCounterInCell:cell withRect:drawingRect];
+			/* closeButtonOrIcon == nil */
 
 		} else if ([cell hasIcon]) {
-			closeButton = [[[cell representedObject] identifier] icon];
-			closeButtonRect.size = [closeButton size];
-			
-			switch (orientation)
-			{
-				case PSMTabBarHorizontalOrientation:
-					closeButtonRect.origin.x -= (NSWidth(closeButtonRect) - [_closeButton size].width) / 2;
-					break;
-				case PSMTabBarVerticalOrientation:
-					closeButtonRect.origin.x -= (NSWidth(closeButtonRect) - [_closeButton size].width);
-					break;
-			}
-
-			closeButtonRect.origin.y = cellFrame.origin.y + ((NSHeight(cellFrame) - NSHeight(closeButtonRect)) / 2);
+			closeButtonOrIcon = [[[cell representedObject] identifier] icon];
+			drawingRect = iconRect;
+	
 		} else {
-			closeButton = ([cell isEdited] ? _closeDirtyButton : _closeButton);
+			closeButtonOrIcon = ([cell isEdited] ? _closeDirtyButton : _closeButton);
+			drawingRect = closeButtonRect;
 		}
 		
 		if ([controlView isFlipped]) {
-			closeButtonRect.origin.y += closeButtonRect.size.height;
+			drawingRect.origin.y += drawingRect.size.height;
 		}
 
-		[closeButton compositeToPoint:closeButtonRect.origin operation:NSCompositeSourceOver fraction:1.0];
+		[closeButtonOrIcon compositeToPoint:drawingRect.origin operation:NSCompositeSourceOver fraction:1.0];
 		
-		// scoot label over by the size of the standard close button
+		// scoot label over
 		switch (orientation)
 		{
 			case PSMTabBarHorizontalOrientation:
 			{
 				float oldOrigin = labelRect.origin.x;
-				labelRect.origin.x = (NSMaxX(closeButtonRect) + (Adium_CellPadding*2));
+				if (NSWidth(iconRect) > NSWidth(closeButtonRect)) {
+					labelRect.origin.x = (NSMaxX(iconRect) + (Adium_CellPadding * 2));
+				} else {
+					labelRect.origin.x = (NSMaxX(closeButtonRect) + (Adium_CellPadding * 2));					
+				}
 				labelRect.size.width -= (labelRect.origin.x - oldOrigin);
 				break;
 			}
 			case PSMTabBarVerticalOrientation:
 			{
 				//Generate the remaining label rect directly from the location of the close button, allowing for padding
-				labelRect.size.width = NSMinX(closeButtonRect) - Adium_CellPadding - NSMinX(labelRect);
+				if (NSWidth(iconRect) > NSWidth(closeButtonRect)) {
+					labelRect.size.width = NSMinX(iconRect) - Adium_CellPadding - NSMinX(labelRect);
+				} else {
+					labelRect.size.width = NSMinX(closeButtonRect) - Adium_CellPadding - NSMinX(labelRect);
+				}
+
 				break;
 			}
 		}
 
 	} else if ([cell hasIcon]) {
+		/* The close button is disabled; the cell has an icon */
 		NSRect iconRect = [self iconRectForTabCell:cell];
 		NSImage *icon = [[[cell representedObject] identifier] icon];
-		
+
 		if ([controlView isFlipped]) {
 			iconRect.origin.y += iconRect.size.height;
 		}
-                
-		// center in available space (in case icon image is smaller than kPSMTabBarIconWidth)
-		if ([icon size].width < kPSMTabBarIconWidth) {
-			iconRect.origin.x += (kPSMTabBarIconWidth - [icon size].width)/2.0;
-		}
-		
-		if ([icon size].height < kPSMTabBarIconWidth) {
-			iconRect.origin.y -= (kPSMTabBarIconWidth - [icon size].height)/2.0;
-		}
-                
+
 		[icon compositeToPoint:iconRect.origin operation:NSCompositeSourceOver fraction:1.0];
 		
 		// scoot label over by the size of the standard close button
