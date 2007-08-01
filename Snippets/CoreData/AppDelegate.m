@@ -137,8 +137,8 @@
     NSString *oldModelFilePath = [[NSBundle mainBundle] pathForResource:@"TestModel" ofType:@"mom"];
     
     ZDSMigrationHandler *handler = [[ZDSMigrationHandler alloc] initWithDelegate:self];
-    [handler setPathToModelToMigrateFrom:oldModelFilePath];
-    [handler setPathToModelToMigrateTo:newModelFilePath];
+    [handler setPathForModelToMigrateFrom:oldModelFilePath];
+    [handler setPathForModelToMigrateTo:newModelFilePath];
     [handler setPathForFileToMigrate:[[self applicationSupportFolder] stringByAppendingPathComponent:@"Test.zds"]];
     [handler setWarnings:YES];
     [handler setThreaded:YES];

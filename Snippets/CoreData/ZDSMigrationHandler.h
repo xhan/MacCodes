@@ -84,23 +84,23 @@
 #pragma mark accessors
 
 - (NSString*)pathForFileToMigrate;
-- (void)setPathForFileToMigrate:(NSString*)aPathForFileToMigrate;
-- (NSString*)pathToModelToMigrateFrom;
-- (void)setPathToModelToMigrateFrom:(NSString*)aPathToModelToMigrateFrom;
-- (NSString*)pathToModelToMigrateTo;
-- (void)setPathToModelToMigrateTo:(NSString*)aPathToModelToMigrateTo;
+- (void)setPathForFileToMigrate:(NSString*)string;
+- (NSString*)pathForModelToMigrateFrom;
+- (void)setPathForModelToMigrateFrom:(NSString*)string;
+- (NSString*)pathForModelToMigrateTo;
+- (void)setPathForModelToMigrateTo:(NSString*)string;
 - (NSString*)storeTypeToMigrateFrom;
-- (void)setStoreTypeToMigrateFrom:(NSString*)aStoreTypeToMigrateFrom;
+- (void)setStoreTypeToMigrateFrom:(NSString*)string;
 - (NSString*)storeTypeToMigrateTo;
-- (void)setStoreTypeToMigrateTo:(NSString*)aStoreTypeToMigrateTo;
+- (void)setStoreTypeToMigrateTo:(NSString*)string;
 - (id)migrationHelper;
-- (void)setMigrationHelper:(id)aMigrationHelper;
+- (void)setMigrationHelper:(id)object;
 - (BOOL)warnings;
 - (void)setWarnings:(BOOL)flag;
 - (BOOL)threaded;
 - (void)setThreaded:(BOOL)flag;
 - (NSDictionary*)newStoreMetadata;
-- (void)setNewStoreMetadata:(NSDictionary*)aNewStoreMetadata;
+- (void)setNewStoreMetadata:(NSDictionary*)dictionary;
 
 @end
 

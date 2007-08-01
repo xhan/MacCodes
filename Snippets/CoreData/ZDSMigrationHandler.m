@@ -374,7 +374,7 @@ static SEL kSELmigrationStopped;
         if ([self threaded]) [NSThread exit];
     }
     if ([self threaded]) {
-        [self performSelectorOnMainThread:@selector(autorrelease) withObject:nil waitUntilDone:NO];
+        [self performSelectorOnMainThread:@selector(autorelease) withObject:nil waitUntilDone:NO];
     } else {
          [self autorelease];
     }
@@ -547,24 +547,24 @@ static SEL kSELmigrationStopped;
     pathForFileToMigrate = aPathForFileToMigrate;
 }
 
-- (NSString*)pathToModelToMigrateFrom
+- (NSString*)pathForModelToMigrateFrom
 {
     return pathToModelToMigrateFrom; 
 }
 
-- (void)setPathToModelToMigrateFrom:(NSString*)aPathToModelToMigrateFrom
+- (void)setPathForModelToMigrateFrom:(NSString*)aPathToModelToMigrateFrom
 {
     [aPathToModelToMigrateFrom retain];
     [pathToModelToMigrateFrom release];
     pathToModelToMigrateFrom = aPathToModelToMigrateFrom;
 }
 
-- (NSString*)pathToModelToMigrateTo
+- (NSString*)pathForModelToMigrateTo
 {
     return pathToModelToMigrateTo; 
 }
 
-- (void)setPathToModelToMigrateTo:(NSString*)aPathToModelToMigrateTo
+- (void)setPathForModelToMigrateTo:(NSString*)aPathToModelToMigrateTo
 {
     [aPathToModelToMigrateTo retain];
     [pathToModelToMigrateTo release];
