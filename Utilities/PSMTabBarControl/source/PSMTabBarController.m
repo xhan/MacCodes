@@ -255,14 +255,21 @@
 				if (width > [_control cellMaxWidth]) {
 					width = [_control cellMaxWidth];
 				}
+				if (width < [_control cellMinWidth]) {
+					width = [_control cellMinWidth];
+				}
 			} else {
 				width = [_control cellOptimumWidth];
 			}
 			
+			width = ceil(width);
+			
 			//check to see if there is not enough space to place all tabs as preferred
 			totalOccupiedWidth += width;
 			if (totalOccupiedWidth >= availableWidth) {
-				//if we're not going to use the overflow menu, cram all the tab cells into the bar
+				//There's not enough space to add currentCell at its preferred width!
+				
+				//If we're not going to use the overflow menu, cram all the tab cells into the bar regardless of minimum width
 				if (![_control useOverflowMenu]) {
 					int j, averageWidth = (availableWidth / cellCount);
 					
@@ -273,51 +280,78 @@
 						float desiredWidth = [[cells objectAtIndex:j] desiredWidthOfCell];
 						[newWidths addObject:[NSNumber numberWithFloat:(desiredWidth < averageWidth && [_control sizeCellsToFit]) ? desiredWidth : averageWidth]];
 					}
+
 					break;
 				}
 				
+				//We'll be using the overflow menu if needed.
 				numberOfVisibleCells = i;
 				if ([_control sizeCellsToFit]) {
-					int neededWidth = width - (totalOccupiedWidth - availableWidth); //the amount of space needed to fit the next cell in
-					// can I squeeze it in without violating min cell width?
+					BOOL remainingCellsMustGoToOverflow = NO;
+
+					// neededWidth is the amount of space needed to fit the next cell in
+					float neededWidth = width - (totalOccupiedWidth - availableWidth);
+																					 
+					/* Can I squeeze it in without violating min cell width? This is the width we would take up
+					 * if every cell so far were at the minimum.
+					 */
 					int widthIfAllMin = (numberOfVisibleCells + 1) * [_control cellMinWidth];
-					
-					if ((width + widthIfAllMin) <= availableWidth) {
-						// squeeze - distribute needed sacrifice among all cells
+					if (widthIfAllMin <= availableWidth) {
+						/* It's definitely possible for cells so far to be visible.
+						 * Squeeze - distribute needed sacrifice among all cells
+						 */
 						int q;
-						for (q = (i - 1); q >= 0; q--) {
-							int desiredReduction = (int)neededWidth / (q + 1);
-							if (([[newWidths objectAtIndex:q] floatValue] - desiredReduction) < [_control cellMinWidth]) {
-								int actualReduction = (int)[[newWidths objectAtIndex:q] floatValue] - [_control cellMinWidth];
-								[newWidths replaceObjectAtIndex:q withObject:[NSNumber numberWithFloat:[_control cellMinWidth]]];
-								neededWidth -= actualReduction;
-							} else {
-								int newCellWidth = (int)[[newWidths objectAtIndex:q] floatValue] - desiredReduction;
-								[newWidths replaceObjectAtIndex:q withObject:[NSNumber numberWithFloat:newCellWidth]];
-								neededWidth -= desiredReduction;
+						int cellMinWidth = [_control cellMinWidth];
+						
+						BOOL changed = NO;
+						do {
+							changed = NO;
+
+							for (q = (i - 1); q >= 0; q--) {
+								float cellWidth = [[newWidths objectAtIndex:q] floatValue];
+								if (cellWidth - 1 >= cellMinWidth) {
+									cellWidth--;
+									changed = YES;
+								}
+								
+								[newWidths replaceObjectAtIndex:q 
+													 withObject:[NSNumber numberWithFloat:cellWidth]];
 							}
-						}
-						
+							
+							if (width - 1 >= cellMinWidth) {
+								width--;
+								changed = YES;
+							}
+						} while (changed &&
+								 ([[newWidths valueForKeyPath:@"@sum.intValue"] intValue] + width) > availableWidth);
+
 						int totalWidth = [[newWidths valueForKeyPath:@"@sum.intValue"] intValue];
-						int thisWidth = width - neededWidth; //width the last cell would want
-						
-						//append a final cell if there is enough room, otherwise stretch all the cells out to fully fit the bar
-						if (availableWidth - totalWidth > thisWidth) {
-							[newWidths addObject:[NSNumber numberWithFloat:thisWidth]];
+
+						if (width >= [_control cellMinWidth] &&
+							(availableWidth - totalWidth >= width)) {
+							//If there is enough room, append this cell
+							[newWidths addObject:[NSNumber numberWithFloat:width]];
 							numberOfVisibleCells++;
-							totalWidth += thisWidth;
+							totalWidth += width;
+
+						} else {
+							remainingCellsMustGoToOverflow = YES;
 						}
 						
 						if (totalWidth < availableWidth) {
+							/* We're not using all available space not but exceeded available width before;
+							 * stretch all cells to fully fit the bar
+							 */
 							int leftoverWidth = availableWidth - totalWidth;
 							int q;
-							for (q = i - 1; q >= 0; q--) {
+							for (q = numberOfVisibleCells - 1; q >= 0; q--) {
 								int desiredAddition = (int)leftoverWidth / (q + 1);
 								int newCellWidth = (int)[[newWidths objectAtIndex:q] floatValue] + desiredAddition;
 								[newWidths replaceObjectAtIndex:q withObject:[NSNumber numberWithFloat:newCellWidth]];
 								leftoverWidth -= desiredAddition;
 							}
 						}
+
 					} else {
 						// stretch - distribute leftover room among cells
 						int leftoverWidth = availableWidth - totalOccupiedWidth + width;
@@ -328,6 +362,8 @@
 							[newWidths replaceObjectAtIndex:q withObject:[NSNumber numberWithFloat:newCellWidth]];
 							leftoverWidth -= desiredAddition;
 						}
+						
+						remainingCellsMustGoToOverflow = YES;
 					}
 					
 					//make sure there are at least two items in the tab bar
@@ -349,12 +385,17 @@
 						if (totalOccupiedWidth < availableWidth) {
 							[newWidths replaceObjectAtIndex:0 withObject:[NSNumber numberWithFloat:availableWidth - [cellWidth floatValue]]];
 						}
-						
+
 						numberOfVisibleCells = 2;
 					}
 					
-					break; // done assigning widths; remaining cells go in overflow menu
+					// done assigning widths; remaining cells go in overflow menu
+					if (remainingCellsMustGoToOverflow) {
+						break;
+					}
+
 				} else {
+					//We're not using size-to-fit
 					int revisedWidth = availableWidth / (i + 1);
 					if (revisedWidth >= [_control cellMinWidth]) {
 						unsigned q;
@@ -374,6 +415,7 @@
 					}
 				}
 			} else {
+				//(totalOccupiedWidth < availableWidth)
 				numberOfVisibleCells = cellCount;
 				[newWidths addObject:[NSNumber numberWithFloat:width]];
 			}
