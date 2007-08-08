@@ -20,6 +20,22 @@
     IBOutlet    NSButton            *isEditedButton;
     IBOutlet    NSTextField         *objectCounterField;
     IBOutlet    NSPopUpButton       *iconButton;
+	
+	IBOutlet	NSPopUpButton		*popUp_style;
+	IBOutlet	NSPopUpButton		*popUp_orientation;
+	IBOutlet	NSPopUpButton		*popUp_tearOff;
+	IBOutlet	NSButton			*button_canCloseOnlyTab;
+	IBOutlet	NSButton			*button_disableTabClosing;
+	IBOutlet	NSButton			*button_hideForSingleTab;
+	IBOutlet	NSButton			*button_showAddTab;
+	IBOutlet	NSButton			*button_useOverflow;
+	IBOutlet	NSButton			*button_automaticallyAnimate;
+	IBOutlet	NSButton			*button_allowScrubbing;
+	IBOutlet	NSButton			*button_sizeToFit;
+	IBOutlet	NSTextField			*textField_minWidth;
+	IBOutlet	NSTextField			*textField_maxWidth;
+	IBOutlet	NSTextField			*textField_optimumWidth;
+	
 }
 
 - (void)addDefaultTabs;

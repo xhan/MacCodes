@@ -11,10 +11,25 @@
 #import "PSMTabBarControl.h"
 #import "PSMTabStyle.h"
 
+@interface WindowController (PRIVATE)
+- (void)configureTabBarInitially;
+@end
+
 @implementation WindowController
 
 - (void)awakeFromNib
 {
+	[[NSUserDefaults standardUserDefaults] registerDefaults:
+		[NSDictionary dictionaryWithObjectsAndKeys:
+			@"Metal", @"Style",
+			@"Horizontal", @"Orientation",
+			@"Alpha Window", @"Tear-Off",
+			@"100", @"TabMinWidth",
+			@"280", @"TabMaxWidth",
+			@"130", @"TabOptimalWidth",
+			[NSNumber numberWithBool:YES], @"UseOverflowMenu",
+			nil]];
+
     // toolbar
     NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"DemoToolbar"];
     [toolbar setDelegate:self];
@@ -40,6 +55,10 @@
     while (item = [e nextObject]) {
         [tabView removeTabViewItem:item];
     }
+	
+	[self performSelector:@selector(configureTabBarInitially)
+			   withObject:nil
+			   afterDelay:0];
 	
     // open drawer
     //[drawer toggle:self];
@@ -141,6 +160,9 @@
 - (void)configStyle:(id)sender
 {
     [tabBar setStyleNamed:[sender titleOfSelectedItem]];
+	
+	[[NSUserDefaults standardUserDefaults] setObject:[sender titleOfSelectedItem]
+											  forKey:@"Style"];
 }
 
 - (void)configOrientation:(id)sender
@@ -181,26 +203,41 @@
 	
 	[tabBar setOrientation:orientation];
 	[[self window] display];
+	
+	[[NSUserDefaults standardUserDefaults] setObject:[sender title]
+											  forKey:@"Orientation"];
 }
 
 - (void)configCanCloseOnlyTab:(id)sender
 {
     [tabBar setCanCloseOnlyTab:[sender state]];
+	
+	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:[sender state]]
+											  forKey:@"CanCloseOnlyTab"];	
 }
 
 - (void)configDisableTabClose:(id)sender
 {
 	[tabBar setDisableTabClose:[sender state]];
+	
+	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:[sender state]]
+											  forKey:@"DisableTabClose"];	
 }
 
 - (void)configHideForSingleTab:(id)sender
 {
     [tabBar setHideForSingleTab:[sender state]];
+	
+	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:[sender state]]
+											  forKey:@"HideForSingleTab"];
 }
 
 - (void)configAddTabButton:(id)sender
 {
     [tabBar setShowAddTabButton:[sender state]];
+	
+	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:[sender state]]
+											  forKey:@"ShowAddTabButton"];
 }
 
 - (void)configTabMinWidth:(id)sender
@@ -212,6 +249,9 @@
     }
     
     [tabBar setCellMinWidth:[sender intValue]];
+	
+	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:[sender intValue]]
+											  forKey:@"TabMinWidth"];
 }
 
 - (void)configTabMaxWidth:(id)sender
@@ -223,6 +263,9 @@
     }
     
     [tabBar setCellMaxWidth:[sender intValue]];
+	
+	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:[sender intValue]]
+											  forKey:@"TabMaxWidth"];
 }
 
 - (void)configTabOptimumWidth:(id)sender
@@ -240,31 +283,47 @@
     }
     
     [tabBar setCellOptimumWidth:[sender intValue]];
+	
 }
 
 - (void)configTabSizeToFit:(id)sender
 {
     [tabBar setSizeCellsToFit:[sender state]];
+	
+	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:[sender intValue]]
+											  forKey:@"SizeToFit"];
 }
 
 - (void)configTearOffStyle:(id)sender
 {
 	[tabBar setTearOffStyle:([sender indexOfSelectedItem] == 0) ? PSMTabBarTearOffAlphaWindow : PSMTabBarTearOffMiniwindow];
+	
+	[[NSUserDefaults standardUserDefaults] setObject:[sender title]
+											  forKey:@"Tear-Off"];
 }
 
 - (void)configUseOverflowMenu:(id)sender
 {
     [tabBar setUseOverflowMenu:[sender state]];
+	
+	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:[sender intValue]]
+											  forKey:@"UseOverflowMenu"];
 }
 
 - (void)configAutomaticallyAnimates:(id)sender
 {
 	[tabBar setAutomaticallyAnimates:[sender state]];
+	
+	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:[sender intValue]]
+											  forKey:@"AutomaticallyAnimates"];
 }
 
 - (void)configAllowsScrubbing:(id)sender
 {
 	[tabBar setAllowsScrubbing:[sender state]];
+	
+	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:[sender intValue]]
+											  forKey:@"AllowScrubbing"];
 }
 
 #pragma mark -
@@ -492,4 +551,36 @@
     return YES;
 }
 
+
+- (void)configureTabBarInitially
+{
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	[popUp_style selectItemWithTitle:[defaults stringForKey:@"Style"]];
+	[popUp_orientation selectItemWithTitle:[defaults stringForKey:@"Orientation"]];
+	[popUp_tearOff selectItemWithTitle:[defaults stringForKey:@"Tear-Off"]];
+
+	[button_canCloseOnlyTab setState:[defaults boolForKey:@"CanCloseOnlyTab"]];
+	[button_disableTabClosing setState:[defaults boolForKey:@"DisableTabClosing"]];
+	[button_hideForSingleTab setState:[defaults boolForKey:@"HideForSingleTab"]];
+	[button_showAddTab setState:[defaults boolForKey:@"ShowAddTabButton"]];
+	[button_sizeToFit setState:[defaults boolForKey:@"SizeToFit"]];
+	[button_useOverflow setState:[defaults boolForKey:@"UseOverflowMenu"]];
+	[button_automaticallyAnimate setState:[defaults boolForKey:@"AutomaticallyAnimates"]];
+	[button_allowScrubbing setState:[defaults boolForKey:@"AllowScrubbing"]];
+
+	[self configStyle:popUp_style];
+	[self configOrientation:popUp_orientation];
+	[self configCanCloseOnlyTab:button_canCloseOnlyTab];
+	[self configDisableTabClose:button_disableTabClosing];
+	[self configHideForSingleTab:button_hideForSingleTab];
+	[self configAddTabButton:button_showAddTab];
+	[self configTabMinWidth:textField_minWidth];
+	[self configTabMaxWidth:textField_maxWidth];
+	[self configTabOptimumWidth:textField_optimumWidth];
+	[self configTabSizeToFit:button_sizeToFit];
+	[self configTearOffStyle:popUp_tearOff];
+	[self configUseOverflowMenu:button_useOverflow];
+	[self configAutomaticallyAnimates:button_automaticallyAnimate];
+	[self configAllowsScrubbing:button_allowScrubbing];	
+}
 @end
