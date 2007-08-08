@@ -219,6 +219,44 @@
 }
 
 /*!
+ *  @method _shrinkWidths:towardMinimum:withAvailableWidth:
+ *  @abstract Decreases widths in an array toward a minimum until they fit within availableWidth, if possible 
+ *  @param An array of NSNumbers
+ *  @param The target minimum
+ *  @param The maximum available width
+ *  @returns The amount by which the total array width was shrunk
+ */
+- (int)_shrinkWidths:(NSMutableArray *)newWidths towardMinimum:(int)minimum withAvailableWidth:(float)availableWidth
+{
+	//XXX this can be optimized!
+
+	BOOL changed = NO;
+	int count = [newWidths count];
+	int totalWidths = [[newWidths valueForKeyPath:@"@sum.intValue"] intValue];
+	int originalTotalWidths = totalWidths;
+
+	do {
+		changed = NO;
+		
+		for (int q = (count - 1); q >= 0; q--) {
+			float cellWidth = [[newWidths objectAtIndex:q] floatValue];
+			if (cellWidth - 1 >= minimum) {
+				cellWidth--;
+				totalWidths--;
+
+				[newWidths replaceObjectAtIndex:q 
+									 withObject:[NSNumber numberWithFloat:cellWidth]];
+
+				changed = YES;
+			}			
+		}
+
+	} while (changed && (totalWidths > availableWidth));
+	
+	return (originalTotalWidths - totalWidths);
+}
+
+/*!
     @method     _generateWidthsFromCells:
     @abstract   Calculates the width of cells that would be visible.
     @discussion Calculates the width of cells in the tab bar and returns an array of widths for the cells that would be
@@ -265,8 +303,7 @@
 			width = ceil(width);
 			
 			//check to see if there is not enough space to place all tabs as preferred
-			totalOccupiedWidth += width;
-			if (totalOccupiedWidth >= availableWidth) {
+			if (totalOccupiedWidth + width >= availableWidth) {
 				//There's not enough space to add currentCell at its preferred width!
 				
 				//If we're not going to use the overflow menu, cram all the tab cells into the bar regardless of minimum width
@@ -281,6 +318,7 @@
 						[newWidths addObject:[NSNumber numberWithFloat:(desiredWidth < averageWidth && [_control sizeCellsToFit]) ? desiredWidth : averageWidth]];
 					}
 
+					totalOccupiedWidth = [[newWidths valueForKeyPath:@"@sum.intValue"] intValue];
 					break;
 				}
 				
@@ -295,63 +333,67 @@
 					int widthIfAllMin = (numberOfVisibleCells + 1) * [_control cellMinWidth];
 					if (widthIfAllMin <= availableWidth) {
 						/* It's definitely possible for cells so far to be visible.
-						 * Squeeze - distribute needed sacrifice among all cells
+						 * Shrink other cells to allow this one to fit
 						 */
-						int q;
 						int cellMinWidth = [_control cellMinWidth];
 						
-						BOOL changed = NO;
-						do {
-							changed = NO;
+						/* Start off adding it to the array; we know that it will eventually fit because
+						 * (widthIfAllMin <= availableWidth)
+						 *
+						 * This allows average and minimum aggregates on the NSArray to work.
+						 */
+						[newWidths addObject:[NSNumber numberWithFloat:width]];
+						numberOfVisibleCells++;
 
-							for (q = (i - 1); q >= 0; q--) {
-								float cellWidth = [[newWidths objectAtIndex:q] floatValue];
-								if (cellWidth - 1 >= cellMinWidth) {
-									cellWidth--;
-									changed = YES;
-								}
-								
-								[newWidths replaceObjectAtIndex:q 
-													 withObject:[NSNumber numberWithFloat:cellWidth]];
-							}
-							
-							if (width - 1 >= cellMinWidth) {
-								width--;
-								changed = YES;
-							}
-						} while (changed &&
-								 ([[newWidths valueForKeyPath:@"@sum.intValue"] intValue] + width) > availableWidth);
+						totalOccupiedWidth = [[newWidths valueForKeyPath:@"@sum.intValue"] intValue];
+	
+						//First, try to shrink tabs toward the average. Tabs smaller than average won't change
+						totalOccupiedWidth -= [self _shrinkWidths:newWidths
+													towardMinimum:[[newWidths valueForKeyPath:@"@avg.intValue"] intValue]
+											   withAvailableWidth:availableWidth];
 
-						int totalWidth = [[newWidths valueForKeyPath:@"@sum.intValue"] intValue];
+						
 
-						if (width >= [_control cellMinWidth] &&
-							(availableWidth - totalWidth >= width)) {
-							//If there is enough room, append this cell
-							[newWidths addObject:[NSNumber numberWithFloat:width]];
-							numberOfVisibleCells++;
-							totalWidth += width;
+						if (totalOccupiedWidth > availableWidth) {
+							//Next, shrink tabs toward the smallest of the existing tabs. The smallest tab won't change.
+							totalOccupiedWidth -= [self _shrinkWidths:newWidths
+														towardMinimum:[[newWidths valueForKeyPath:@"@min.intValue"] intValue]
+												   withAvailableWidth:availableWidth];
+						}
+						
+						if (totalOccupiedWidth > availableWidth) {
+							//Finally, shrink tabs toward the imposed minimum size.  All tabs larger than the minimum wll change.
+							totalOccupiedWidth -= [self _shrinkWidths:newWidths
+														towardMinimum:cellMinWidth
+												   withAvailableWidth:availableWidth];
+						}
 
-						} else {
+						if (width < [_control cellMinWidth] ||
+							(totalOccupiedWidth > availableWidth)) {
+							NSLog(@"**** this is a failure (available %f, total %f, width is %f)",availableWidth,totalOccupiedWidth,width);
 							remainingCellsMustGoToOverflow = YES;
 						}
 						
-						if (totalWidth < availableWidth) {
+						if (totalOccupiedWidth < availableWidth) {
 							/* We're not using all available space not but exceeded available width before;
 							 * stretch all cells to fully fit the bar
 							 */
-							int leftoverWidth = availableWidth - totalWidth;
-							int q;
-							for (q = numberOfVisibleCells - 1; q >= 0; q--) {
-								int desiredAddition = (int)leftoverWidth / (q + 1);
-								int newCellWidth = (int)[[newWidths objectAtIndex:q] floatValue] + desiredAddition;
-								[newWidths replaceObjectAtIndex:q withObject:[NSNumber numberWithFloat:newCellWidth]];
-								leftoverWidth -= desiredAddition;
+							int leftoverWidth = availableWidth - totalOccupiedWidth;
+							if (leftoverWidth > 0) {
+								int q;
+								for (q = numberOfVisibleCells - 1; q >= 0; q--) {
+									int desiredAddition = (int)leftoverWidth / (q + 1);
+									int newCellWidth = (int)[[newWidths objectAtIndex:q] floatValue] + desiredAddition;
+									[newWidths replaceObjectAtIndex:q withObject:[NSNumber numberWithFloat:newCellWidth]];
+									leftoverWidth -= desiredAddition;
+									totalOccupiedWidth += desiredAddition;
+								}
 							}
 						}
 
 					} else {
-						// stretch - distribute leftover room among cells
-						int leftoverWidth = availableWidth - totalOccupiedWidth + width;
+						// stretch - distribute leftover room among cells, since we can't add this cell
+						int leftoverWidth = availableWidth - totalOccupiedWidth;
 						int q;
 						for (q = i - 1; q >= 0; q--) {
 							int desiredAddition = (int)leftoverWidth / (q + 1);
@@ -362,30 +404,7 @@
 						
 						remainingCellsMustGoToOverflow = YES;
 					}
-					
-					//make sure there are at least two items in the tab bar
-					if (numberOfVisibleCells < 2 && [cells count] > 1) {
-						PSMTabBarCell *cell1 = [cells objectAtIndex:0], *cell2 = [cells objectAtIndex:1];
-						NSNumber *cellWidth;
-						
-						[newWidths removeAllObjects];
-						totalOccupiedWidth = 0;
-												
-						cellWidth = [NSNumber numberWithFloat:[cell1 desiredWidthOfCell] < availableWidth * 0.5f ? [cell1 desiredWidthOfCell] : availableWidth * 0.5f];
-						[newWidths addObject:cellWidth];
-						totalOccupiedWidth += [cellWidth floatValue];
-						
-						cellWidth = [NSNumber numberWithFloat:[cell2 desiredWidthOfCell] < (availableWidth - totalOccupiedWidth) ? [cell2 desiredWidthOfCell] : (availableWidth - totalOccupiedWidth)];
-						[newWidths addObject:cellWidth];
-						totalOccupiedWidth += [cellWidth floatValue];
-						
-						if (totalOccupiedWidth < availableWidth) {
-							[newWidths replaceObjectAtIndex:0 withObject:[NSNumber numberWithFloat:availableWidth - [cellWidth floatValue]]];
-						}
 
-						numberOfVisibleCells = 2;
-					}
-					
 					// done assigning widths; remaining cells go in overflow menu
 					if (remainingCellsMustGoToOverflow) {
 						break;
@@ -415,7 +434,9 @@
 				//(totalOccupiedWidth < availableWidth)
 				numberOfVisibleCells = cellCount;
 				[newWidths addObject:[NSNumber numberWithFloat:width]];
+				totalOccupiedWidth += width;
 			}
+
         } else {
             //lay out vertical tabs
 			if (currentOrigin + cellRect.size.height <= controlRect.size.height) {
@@ -432,7 +453,32 @@
 			}
         }
     }
-    
+
+	//make sure there are at least two items in the horizontal tab bar
+	if ([_control orientation] == PSMTabBarHorizontalOrientation) {
+		if (numberOfVisibleCells < 2 && [cells count] > 1) {
+			PSMTabBarCell *cell1 = [cells objectAtIndex:0], *cell2 = [cells objectAtIndex:1];
+			NSNumber *cellWidth;
+			
+			[newWidths removeAllObjects];
+			totalOccupiedWidth = 0;
+			
+			cellWidth = [NSNumber numberWithFloat:[cell1 desiredWidthOfCell] < availableWidth * 0.5f ? [cell1 desiredWidthOfCell] : availableWidth * 0.5f];
+			[newWidths addObject:cellWidth];
+			totalOccupiedWidth += [cellWidth floatValue];
+			
+			cellWidth = [NSNumber numberWithFloat:[cell2 desiredWidthOfCell] < (availableWidth - totalOccupiedWidth) ? [cell2 desiredWidthOfCell] : (availableWidth - totalOccupiedWidth)];
+			[newWidths addObject:cellWidth];
+			totalOccupiedWidth += [cellWidth floatValue];
+			
+			if (totalOccupiedWidth < availableWidth) {
+				[newWidths replaceObjectAtIndex:0 withObject:[NSNumber numberWithFloat:availableWidth - [cellWidth floatValue]]];
+			}
+
+			numberOfVisibleCells = 2;
+		}
+	}
+
     return newWidths;
 }
 
