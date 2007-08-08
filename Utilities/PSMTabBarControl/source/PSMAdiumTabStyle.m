@@ -631,7 +631,7 @@
 				} else {
 					labelRect.origin.x = (NSMaxX(closeButtonRect) + (Adium_CellPadding * 2));					
 				}
-				labelRect.size.width -= (labelRect.origin.x - oldOrigin);
+				labelRect.size.width -= (NSMinX(labelRect) - oldOrigin);
 				break;
 			}
 			case PSMTabBarVerticalOrientation:
@@ -686,14 +686,14 @@
 		NSRect counterRect = [self objectCounterRectForTabCell:cell];
 		
 		[self drawObjectCounterInCell:cell withRect:counterRect];
-		labelRect.size.width -= counterRect.size.width + Adium_CellPadding;
+		labelRect.size.width -= NSWidth(counterRect) + Adium_CellPadding;
 	}
 	
 	// draw label
 	NSAttributedString *attributedString = [cell attributedStringValue];
 	if (orientation == PSMTabBarVerticalOrientation) {
 		//Calculate the centered rect
-		float stringHeight = [self heightOfAttributedString:attributedString withWidth:labelRect.size.width];
+		float stringHeight = [self heightOfAttributedString:attributedString withWidth:NSWidth(labelRect)];
 		if (stringHeight < labelRect.size.height) {
 			labelRect.origin.y += (NSHeight(labelRect) - stringHeight) / 2.0;
 		}		
@@ -723,7 +723,7 @@
 	if ([cell state] == NSOnState) {
 		// selected tab
 		if (orientation == PSMTabBarHorizontalOrientation) {
-			NSRect aRect = NSMakeRect(cellFrame.origin.x, cellFrame.origin.y, cellFrame.size.width, cellFrame.size.height - 2.5);
+			NSRect aRect = NSMakeRect(cellFrame.origin.x, cellFrame.origin.y, NSWidth(cellFrame), cellFrame.size.height - 2.5);
 			
 			// background
 			if (_drawsUnified) {
@@ -736,7 +736,7 @@
 					NSRectFill(aRect);
 				}
 			} else {
-				[_gradientImage drawInRect:NSMakeRect(aRect.origin.x, aRect.origin.y, aRect.size.width, aRect.size.height) fromRect:NSMakeRect(0, 0, [_gradientImage size].width, [_gradientImage size].height) operation:NSCompositeSourceOver fraction:1.0];
+				[_gradientImage drawInRect:NSMakeRect(NSMinX(aRect), NSMinY(aRect), NSWidth(aRect), NSHeight(aRect)) fromRect:NSMakeRect(0, 0, [_gradientImage size].width, [_gradientImage size].height) operation:NSCompositeSourceOver fraction:1.0];
 			}
 			
 			// frame
@@ -751,9 +751,9 @@
 			
 			bezier = [NSBezierPath bezierPath];
 			[bezier setLineWidth:1.0];
-			[bezier moveToPoint:NSMakePoint(aRect.origin.x, aRect.origin.y + aRect.size.height)];
-			[bezier lineToPoint:NSMakePoint(aRect.origin.x + aRect.size.width, aRect.origin.y + aRect.size.height)];
-			[bezier lineToPoint:NSMakePoint(aRect.origin.x + aRect.size.width, aRect.origin.y)];
+			[bezier moveToPoint:NSMakePoint(NSMinX(aRect), NSMaxY(aRect))];
+			[bezier lineToPoint:NSMakePoint(NSMaxX(aRect), NSMaxY(aRect))];
+			[bezier lineToPoint:NSMakePoint(NSMaxX(aRect), NSMinY(aRect))];
 			
 			if ([[cell controlView] frame].size.height < 2) {
 				// special case of hidden control; need line across top of cell
