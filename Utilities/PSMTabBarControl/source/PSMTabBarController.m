@@ -289,9 +289,6 @@
 				if ([_control sizeCellsToFit]) {
 					BOOL remainingCellsMustGoToOverflow = NO;
 
-					// neededWidth is the amount of space needed to fit the next cell in
-					float neededWidth = width - (totalOccupiedWidth - availableWidth);
-																					 
 					/* Can I squeeze it in without violating min cell width? This is the width we would take up
 					 * if every cell so far were at the minimum.
 					 */
