@@ -320,7 +320,7 @@
 
 	// object counter?
 	if (([cell count] > 0) && (orientation == PSMTabBarHorizontalOrientation)) {
-		resultWidth += NSwidth([self objectCounterRectForTabCell:cell]) + Adium_CellPadding;
+		resultWidth += NSWidth([self objectCounterRectForTabCell:cell]) + Adium_CellPadding;
 	}
 
 	// indicator?
