@@ -228,8 +228,6 @@
  */
 - (int)_shrinkWidths:(NSMutableArray *)newWidths towardMinimum:(int)minimum withAvailableWidth:(float)availableWidth
 {
-	//XXX this can be optimized!
-
 	BOOL changed = NO;
 	int count = [newWidths count];
 	int totalWidths = [[newWidths valueForKeyPath:@"@sum.intValue"] intValue];
@@ -254,6 +252,29 @@
 	} while (changed && (totalWidths > availableWidth));
 	
 	return (originalTotalWidths - totalWidths);
+}
+
+/*!
+ * @function   potentialMinimumForArray()
+ * @abstract   Calculate the minimum total for a given array of widths
+ * @discussion The array is summed using, for each item, the minimum between the current value and the passed minimum value.
+ *             This is useful for getting a sum if the array has size-to-fit widths which will be allowed to be less than the 
+ *             specified minimum.
+ * @param      An array of widths
+ * @param      The minimum
+ * @returns    The smallest possible sum for the array
+ */
+static int potentialMinimumForArray(NSArray *array, int minimum)
+{
+	int runningTotal = 0;
+	int count = [array count];
+
+	for (int i = 0; i < count; i++) {
+		int currentValue = [[array objectAtIndex:i] intValue];
+		runningTotal += MIN(currentValue, minimum);
+	}
+	
+	return runningTotal;
 }
 
 /*!
@@ -293,9 +314,6 @@
 				if (width > [_control cellMaxWidth]) {
 					width = [_control cellMaxWidth];
 				}
-				if (width < [_control cellMinWidth]) {
-					width = [_control cellMinWidth];
-				}
 			} else {
 				width = [_control cellOptimumWidth];
 			}
@@ -327,25 +345,26 @@
 				if ([_control sizeCellsToFit]) {
 					BOOL remainingCellsMustGoToOverflow = NO;
 
+					totalOccupiedWidth = [[newWidths valueForKeyPath:@"@sum.intValue"] intValue];
+										
 					/* Can I squeeze it in without violating min cell width? This is the width we would take up
-					 * if every cell so far were at the minimum.
-					 */
-					int widthIfAllMin = (numberOfVisibleCells + 1) * [_control cellMinWidth];
-					if (widthIfAllMin <= availableWidth) {
+					 * if every cell so far were at the control minimum size (or their current size if that is less than the control minimum).
+					 */					
+					if ((potentialMinimumForArray(newWidths, [_control cellMinWidth]) + MIN(width, [_control cellMinWidth])) <= availableWidth) {
 						/* It's definitely possible for cells so far to be visible.
 						 * Shrink other cells to allow this one to fit
 						 */
 						int cellMinWidth = [_control cellMinWidth];
 						
 						/* Start off adding it to the array; we know that it will eventually fit because
-						 * (widthIfAllMin <= availableWidth)
+						 * (the potential minimum <= availableWidth)
 						 *
 						 * This allows average and minimum aggregates on the NSArray to work.
 						 */
 						[newWidths addObject:[NSNumber numberWithFloat:width]];
 						numberOfVisibleCells++;
 
-						totalOccupiedWidth = [[newWidths valueForKeyPath:@"@sum.intValue"] intValue];
+						totalOccupiedWidth += width;
 	
 						//First, try to shrink tabs toward the average. Tabs smaller than average won't change
 						totalOccupiedWidth -= [self _shrinkWidths:newWidths
@@ -356,9 +375,12 @@
 
 						if (totalOccupiedWidth > availableWidth) {
 							//Next, shrink tabs toward the smallest of the existing tabs. The smallest tab won't change.
-							totalOccupiedWidth -= [self _shrinkWidths:newWidths
-														towardMinimum:[[newWidths valueForKeyPath:@"@min.intValue"] intValue]
-												   withAvailableWidth:availableWidth];
+							int smallestTabWidth = [[newWidths valueForKeyPath:@"@min.intValue"] intValue];
+							if (smallestTabWidth > cellMinWidth) {
+								totalOccupiedWidth -= [self _shrinkWidths:newWidths
+															towardMinimum:smallestTabWidth
+													   withAvailableWidth:availableWidth];
+							}
 						}
 						
 						if (totalOccupiedWidth > availableWidth) {
@@ -368,9 +390,9 @@
 												   withAvailableWidth:availableWidth];
 						}
 
-						if (width < [_control cellMinWidth] ||
-							(totalOccupiedWidth > availableWidth)) {
-							NSLog(@"**** this is a failure (available %f, total %f, width is %f)",availableWidth,totalOccupiedWidth,width);
+						if (totalOccupiedWidth > availableWidth) {
+							NSLog(@"**** -[PSMTabBarController generateWidthsFromCells:] This is a failure (available %f, total %f, width is %f)",
+								  availableWidth, totalOccupiedWidth, width);
 							remainingCellsMustGoToOverflow = YES;
 						}
 						
