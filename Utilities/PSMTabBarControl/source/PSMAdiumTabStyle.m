@@ -307,7 +307,7 @@
 
 	// close button?
 	if ([self closeButtonIsEnabledForCell:cell]) {
-		resultWidth += [_closeButton size].width + Adium_CellPadding;
+		resultWidth += MAX([_closeButton size].width, NSWidth([self iconRectForTabCell:cell])) + Adium_CellPadding;
 	}
 
 	// icon?
@@ -320,7 +320,7 @@
 
 	// object counter?
 	if (([cell count] > 0) && (orientation == PSMTabBarHorizontalOrientation)) {
-		resultWidth += [self objectCounterRectForTabCell:cell].size.width + Adium_CellPadding;
+		resultWidth += NSwidth([self objectCounterRectForTabCell:cell]) + Adium_CellPadding;
 	}
 
 	// indicator?
