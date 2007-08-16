@@ -105,7 +105,10 @@
 	BOOL	mouseInside = NSPointInRect(localPoint, trackRect);
 	
     _myTrackingRectTag = [self addTrackingRect:trackRect owner:self userData:nil assumeInside:mouseInside];
-	if (mouseInside) [self mouseEntered:nil];
+	if (mouseInside) 
+		[self mouseEntered:nil];
+	else
+		[self mouseExited:nil];
 }
 
 - (void)removeTrackingRect
