@@ -307,6 +307,12 @@ static int potentialMinimumForArray(NSArray *array, int minimum)
     for (i = 0; i < cellCount; i++) {
         currentCell = [cells objectAtIndex:i];
         
+		// supress close button?
+        [currentCell setCloseButtonSuppressed:((cellCount == 1 && [_control canCloseOnlyTab] == NO) ||
+											   [_control disableTabClose] ||
+											   ([[_control delegate] respondsToSelector:@selector(tabView:disableTabCloseForTabViewItem:)] && 
+												[[_control delegate] tabView:[_control tabView] disableTabCloseForTabViewItem:[currentCell representedObject]]))];		
+		
         if ([_control orientation] == PSMTabBarHorizontalOrientation) {
             // Determine cell width
 			if ([_control sizeCellsToFit]) {
@@ -523,11 +529,6 @@ static int potentialMinimumForArray(NSArray *array, int minimum)
     for (i = 0; i < cellCount; i++) {
         cell = [cells objectAtIndex:i];
         
-        // supress close button?
-        [cell setCloseButtonSuppressed:((cellCount == 1 && [_control canCloseOnlyTab] == NO) ||
-										[_control disableTabClose] ||
-										([[_control delegate] respondsToSelector:@selector(tabView:disableTabCloseForTabViewItem:)] && 
-										 [[_control delegate] tabView:[_control tabView] disableTabCloseForTabViewItem:[cell representedObject]]))];
         if (i < [widths count]) {
             tabState = 0;
             

@@ -1220,7 +1220,10 @@
     PSMTabBarCell *cell = [self cellForPoint:mousePt cellFrame:&cellFrame];
     if (cell) {
 		BOOL overClose = NSMouseInRect(mousePt, [cell closeButtonRectForFrame:cellFrame], [self isFlipped]);
-        if (overClose && ![self disableTabClose] && ![cell isCloseButtonSuppressed] && ([self allowsBackgroundTabClosing] || [[cell representedObject] isEqualTo:[tabView selectedTabViewItem]] || [theEvent modifierFlags] & NSCommandKeyMask)) {
+        if (overClose && 
+			![self disableTabClose] && 
+			![cell isCloseButtonSuppressed] &&
+			([self allowsBackgroundTabClosing] || [[cell representedObject] isEqualTo:[tabView selectedTabViewItem]] || [theEvent modifierFlags] & NSCommandKeyMask)) {
             [cell setCloseButtonOver:NO];
             [cell setCloseButtonPressed:YES];
 			_closeClicked = YES;
@@ -1308,7 +1311,24 @@
 			NSRect iconRect = [mouseDownCell closeButtonRectForFrame:mouseDownCellFrame];
 			
 			if ((NSMouseInRect(mousePt, iconRect,[self isFlipped])) && ![self disableTabClose] && ![cell isCloseButtonSuppressed] && [mouseDownCell closeButtonPressed]) {
-				[self performSelector:@selector(closeTabClick:) withObject:cell];
+				if (([[NSApp currentEvent] modifierFlags] & NSAlternateKeyMask) != 0) {
+					//If the user is holding Option, close all other tabs
+					NSEnumerator	*enumerator = [[[[self cells] copy] autorelease] objectEnumerator];
+					PSMTabBarCell	*otherCell;
+					
+					while ((otherCell = [enumerator nextObject])) {
+						if (otherCell != cell)
+							[self performSelector:@selector(closeTabClick:) withObject:otherCell];
+					}
+					
+					//Fix the close button for the clicked tab not to be pressed
+					[cell setCloseButtonPressed:NO];
+					
+				} else {
+					//Otherwise, close this tab
+					[self performSelector:@selector(closeTabClick:) withObject:cell];
+				}
+
 			} else if (NSMouseInRect(mousePt, mouseDownCellFrame, [self isFlipped]) &&
 					   (!NSMouseInRect(trackingStartPoint, [cell closeButtonRectForFrame:cellFrame], [self isFlipped]) || ![self allowsBackgroundTabClosing] || [self disableTabClose])) {
 				[mouseDownCell setCloseButtonPressed:NO];
