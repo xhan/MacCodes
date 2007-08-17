@@ -913,7 +913,7 @@
 			}
 		}
 		
-		[timer invalidate];
+		[_showHideAnimationTimer invalidate];
 		[_showHideAnimationTimer release]; _showHideAnimationTimer = nil;
     }
     [[self window] display];
@@ -985,7 +985,7 @@
 
 	if (_animationTimer) {
 		[_animationTimer invalidate];
-		[_animationTimer release];
+		[_animationTimer release]; _animationTimer = nil;
 	}	
 
     if (animate) {
