@@ -62,6 +62,7 @@
     // convenience
 - (id)cellForPoint:(NSPoint)point cellFrame:(NSRectPointer)outFrame;
 
+- (void)_animateCells:(NSTimer *)timer;
 @end
 
 @implementation PSMTabBarControl
@@ -601,7 +602,7 @@
     [cell release];
     if ([_cells count] == [tabView numberOfTabViewItems]) {
         [self update]; // don't update unless all are accounted for!
-    }
+	}
 }
 
 - (void)removeTabForCell:(PSMTabBarCell *)cell
@@ -965,7 +966,7 @@
     if ([[self tabView] numberOfTabViewItems] != [_cells count]) {
         return;
     }
-    
+
     // hide/show? (these return if already in desired state)
     if ( (_hideForSingleTab) && ([_cells count] <= 1) ) {
         [self hideTabBar:YES animate:YES];
@@ -1008,7 +1009,10 @@
 														  selector:@selector(_animateCells:)
 														  userInfo:[NSArray arrayWithObjects:targetFrames, animation, nil]
 														   repeats:YES] retain];
+		[animation release];
 		[[NSRunLoop currentRunLoop] addTimer:_animationTimer forMode:NSEventTrackingRunLoopMode];
+		[self _animateCells:_animationTimer];
+
     } else {
         for (int i = 0; i < [_cells count]; i++) {
             currentCell = [_cells objectAtIndex:i];
@@ -1098,10 +1102,9 @@
             frame.origin.x = [_controller addButtonRect].origin.x;
             [_addTabButton setFrame:frame];
         }
-		
+
 		[_animationTimer invalidate];
 		[_animationTimer release]; _animationTimer = nil;
-		[animation release];
 		
         for (int i = 0; i < cellCount; i++) {
             currentCell = [_cells objectAtIndex:i];
@@ -1510,7 +1513,10 @@
 	PSMTabBarCell *cell;
 	while ( (cell = [e nextObject]) ) {
 		[[cell indicator] stopAnimation:self];
-		[[cell indicator] startAnimation:self];
+
+		[[cell indicator] performSelector:@selector(startAnimation:)
+							   withObject:nil
+							   afterDelay:0];
 	}
 
 	[self update:NO];
