@@ -64,6 +64,10 @@ enum {
     PSMOverflowPopUpButton      *_overflowPopUpButton;      // for too many tabs
     PSMRolloverButton           *_addTabButton;
     PSMTabBarController			*_controller;
+
+    // Spring-loading.
+    NSTimer						*_springTimer;
+    NSTabViewItem				*_tabViewItemWithSpring;
 	
     // drawing style
     id<PSMTabStyle>             style;
