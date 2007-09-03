@@ -2,7 +2,7 @@
 ### Versioning:
 ###   * Set VERSION and BETA below. BETA should be TRUE or FALSE.
 #
-VERSION=1.0
+VERSION=Release1
 BETA=TRUE
 
 #
@@ -14,7 +14,7 @@ BETA=TRUE
 RELEASE_FILENAME=MacCode-$(VERSION)
 RELEASE_NAME="MacCode $(VERSION)"
 
-SRC_DIR=`pwd`/..
+SRC_DIR=..
 BUILD_DIR=build
 SOURCE_DIR=$(BUILD_DIR)/Source
 #SDK_DIR=$(BUILD_DIR)/SDK
@@ -31,10 +31,10 @@ ART_DIR=Artwork
 
 #########################
 
-.PHONY: all compile clean release
+.PHONY: all clean release
 
-all: compile release
-all-withlocalchanges: compile release
+all: release
+all-withlocalchanges: release
 
 #assertnochanges:
 #	if [[ 0 -ne `svn st $(SRC_DIR) | wc -l` ]]; then \
@@ -48,13 +48,6 @@ all-withlocalchanges: compile release
 #	fi
 
 
-#compile:
-#	$(MAKE) $(BUILDFLAGS) -C $(SRC_DIR)
-#	$(MAKE) $(BUILDFLAGS) -C $(SRC_DIR)/Extras/GrowlMail
-#	$(MAKE) $(BUILDFLAGS) -C $(SRC_DIR)/Extras/GrowlSafari
-#	$(MAKE) $(BUILDFLAGS) -C $(SRC_DIR)/Extras/growlnotify
-#	$(MAKE) $(BUILDFLAGS) -C $(SRC_DIR)/Extras/HardwareGrowler
-#	$(MAKE) $(BUILDFLAGS) -C $(SRC_DIR)/Extras/GrowlTunes
 
 clean:
 	rm -rf $(BUILD_DIR)
@@ -80,8 +73,8 @@ release:
 	
 	
 	@# delete svn and backup files
-	find $(BUILD_DIR)/source \( -name build -or -name .svn -or -name "*~.nib" \) -type d -exec rm -rf {} \; -prune
-	find $(BUILD_DIR)/source \( -name "*~" -or -name .DS_Store \) -type f -delete
+	find $(BUILD_DIR)/Source \( -name build -or -name .svn -or -name "*~.nib" \) -type d -exec rm -rf {} \; -prune
+	find $(BUILD_DIR)/Source \( -name "*~" -or -name .DS_Store \) -type f -delete
 
 	
 #	@# optimize nib files, making them uneditable, for releases only
