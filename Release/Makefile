@@ -27,19 +27,8 @@ BUILDFLAGS="BUILDCONFIGURATION=$(BUILDSTYLE)"
 PRODUCT_DIR=$(shell defaults read com.apple.Xcode PBXProductDirectory 2> /dev/null)
 ifeq ($(strip $(PRODUCT_DIR)),)
 	MACCODE_BUILD_DIR=$(SRC_DIR)/build/$(BUILDSTYLE)
-#	GROWLNOTIFY_BUILD_DIR=$(SRC_DIR)/Extras/growlnotify/build/$(BUILDSTYLE)
-#	GROWLTUNES_BUILD_DIR=$(SRC_DIR)/Extras/GrowlTunes/build/$(BUILDSTYLE)
-#	HARDWAREGROWLER_BUILD_DIR=$(SRC_DIR)/Extras/HardwareGrowler/build/$(BUILDSTYLE)
-#	GROWLMAIL_BUILD_DIR=$(SRC_DIR)/Extras/GrowlMail/build/$(BUILDSTYLE)
-#	GROWLSAFARI_BUILD_DIR=$(SRC_DIR)/Extras/GrowlSafari/build/$(BUILDSTYLE)
 else
 	TARGET_BUILD_DIR=$(PRODUCT_DIR)/$(BUILDSTYLE)
-#	GROWL_BUILD_DIR=$(TARGET_BUILD_DIR)
-#	GROWLNOTIFY_BUILD_DIR=$(TARGET_BUILD_DIR)
-#	GROWLTUNES_BUILD_DIR=$(TARGET_BUILD_DIR)
-#	HARDWAREGROWLER_BUILD_DIR=$(TARGET_BUILD_DIR)
-#	GROWLMAIL_BUILD_DIR=$(TARGET_BUILD_DIR)
-#	GROWLSAFARI_BUILD_DIR=$(TARGET_BUILD_DIR)
 endif
 #PACKAGE_MAKER=/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker
 ART_DIR=Artwork
@@ -48,8 +37,8 @@ ART_DIR=Artwork
 
 .PHONY: all compile  clean release source version
 
-all:  version compile release
-all-withlocalchanges: version compile release
+all:  source version compile release
+all-withlocalchanges: source version compile release
 
 assertnochanges:
 	if [[ 0 -ne `svn st $(SRC_DIR) | wc -l` ]]; then \
@@ -109,6 +98,7 @@ clean:
 
 source:
 	rm -rf $(BUILD_DIR)/source
+	mkdir $(BUILD_DIR)
 	mkdir $(BUILD_DIR)/Source
 	cp -R $(SRC_DIR)/Utilities $(BUILD_DIR)/Source
 	cp -R $(SRC_DIR)/Snippets $(BUILD_DIR)/Source
