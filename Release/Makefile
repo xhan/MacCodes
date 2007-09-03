@@ -46,7 +46,7 @@ ART_DIR=Artwork
 
 #########################
 
-.PHONY: all clean release source version
+.PHONY: all compile  clean release source version
 
 all:  version compile release
 all-withlocalchanges: version compile release
