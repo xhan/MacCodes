@@ -235,7 +235,7 @@ endif
 
 	@# make MacCode disk image
 	mkdir $(MACCODE_DIR)/.background
-	cp $(SRC_DIR)/images/dmg/growlDMGBackground.png $(MACCODE_DIR)/.background
+	cp $(SRC_DIR)/images/dmg/maccodeDMGBackground.png $(MACCODE_DIR)/.background
 	./ensureCustomIconsExtracted $(ART_DIR)
 	./make-diskimage.sh $(BUILD_DIR)/$(RELEASE_FILENAME).dmg $(MACCODE_DIR) $(RELEASE_NAME) dmg_growl.applescript $(ART_DIR)
 	
