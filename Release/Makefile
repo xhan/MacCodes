@@ -104,8 +104,8 @@ assertnoconflicts:
 clean:
 	rm -rf $(BUILD_DIR)
 
-realclean: clean
-	../build.sh clean
+#realclean: clean
+#	../build.sh clean
 
 #source:
 #	rm -rf $(BUILD_DIR)/source
@@ -140,7 +140,7 @@ release:
 	@# clean build directory
 	rm -rf $(BUILD_DIR)
 	mkdir $(BUILD_DIR)
-	mkdir $(GROWL_DIR)
+	mkdir $(MACCODE_DIR)
 	
 #	@# copy uninstaller
 #	cp -R "Uninstall Growl.app" $(GROWL_DIR)
