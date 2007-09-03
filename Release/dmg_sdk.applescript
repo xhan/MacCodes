@@ -1,5 +1,5 @@
 tell application "Finder"
-	tell disk "Growl-SDK"
+	tell disk "MacCode"
 		open
 		tell container window
 			set current view to icon view
@@ -13,11 +13,11 @@ tell application "Finder"
 			set icon size to 60
 			set arrangement to not arranged
 		end tell
-		set background picture of opts to file ".background:growlSDK.png"
-		set position of item "Bindings" to {263, 76}
-		set position of item "Frameworks" to {370, 76}
-		set position of item "Growl Developer Documentation.webloc" to {263, 196}
-		set position of item "Growl version history for developers.webloc" to {370, 183}
+		set background picture of opts to file ".background:maccodeDMGBackground.png"
+		--set position of item "Bindings" to {263, 76}
+		set position of item "Source" to {370, 76}
+		set position of item "MacCode.webloc" to {263, 196}
+		-- set position of item "Growl version history for developers.webloc" to {370, 183}
 		update without registering applications
 		tell container window
 			set the bounds to {31, 50, 490, 360}
