@@ -139,7 +139,7 @@ function getSignature($dict, $key, $privKey)
     // If that fails, do it in php
     if ($sig != "")
     {
-        $sig = base64_encode($sig);    // djw just go binary to base64
+        $sig = base64_encode($sig);
     }
     else
     {

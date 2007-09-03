@@ -59,4 +59,14 @@ $order_notice_secret = "my secret esellerate string";
 $aquaticPrimeSKUs = array(
 		"SKU1234567890"	
 		);
+		
+		
+// ---MYSQL CONFIG----
+
+// Database of registrations
+$db_host        = "--DATABASE HOST HERE --";
+$db_user        = "--DATABASE USER HERE--";
+$db_password    = "--DATABASE PW HERE--";
+$db_name        = "--DATABASE NAME HERE--";
+
 ?>
