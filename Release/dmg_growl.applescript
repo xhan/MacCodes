@@ -18,17 +18,17 @@ on process_disk_image(volumeName, artPath)
 				set icon size to 64
 				set arrangement to not arranged
 			end tell
-			set background picture of opts to file ".background:growlDMGBackground.png"
-			set position of item "Growl.mpkg" to {147, 75}
-			set position of item "Extras" to {100, 320}
+			-- set background picture of opts to file ".background:growlDMGBackground.png"
+			-- set position of item "Growl.mpkg" to {147, 75}
+			-- set position of item "Extras" to {100, 320}
 			--set position of item "Scripts" to {36, 153}
-			set position of item "Growl Documentation.webloc" to {100, 218}
-			set position of item "Growl version history.webloc" to {275, 218}
-			set position of item "Get more styles.webloc" to {415, 218}
-			set position of item "Uninstall Growl.app" to {415, 320}
+			-- set position of item "Growl Documentation.webloc" to {100, 218}
+			-- set position of item "Growl version history.webloc" to {275, 218}
+			-- set position of item "Get more styles.webloc" to {415, 218}
+			-- set position of item "Uninstall Growl.app" to {415, 320}
 			
 			-- Custom icons
-			my copyIconOfTo(artPath & "/GrowlIcon", "/Volumes/" & volumeName & "/Growl.mpkg")
+			-- my copyIconOfTo(artPath & "/GrowlIcon", "/Volumes/" & volumeName & "/Growl.mpkg")
 			
 			update without registering applications
 			tell container window
