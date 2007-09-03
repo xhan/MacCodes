@@ -180,8 +180,8 @@ release:
 #	$(PACKAGE_MAKER) --doc GrowlSafari/GrowlSafari\ Installer.pmdoc --out $(GROWL_DIR)/Extras/GrowlSafari/GrowlSafari.mpkg --version $(VERSION) -v	
 #	cp -R $(SRC_DIR)/Extras/GrowlSafari/README.txt $(GROWL_DIR)/Extras/GrowlSafari
 	
-	@# build the SDK
-	mkdir $(SDK_DIR)
+#	@# build the SDK
+#	mkdir $(SDK_DIR)
 	
 #	@# copy the webloc files
 #	cp "Growl Developer Documentation.webloc" "Growl version history for developers.webloc" $(SDK_DIR)
@@ -233,8 +233,8 @@ ifeq ($(BETA),FALSE)
 	find $(BUILD_DIR) \( -name classes.nib -or -name info.nib \) -type f -delete
 endif
 
-	@# make Growl disk image
-	mkdir $(GROWL_DIR)/.background
+	@# make MacCode disk image
+	mkdir $(MACCODE_DIR)/.background
 	cp $(SRC_DIR)/images/dmg/growlDMGBackground.png $(MACCODE_DIR)/.background
 	./ensureCustomIconsExtracted $(ART_DIR)
 	./make-diskimage.sh $(BUILD_DIR)/$(RELEASE_FILENAME).dmg $(MACCODE_DIR) $(RELEASE_NAME) dmg_growl.applescript $(ART_DIR)
