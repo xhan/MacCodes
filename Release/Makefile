@@ -46,10 +46,10 @@ ART_DIR=Artwork
 
 #########################
 
-.PHONY: all assertnochanges assertnoconflicts compile clean release source version
+.PHONY: all compile clean release source version
 
-all: assertnochanges version compile release
-all-withlocalchanges: assertnoconflicts version compile release
+all:  version compile release
+all-withlocalchanges: version compile release
 
 assertnochanges:
 	if [[ 0 -ne `svn st $(SRC_DIR) | wc -l` ]]; then \
