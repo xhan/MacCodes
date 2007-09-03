@@ -41,12 +41,12 @@ else
 #	GROWLMAIL_BUILD_DIR=$(TARGET_BUILD_DIR)
 #	GROWLSAFARI_BUILD_DIR=$(TARGET_BUILD_DIR)
 endif
-PACKAGE_MAKER=/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker
+#PACKAGE_MAKER=/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker
 ART_DIR=Artwork
 
 #########################
 
-.PHONY: all compile clean release source version
+.PHONY: all clean release source version
 
 all:  version compile release
 all-withlocalchanges: version compile release
@@ -107,12 +107,12 @@ clean:
 #realclean: clean
 #	../build.sh clean
 
-#source:
-#	rm -rf $(BUILD_DIR)/source
-#	mkdir $(BUILD_DIR)/source
-#	cp -R $(SRC_DIR)/Bindings $(BUILD_DIR)/source
-#	cp -R $(SRC_DIR)/Common $(BUILD_DIR)/source
-#	cp -R $(SRC_DIR)/Core $(BUILD_DIR)/source
+source:
+	rm -rf $(BUILD_DIR)/source
+	mkdir $(BUILD_DIR)/Source
+	cp -R $(SRC_DIR)/Utilities $(BUILD_DIR)/Source
+	cp -R $(SRC_DIR)/Snippets $(BUILD_DIR)/Source
+	cp -R $(SRC_DIR)/pxmLib $(BUILD_DIR)/Source
 #	cp -R $(SRC_DIR)/Plugins $(BUILD_DIR)/source
 #	cp -R $(SRC_DIR)/Docs $(BUILD_DIR)/source
 #	cp -R $(SRC_DIR)/Examples $(BUILD_DIR)/source
@@ -126,13 +126,10 @@ clean:
 #	cp $(SRC_DIR)/HACKING.txt $(BUILD_DIR)/source
 #	cp $(SRC_DIR)/License.txt $(BUILD_DIR)/source
 #	cp $(SRC_DIR)/Makefile $(BUILD_DIR)/source
-#	cp $(SRC_DIR)/README.rtf $(BUILD_DIR)/source
-#	cp $(SRC_DIR)/build.sh $(BUILD_DIR)/source
-#	cp $(SRC_DIR)/changes.txt $(BUILD_DIR)/source
-#	cp $(SRC_DIR)/generateSVNRevision.sh $(BUILD_DIR)/source
 #	cp $(SRC_DIR)/headerDoc2HTML.config $(BUILD_DIR)/source
-#	find $(BUILD_DIR)/source \( -name build -or -name .svn -or -name "*~.nib" \) -type d -exec rm -rf {} \; -prune
-#	find $(BUILD_DIR)/source \( -name "*~" -or -name .DS_Store \) -type f -delete
+
+	find $(BUILD_DIR)/source \( -name build -or -name .svn -or -name "*~.nib" \) -type d -exec rm -rf {} \; -prune
+	find $(BUILD_DIR)/source \( -name "*~" -or -name .DS_Store \) -type f -delete
 #	tar -c -C $(BUILD_DIR)/source -f $(BUILD_DIR)/$(RELEASE_FILENAME)-src.tar .
 #	bzip2 $(BUILD_DIR)/$(RELEASE_FILENAME)-src.tar
 
@@ -237,7 +234,7 @@ endif
 	mkdir $(MACCODE_DIR)/.background
 	cp $(SRC_DIR)/images/dmg/maccodeDMGBackground.png $(MACCODE_DIR)/.background
 	./ensureCustomIconsExtracted $(ART_DIR)
-	./make-diskimage.sh $(BUILD_DIR)/$(RELEASE_FILENAME).dmg $(MACCODE_DIR) $(RELEASE_NAME) dmg_growl.applescript $(ART_DIR)
+	./make-diskimage.sh $(BUILD_DIR)/$(RELEASE_FILENAME).dmg $(MACCODE_DIR) $(RELEASE_NAME) maccode_dmg_builder.applescript $(ART_DIR)
 	
 #	@# make SDK disk image
 #	mkdir $(SDK_DIR)/.background
