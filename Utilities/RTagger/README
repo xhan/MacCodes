@@ -4,6 +4,8 @@ Written by Fjölnir Ásgeirsson (fjolnir@gmail.com, http://ninjakitten.us)
 RTagger is a simple interface to libmp4v2 and taglib (both are provided as frameworks)
 There's really not much to say that the following usage example doesn't explain:
 
+NOTE: The required frameworks can't be hosted on code.google.com (license issue) so
+      you must download them from http://ninjakitten.us/RTaggerFrameworks.zip
 Example Usage
 ======================================================================================
 id<RTaggerProtocol> tagger = [RTagger taggerWithPath:@"/path/to/mp3OrAAC.aac"];
