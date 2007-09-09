@@ -85,6 +85,7 @@
 		37A9FB6E0C25FE2B0062045C /* PSMTabDragView.h in Headers */ = {isa = PBXBuildFile; fileRef = 37A9FB6C0C25FE2B0062045C /* PSMTabDragView.h */; };
 		37A9FB6F0C25FE2B0062045C /* PSMTabDragView.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A9FB6D0C25FE2B0062045C /* PSMTabDragView.m */; };
 		37A9FB700C25FE2B0062045C /* PSMTabDragView.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A9FB6D0C25FE2B0062045C /* PSMTabDragView.m */; };
+		37AF9DE10C945DC8003CAABC /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 318F2E320C7D17E300DE79A7 /* Carbon.framework */; };
 		546DEAF1067F63070098DCC4 /* PSMTabBarControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 0259C576FE90428111CA0C5A /* PSMTabBarControl.m */; };
 		546DEAF2067F630E0098DCC4 /* PSMTabBarControl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0259C57AFE90428111CA0C5A /* PSMTabBarControl.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		54D33B2906778E3300C9C163 /* PSMTabBarControl.ibclassdescription in Resources */ = {isa = PBXBuildFile; fileRef = 54D33B2806778E3300C9C163 /* PSMTabBarControl.ibclassdescription */; };
@@ -261,7 +262,7 @@
 		A251BE8C0959A1EA0058BC7F /* FakeModel.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = FakeModel.m; path = source/FakeModel.m; sourceTree = "<group>"; };
 		A251BE8D0959A1EA0058BC7F /* main.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = main.m; path = source/main.m; sourceTree = "<group>"; };
 		A251BE9B0959A2530058BC7F /* ReadMe.rtfd */ = {isa = PBXFileReference; lastKnownFileType = wrapper.rtfd; path = ReadMe.rtfd; sourceTree = "<group>"; };
-		A251BEA00959BB5B0058BC7F /* TabBarControlDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TabBarControlDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A251BEA00959BB5B0058BC7F /* TabBarControlDemo.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = TabBarControlDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A251BEA20959BB5B0058BC7F /* TabBarControlDemo-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "TabBarControlDemo-Info.plist"; sourceTree = "<group>"; };
 		A268EA5F09A9831800E082AA /* PSMRolloverButton.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = PSMRolloverButton.h; path = source/PSMRolloverButton.h; sourceTree = "<group>"; };
 		A268EA6009A9831800E082AA /* PSMRolloverButton.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = PSMRolloverButton.m; path = source/PSMRolloverButton.m; sourceTree = "<group>"; };
@@ -295,6 +296,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D1AC9700486D14A00FE50C9 /* Cocoa.framework in Frameworks */,
+				37AF9DE10C945DC8003CAABC /* Carbon.framework in Frameworks */,
 				13EB9DBE07DE0F1E00EB933A /* InterfaceBuilder.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -956,7 +958,7 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = PSMTabBarControl_Prefix.pch;
+				GCC_PREFIX_HEADER = source/PSMTabBarControl_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Palettes";
 				PRODUCT_NAME = PSMTabBarControl;
@@ -977,7 +979,7 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = PSMTabBarControl_Prefix.pch;
+				GCC_PREFIX_HEADER = source/PSMTabBarControl_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Palettes";
 				PRODUCT_NAME = PSMTabBarControl;
