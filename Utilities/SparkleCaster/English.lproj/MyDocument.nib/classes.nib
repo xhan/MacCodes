@@ -30,12 +30,10 @@
                 fileDropImageView = FileDropImageView; 
                 mainWindow = NSWindow; 
                 previewMatrix = NSMatrix; 
-                productInfoController = NSObjectController; 
                 projectInfoSheet = NSWindow; 
                 urlPreviewPanel = NSPanel; 
                 urlTextField = NSTextField; 
                 versionArrayController = NSArrayController; 
-                versionInfoController = NSObjectController; 
                 versionInfoSheet = NSWindow; 
                 versionListTableView = NSTableView; 
                 webView = WebView; 
