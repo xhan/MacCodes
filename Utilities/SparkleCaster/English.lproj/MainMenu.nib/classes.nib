@@ -1,0 +1,19 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {newSCDocument = id; openSCDocument = id; }; 
+            CLASS = AppDelegate; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {recentDocsTableView = NSTableView; startPanel = NSPanel; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = MyDocumentController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSDocumentController; 
+        }, 
+        {CLASS = URLToFilenameTransformer; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

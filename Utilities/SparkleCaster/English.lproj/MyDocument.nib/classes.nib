@@ -1,0 +1,70 @@
+{
+    IBClasses = (
+        {CLASS = EtchedText; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
+        {CLASS = EtchedTextCell; LANGUAGE = ObjC; SUPERCLASS = NSTextFieldCell; }, 
+        {
+            CLASS = FileDropImageView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {delegate = id; }; 
+            SUPERCLASS = NSImageView; 
+        }, 
+        {
+            ACTIONS = {"" = id; }; 
+            CLASS = FirstResponder; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {
+                addNewVersion = id; 
+                cancelVersionInfoSheet = id; 
+                closeProjectInfoSheet = id; 
+                okVersionInfoSheet = id; 
+                previewReleaseNotes = id; 
+                saveXML = id; 
+                showProjectInfoSheet = id; 
+            }; 
+            CLASS = MyDocument; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                fileDropImageView = FileDropImageView; 
+                mainWindow = NSWindow; 
+                previewMatrix = NSMatrix; 
+                productInfoController = NSObjectController; 
+                projectInfoSheet = NSWindow; 
+                urlPreviewPanel = NSPanel; 
+                urlTextField = NSTextField; 
+                versionArrayController = NSArrayController; 
+                versionInfoController = NSObjectController; 
+                versionInfoSheet = NSWindow; 
+                versionListTableView = NSTableView; 
+                webView = WebView; 
+                xmlProgressIndicator = NSProgressIndicator; 
+            }; 
+            SUPERCLASS = NSDocument; 
+        }, 
+        {CLASS = NFHUDButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
+        {CLASS = NFHUDButtonCell; LANGUAGE = ObjC; SUPERCLASS = NSButtonCell; }, 
+        {CLASS = NFHUDPopUpButton; LANGUAGE = ObjC; SUPERCLASS = NSPopUpButton; }, 
+        {
+            CLASS = NFHUDPopUpButtonCell; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSPopUpButtonCell; 
+        }, 
+        {CLASS = NFHUDSlider; LANGUAGE = ObjC; SUPERCLASS = NSSlider; }, 
+        {CLASS = NFHUDSliderCell; LANGUAGE = ObjC; SUPERCLASS = NSSliderCell; }, 
+        {CLASS = NFHUDWindow; LANGUAGE = ObjC; SUPERCLASS = NSPanel; }, 
+        {CLASS = NFIButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
+        {CLASS = NFIButtonCell; LANGUAGE = ObjC; SUPERCLASS = NSButtonCell; }, 
+        {CLASS = NFIPopUpButton; LANGUAGE = ObjC; SUPERCLASS = NSPopUpButton; }, 
+        {CLASS = NFIPopUpButtonCell; LANGUAGE = ObjC; SUPERCLASS = NSPopUpButtonCell; }, 
+        {CLASS = NFIWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
+        {CLASS = NSDatePicker; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 
+        {CLASS = NSFrameView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }, 
+        {CLASS = NSSegmentedControl; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 
+        {CLASS = NSTitledFrame; LANGUAGE = ObjC; SUPERCLASS = NSFrameView; }, 
+        {CLASS = URLFormatter; LANGUAGE = ObjC; SUPERCLASS = NSFormatter; }
+    ); 
+    IBVersion = 1; 
+}
