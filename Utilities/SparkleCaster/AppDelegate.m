@@ -74,7 +74,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 	[[NSDocumentController sharedDocumentController] openDocument:self];
 }
 
-#pragma mark Recent Documents Table Delegate Methods
+#pragma mark Recent Documents Table Data Source Methods
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
 {
 	NSString *outString = [[[[NSDocumentController sharedDocumentController] recentDocumentURLs] objectAtIndex:rowIndex] path];

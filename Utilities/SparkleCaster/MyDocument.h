@@ -39,7 +39,6 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 
 #import <Cocoa/Cocoa.h>
 #import <WebKit/WebKit.h>
-#import "common.h"
 #import "URLFormatter.h"
 #import "FileDropImageView.h"
 
@@ -47,14 +46,11 @@ typedef enum
 {
 	SCCancelButton,
 	SCOKButton,
-} SCDialogButtons; 
-
-#define kTestXMLFilePath "file:///Users/adam/Desktop/test.xml"
+} SCDialogButtons;
 
 @interface MyDocument : NSDocument
 {
 	IBOutlet NSWindow				*mainWindow;
-	IBOutlet NSArrayController		*versionArrayController;
 	IBOutlet NSPanel				*urlPreviewPanel;
 	IBOutlet NSTextField			*urlTextField;
 	IBOutlet WebView				*webView;
@@ -62,10 +58,9 @@ typedef enum
 	IBOutlet NSTableView			*versionListTableView;
 	IBOutlet FileDropImageView		*fileDropImageView;
 	IBOutlet NSWindow				*projectInfoSheet;
-	IBOutlet NSObjectController		*versionInfoController;
-	IBOutlet NSObjectController		*productInfoController;
 	IBOutlet NSWindow				*versionInfoSheet;
 	IBOutlet NSProgressIndicator	*xmlProgressIndicator;
+	IBOutlet NSArrayController		*versionArrayController;
 	
 	NSMutableArray				*versionListArray;
 	NSMutableDictionary			*productInfoDictionary;
@@ -73,6 +68,21 @@ typedef enum
 	
 	NSXMLDocument				*xmlDocument;
 }
+
+- (NSMutableArray *) versionListArray;
+- (void) setVersionListArray:(NSMutableArray *)newVersionListArray;
+
+- (unsigned) countOfVersionListArray;
+- (NSObject *) objectInVersionListArrayAtIndex:(unsigned)idx;
+- (void) insertObject:(NSObject *)obj inVersionListArrayAtIndex:(unsigned)idx;
+- (void) removeObjectFromVersionListArrayAtIndex:(unsigned)idx;
+- (void) replaceObjectInVersionListArrayAtIndex:(unsigned)idx withObject:(NSObject *)obj;
+
+- (NSMutableDictionary *) productInfoDictionary;
+- (void) setProductInfoDictionary:(NSMutableDictionary *)newProductInfoDictionary;
+
+- (NSMutableDictionary *) versionInfoDictionary;
+- (void) setVersionInfoDictionary:(NSMutableDictionary *)newVersionInfoDictionary;
 
 #pragma mark IBAction Methods
 - (IBAction)addNewVersion:(id)sender;
@@ -89,7 +99,6 @@ typedef enum
 - (void)displayAlertWithMessage:(NSString *)message informativeText:(NSString *)informativeText buttons:(NSArray *)buttons alertStyle:(NSAlertStyle)alertStyle forWindow:(NSWindow *)window;
 
 - (void)addVersion;
-- (void)removeVersion:(NSIndexSet *)indexes;
 - (void)previewURL:(NSURL *)url;
 
 - (void)writeAppCastToURL:(NSURL *)url;

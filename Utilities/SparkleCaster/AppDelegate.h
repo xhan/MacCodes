@@ -34,7 +34,6 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 
 
 #import <Cocoa/Cocoa.h>
-#import "common.h"
 
 @interface AppDelegate : NSObject
 {

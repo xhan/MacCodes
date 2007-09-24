@@ -76,12 +76,55 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
     // Add any code here that needs to be executed once the windowController has loaded the document's window.
 }
 
+- (NSMutableArray *) versionListArray {
+	return versionListArray;
+}
+- (void) setVersionListArray:(NSMutableArray *)newVersionListArray {
+	if(versionListArray != newVersionListArray) {
+		[versionListArray setArray:newVersionListArray];
+	}
+}
+
+- (unsigned) countOfVersionListArray {
+	return [versionListArray count];
+}
+- (NSObject *) objectInVersionListArrayAtIndex:(unsigned)idx {
+	return [versionListArray objectAtIndex:idx];
+}
+- (void) insertObject:(NSObject *)obj inVersionListArrayAtIndex:(unsigned)idx {
+	[versionListArray insertObject:obj atIndex:idx];
+}
+- (void) removeObjectFromVersionListArrayAtIndex:(unsigned)idx {
+	[versionListArray removeObjectAtIndex:idx];
+}
+- (void) replaceObjectInVersionListArrayAtIndex:(unsigned)idx withObject:(NSObject *)obj {
+	[versionListArray replaceObjectAtIndex:idx withObject:obj];
+}
+
+- (NSMutableDictionary *) productInfoDictionary {
+	return productInfoDictionary;
+}
+- (void) setProductInfoDictionary:(NSMutableDictionary *)newProductInfoDictionary {
+	if(productInfoDictionary != newProductInfoDictionary) {
+		[productInfoDictionary setDictionary:newProductInfoDictionary];
+	}
+}
+
+- (NSMutableDictionary *) versionInfoDictionary {
+	return versionInfoDictionary;
+}
+- (void) setVersionInfoDictionary:(NSMutableDictionary *)newVersionInfoDictionary {
+	if(versionInfoDictionary != newVersionInfoDictionary) {
+		[versionInfoDictionary setDictionary:newVersionInfoDictionary];
+	}
+}
+
 - (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError {
 	
 	NSMutableDictionary *masterDictionary = [NSMutableDictionary dictionary];
 	
-    [masterDictionary setValue:[productInfoController content] forKey:@"productInfoDictionary"];
-	[masterDictionary setValue:[versionArrayController arrangedObjects] forKey:@"versionArray"];
+    [masterDictionary setObject:[self productInfoDictionary] forKey:@"productInfoDictionary"];
+	[masterDictionary setObject:[self versionListArray] forKey:@"versionArray"];
 	
 #ifdef kDebugBuild
 	NSLog([masterDictionary description]);
@@ -107,8 +150,8 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 	
 	if (masterDictionary != nil) {
 		readSuccess = YES;
-		[productInfoController setContent:[masterDictionary valueForKey:@"productInfoDictionary"]];
-		[versionListArray setArray:[masterDictionary valueForKey:@"versionArray"]];
+		[self setProductInfoDictionary:[masterDictionary valueForKey:@"productInfoDictionary"]];
+		[self setVersionListArray:[masterDictionary valueForKey:@"versionArray"]];
 	}
 	return readSuccess;
 }
@@ -118,14 +161,9 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 	NSMutableDictionary *newVersionDict;
 	NSDate *date = [NSDate date]; // Today
 	
-	newVersionDict = [NSMutableDictionary dictionaryWithCapacity:5];
+	newVersionDict = [NSMutableDictionary new];
 	[newVersionDict setObject:date forKey:@"date"];
-	[versionInfoController setContent:newVersionDict];
-}
-
-- (void)removeVersion:(NSIndexSet *)indexes;
-{
-	[versionArrayController removeObjectsAtArrangedObjectIndexes:indexes];
+	[self setVersionInfoDictionary:newVersionDict];
 }
 
 - (void)previewURL:(NSURL *)url;
@@ -149,8 +187,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 	[versionInfoSheet orderOut:self];
 	if (returnCode == SCOKButton)
 	{
-		[versionArrayController addObject:[versionInfoController content]];
-		[versionListTableView reloadData];
+		[self insertObject:[self versionInfoDictionary] inVersionListArrayAtIndex:0];
 	}
 }
 
@@ -229,12 +266,13 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 		[versionArrayController setSortDescriptors:[NSArray arrayWithObject:[[[NSSortDescriptor alloc] initWithKey:@"date" ascending:NO] autorelease]]];
 		NSArray *itemArray = [versionArrayController arrangedObjects];
 		
-		int i;
+		NSEnumerator *enumerator = [itemArray objectEnumerator];
+		id anObject;
 		
-		for (i = 0; i < [itemArray count]; i++)
-		{
+		while (anObject = [enumerator nextObject]) {
+			/* code to act on each element as it is returned */
 			// Get the current version's dictionary
-			NSDictionary *itemDictionary = [itemArray objectAtIndex:i];
+			NSDictionary *itemDictionary = anObject;
 			
 			NSXMLElement *item = [NSXMLNode elementWithName:@"item"];
 			NSString *titleString = [NSString stringWithFormat:@"%@ %@", [productInfoDictionary objectForKey:@"productName"], [itemDictionary objectForKey:@"version"]];
@@ -272,11 +310,13 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 
 - (void)displayAlertWithMessage:(NSString *)message informativeText:(NSString *)informativeText buttons:(NSArray *)buttons alertStyle:(NSAlertStyle)alertStyle forWindow:(NSWindow *)window;
 {
-	int i = 0;
 	NSAlert *alert = [[[NSAlert alloc] init] autorelease];
-	for (i = 0; i < [buttons count]; i++)
-	{
-		[alert addButtonWithTitle:[buttons objectAtIndex:i]];
+	
+	NSEnumerator *enumerator = [buttons objectEnumerator];
+	id buttonTitle;
+	
+	while (buttonTitle = [enumerator nextObject]) {
+		[alert addButtonWithTitle:buttonTitle];
 	}
 	[alert setMessageText:message];
 	[alert setInformativeText:informativeText];
@@ -335,7 +375,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 
 - (IBAction)saveXML:(id)sender;
 {
-	[self writeAppCastToURL:[NSURL URLWithString:[NSString stringWithCString:kTestXMLFilePath]]];
+	[self writeAppCastToURL:[NSURL URLWithString:NSHomeDirectory()]];
 }
 
 #pragma mark FileDropImageView Delegate Methods
@@ -343,7 +383,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 - (void)filesWereDropped:(NSArray *)fileArray;
 {
 	NSLog([fileArray description]);
-	[versionInfoController setValue:[fileArray objectAtIndex:0] forKeyPath:@"selection.enclosure"];
+	[self setValue:[fileArray objectAtIndex:0] forKeyPath:@"versionListArray.selection.enclosure"];
 }
 
 @end

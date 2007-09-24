@@ -73,7 +73,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 		if ([delegate respondsToSelector:@selector(filesWereDropped:)]) {
 			[delegate filesWereDropped:files];
 			if ((_acceptsMultipleFiles) && ([files count] > 1))
-				[self setImage:[NSImage imageNamed:@"documents"]];
+				[self setImage:[NSImage imageNamed:@"NSMultipleFiles"]];
 			else
 				[self setImage:[[NSWorkspace sharedWorkspace] iconForFile:[files objectAtIndex:0]]];
 		}

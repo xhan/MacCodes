@@ -51,5 +51,5 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 @interface NSObject (FileDropDelegateMethods)
 
 // If acceptsMultipleFiles is true, this method will pass an array with the list of files dropped; otherwise it passes an array containing the item dropped onto the view.
-- filesWereDropped:(NSArray *)fileArray;
+- (void)filesWereDropped:(NSArray *)fileArray;
 @end
