@@ -76,6 +76,8 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
     // Add any code here that needs to be executed once the windowController has loaded the document's window.
 }
 
+#pragma mark Accessor Methods
+
 - (NSMutableArray *) versionListArray {
 	return versionListArray;
 }
@@ -113,11 +115,14 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 - (NSMutableDictionary *) versionInfoDictionary {
 	return versionInfoDictionary;
 }
+
 - (void) setVersionInfoDictionary:(NSMutableDictionary *)newVersionInfoDictionary {
 	if(versionInfoDictionary != newVersionInfoDictionary) {
 		[versionInfoDictionary setDictionary:newVersionInfoDictionary];
 	}
 }
+
+#pragma mark Document Read/Write
 
 - (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError {
 	
@@ -156,6 +161,8 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 	return readSuccess;
 }
 
+#pragma mark Misc Methods
+
 - (void)addVersion;
 {
 	NSMutableDictionary *newVersionDict;
@@ -164,6 +171,9 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 	newVersionDict = [NSMutableDictionary new];
 	[newVersionDict setObject:date forKey:@"date"];
 	[self setVersionInfoDictionary:newVersionDict];
+#ifdef kDebugBuild
+	NSLog([versionInfoDictionary description]);
+#endif
 }
 
 - (void)previewURL:(NSURL *)url;
@@ -176,6 +186,8 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 		[[webView mainFrame] loadRequest:urlRequest];
 	}
 }
+
+#pragma mark Sheet Callback Methods
 
 - (void)didEndProjectInfoSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 {
