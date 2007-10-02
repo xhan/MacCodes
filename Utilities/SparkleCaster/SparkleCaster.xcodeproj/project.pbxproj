@@ -20,6 +20,10 @@
 		6644FC790C94388D005C5CED /* FileDropImageView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6644FC770C94388D005C5CED /* FileDropImageView.h */; };
 		6644FC7A0C94388D005C5CED /* FileDropImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6644FC780C94388D005C5CED /* FileDropImageView.m */; };
 		66553D1A0C956E04003EA010 /* SparkleCaster.icns in Resources */ = {isa = PBXBuildFile; fileRef = 66553D190C956E04003EA010 /* SparkleCaster.icns */; };
+		6665EB2A0CB2676A00FBE6E5 /* Info.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 6665EB290CB2676A00FBE6E5 /* Info.tiff */; };
+		6665EB2C0CB2683900FBE6E5 /* Add.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 6665EB2B0CB2683900FBE6E5 /* Add.tiff */; };
+		6665EB2E0CB2684A00FBE6E5 /* Remove.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 6665EB2D0CB2684A00FBE6E5 /* Remove.tiff */; };
+		6665EBA40CB26FD800FBE6E5 /* Publish.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 6665EBA30CB26FD800FBE6E5 /* Publish.tiff */; };
 		66CB23E20C8D7AED0007DFB4 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66CB23E10C8D7AED0007DFB4 /* WebKit.framework */; };
 		66CB24350C8D88000007DFB4 /* drop-target.png in Resources */ = {isa = PBXBuildFile; fileRef = 66CB24300C8D88000007DFB4 /* drop-target.png */; };
 		66CB24360C8D88000007DFB4 /* button-plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 66CB24310C8D88000007DFB4 /* button-plus.png */; };
@@ -79,6 +83,10 @@
 		6644FC770C94388D005C5CED /* FileDropImageView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = FileDropImageView.h; sourceTree = "<group>"; };
 		6644FC780C94388D005C5CED /* FileDropImageView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = FileDropImageView.m; sourceTree = "<group>"; };
 		66553D190C956E04003EA010 /* SparkleCaster.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = SparkleCaster.icns; sourceTree = "<group>"; };
+		6665EB290CB2676A00FBE6E5 /* Info.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Info.tiff; sourceTree = "<group>"; };
+		6665EB2B0CB2683900FBE6E5 /* Add.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Add.tiff; sourceTree = "<group>"; };
+		6665EB2D0CB2684A00FBE6E5 /* Remove.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Remove.tiff; sourceTree = "<group>"; };
+		6665EBA30CB26FD800FBE6E5 /* Publish.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Publish.tiff; sourceTree = "<group>"; };
 		66CB23E10C8D7AED0007DFB4 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /Developer/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
 		66CB24300C8D88000007DFB4 /* drop-target.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "drop-target.png"; sourceTree = "<group>"; };
 		66CB24310C8D88000007DFB4 /* button-plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-plus.png"; sourceTree = "<group>"; };
@@ -172,6 +180,10 @@
 		2A37F4B8FDCFA73011CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				6665EBA30CB26FD800FBE6E5 /* Publish.tiff */,
+				6665EB2D0CB2684A00FBE6E5 /* Remove.tiff */,
+				6665EB2B0CB2683900FBE6E5 /* Add.tiff */,
+				6665EB290CB2676A00FBE6E5 /* Info.tiff */,
 				66553D190C956E04003EA010 /* SparkleCaster.icns */,
 				6608D98D0C8DA55300763CC8 /* WebNavBackHighlight.tiff */,
 				6608D98E0C8DA55300763CC8 /* WebNavBackNormal.tiff */,
@@ -260,6 +272,10 @@
 				6608D99B0C8DA55300763CC8 /* WebNavStopHighlight.tiff in Resources */,
 				6608D99C0C8DA55300763CC8 /* WebNavStopNormal.tiff in Resources */,
 				66553D1A0C956E04003EA010 /* SparkleCaster.icns in Resources */,
+				6665EB2A0CB2676A00FBE6E5 /* Info.tiff in Resources */,
+				6665EB2C0CB2683900FBE6E5 /* Add.tiff in Resources */,
+				6665EB2E0CB2684A00FBE6E5 /* Remove.tiff in Resources */,
+				6665EBA40CB26FD800FBE6E5 /* Publish.tiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

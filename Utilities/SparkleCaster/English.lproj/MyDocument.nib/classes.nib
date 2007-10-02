@@ -34,6 +34,7 @@
                 urlPreviewPanel = NSPanel; 
                 urlTextField = NSTextField; 
                 versionArrayController = NSArrayController; 
+                versionInfoController = NSObjectController; 
                 versionInfoSheet = NSWindow; 
                 versionListTableView = NSTableView; 
                 webView = WebView; 

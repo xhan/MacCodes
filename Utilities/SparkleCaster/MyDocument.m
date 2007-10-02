@@ -38,6 +38,19 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 
 #import "MyDocument.h"
 
+static NSString* 	MyDocToolbarIdentifier 		= @"My Document Toolbar Identifier";
+static NSString*	ProductInfoToolbarItemIdentifier 	= @"Product Info Item Identifier";
+static NSString*	AddVersonToolbarItemIdentifier 	= @"Add Version Item Identifier";
+static NSString*	DeleteVersonToolbarItemIdentifier 	= @"Delete Version Item Identifier";
+
+// This class knows how to validate "most" custom views.  Useful for view items we need to validate.
+@interface ValidatedViewToolbarItem : NSToolbarItem
+@end
+
+@interface MyDocument (Private)
+- (void)setupToolbar;
+@end
+
 @implementation MyDocument
 
 - (id) init {
@@ -74,6 +87,112 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 {
     [super windowControllerDidLoadNib:aController];
     // Add any code here that needs to be executed once the windowController has loaded the document's window.
+	[self setupToolbar];
+}
+
+#pragma mark NSToolbar Related Methods
+
+- (void) setupToolbar {
+    // Create a new toolbar instance, and attach it to our document window 
+    NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier: MyDocToolbarIdentifier] autorelease];
+    
+    // Set up toolbar properties: Allow customization, give a default display mode, and remember state in user defaults 
+    [toolbar setAllowsUserCustomization: YES];
+    [toolbar setAutosavesConfiguration: YES];
+    [toolbar setDisplayMode: NSToolbarDisplayModeIconAndLabel];
+    
+    // We are the delegate
+    [toolbar setDelegate: self];
+    
+    // Attach the toolbar to the document window 
+    [mainWindow setToolbar: toolbar];
+}
+
+- (NSToolbarItem *) toolbar: (NSToolbar *)toolbar itemForItemIdentifier: (NSString *) itemIdent willBeInsertedIntoToolbar:(BOOL) willBeInserted {
+    // Required delegate method:  Given an item identifier, this method returns an item 
+    // The toolbar will use this method to obtain toolbar items that can be displayed in the customization sheet, or in the toolbar itself 
+    NSToolbarItem *toolbarItem = nil;
+    
+    if ([itemIdent isEqual: ProductInfoToolbarItemIdentifier]) {
+        toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier: itemIdent] autorelease];
+		
+        // Set the text label to be displayed in the toolbar and customization palette 
+		[toolbarItem setLabel: @"Product Info"];
+		[toolbarItem setPaletteLabel: @"Product Info"];
+		
+		// Set up a reasonable tooltip, and image   Note, these aren't localized, but you will likely want to localize many of the item's properties 
+		[toolbarItem setToolTip: @"Edit Product Info"];
+		[toolbarItem setImage: [NSImage imageNamed: @"Info"]];
+		
+		// Tell the item what message to send when it is clicked 
+		[toolbarItem setTarget: self];
+		[toolbarItem setAction: @selector(showProjectInfoSheet:)];
+		
+    } else if([itemIdent isEqual: AddVersonToolbarItemIdentifier]) {
+        toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier: itemIdent] autorelease];
+		
+        // Set the text label to be displayed in the toolbar and customization palette 
+		[toolbarItem setLabel: @"Add Version"];
+		[toolbarItem setPaletteLabel: @"Add Version"];
+		
+		// Set up a reasonable tooltip, and image   Note, these aren't localized, but you will likely want to localize many of the item's properties 
+		[toolbarItem setToolTip: @"Add New Version"];
+		[toolbarItem setImage: [NSImage imageNamed: @"Add"]];
+		
+		// Tell the item what message to send when it is clicked 
+		[toolbarItem setTarget: self];
+		[toolbarItem setAction: @selector(addNewVersion:)];
+		
+	} else if([itemIdent isEqual: DeleteVersonToolbarItemIdentifier]) {
+        toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier: itemIdent] autorelease];
+		
+        // Set the text label to be displayed in the toolbar and customization palette 
+		[toolbarItem setLabel: @"Delete Version"];
+		[toolbarItem setPaletteLabel: @"Delete Version"];
+		
+		// Set up a reasonable tooltip, and image   Note, these aren't localized, but you will likely want to localize many of the item's properties 
+		[toolbarItem setToolTip: @"Delete Version"];
+		[toolbarItem setImage: [NSImage imageNamed: @"Remove"]];
+		
+		// Tell the item what message to send when it is clicked 
+		[toolbarItem setTarget: versionArrayController];
+		[toolbarItem setAction: @selector(remove:)];
+		
+    } else {
+		// itemIdent refered to a toolbar item that is not provide or supported by us or cocoa 
+		// Returning nil will inform the toolbar this kind of item is not supported 
+		toolbarItem = nil;
+    }
+    return toolbarItem;
+}
+
+- (NSArray *) toolbarDefaultItemIdentifiers: (NSToolbar *) toolbar {
+    // Required delegate method:  Returns the ordered list of items to be shown in the toolbar by default    
+    // If during the toolbar's initialization, no overriding values are found in the user defaults, or if the
+    // user chooses to revert to the default items this set will be used 
+    return [NSArray arrayWithObjects: ProductInfoToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, AddVersonToolbarItemIdentifier, DeleteVersonToolbarItemIdentifier, nil];
+}
+
+- (NSArray *) toolbarAllowedItemIdentifiers: (NSToolbar *) toolbar {
+    // Required delegate method:  Returns the list of all allowed items by identifier.  By default, the toolbar 
+    // does not assume any items are allowed, even the separator.  So, every allowed item must be explicitly listed   
+    // The set of allowed items is used to construct the customization palette 
+    return [NSArray arrayWithObjects: 	ProductInfoToolbarItemIdentifier, AddVersonToolbarItemIdentifier, DeleteVersonToolbarItemIdentifier,  NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
+}  
+
+- (BOOL) validateToolbarItem: (NSToolbarItem *) toolbarItem {
+    // Optional method:  This message is sent to us since we are the target of some toolbar item actions 
+    // (for example:  of the save items action) 
+    BOOL enable = NO;
+    if ([[toolbarItem itemIdentifier] isEqual: ProductInfoToolbarItemIdentifier]) {
+		// We will return YES (ie  the button is enabled) only when the document is dirty and needs saving 
+		enable = YES;
+    } else if ([[toolbarItem itemIdentifier] isEqual: AddVersonToolbarItemIdentifier]) {
+		enable = [versionArrayController canAdd];
+    } else if ([[toolbarItem itemIdentifier] isEqual: DeleteVersonToolbarItemIdentifier]) {
+		enable = [versionArrayController canRemove];
+    }	
+    return enable;
 }
 
 #pragma mark Accessor Methods
@@ -165,12 +284,11 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 
 - (void)addVersion;
 {
-	NSMutableDictionary *newVersionDict;
+	NSMutableDictionary *newVersionDict = [NSMutableDictionary dictionaryWithCapacity:4];
 	NSDate *date = [NSDate date]; // Today
 	
-	newVersionDict = [NSMutableDictionary new];
 	[newVersionDict setObject:date forKey:@"date"];
-	[self setVersionInfoDictionary:newVersionDict];
+	[versionInfoController setContent:newVersionDict];
 #ifdef kDebugBuild
 	NSLog([versionInfoDictionary description]);
 #endif
@@ -199,7 +317,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 	[versionInfoSheet orderOut:self];
 	if (returnCode == SCOKButton)
 	{
-		[self insertObject:[self versionInfoDictionary] inVersionListArrayAtIndex:0];
+		[self insertObject:[versionInfoController content] inVersionListArrayAtIndex:0];
 	}
 }
 
@@ -396,6 +514,29 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 {
 	NSLog([fileArray description]);
 	[self setValue:[fileArray objectAtIndex:0] forKeyPath:@"versionListArray.selection.enclosure"];
+}
+
+@end
+
+@implementation ValidatedViewToolbarItem
+
+- (void)validate {
+    [super validate]; // Let super take care of validating the menuFormRep, etc.
+	
+    if ([[self view] isKindOfClass:[NSControl class]]) {
+        NSControl *control = (NSControl *)[self view];
+        id target = [control target];
+        SEL action = [control action];
+        
+        if ([target respondsToSelector:action]) {
+            BOOL enable = YES;
+            if ([target respondsToSelector:@selector(validateToolbarItem:)]) {
+                enable = [target validateToolbarItem:self];
+            }
+            [self setEnabled:enable];
+            [control setEnabled:enable];
+        }
+    }
 }
 
 @end

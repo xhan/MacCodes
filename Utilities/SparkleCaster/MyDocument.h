@@ -61,6 +61,7 @@ typedef enum
 	IBOutlet NSWindow				*versionInfoSheet;
 	IBOutlet NSProgressIndicator	*xmlProgressIndicator;
 	IBOutlet NSArrayController		*versionArrayController;
+	IBOutlet NSObjectController		*versionInfoController;
 	
 	NSMutableArray				*versionListArray;
 	NSMutableDictionary			*productInfoDictionary;
