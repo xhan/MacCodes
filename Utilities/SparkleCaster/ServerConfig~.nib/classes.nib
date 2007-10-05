@@ -1,0 +1,15 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = ServerConfigController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                dotMacPasswordTextField = NSTextField; 
+                dotMacUserNameTextField = NSTextField; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}

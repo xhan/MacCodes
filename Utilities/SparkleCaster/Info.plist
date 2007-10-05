@@ -12,7 +12,11 @@
 				<string>scast</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string></string>
+			<string>SCAST.icns</string>
+			<key>CFBundleTypeMIMETypes</key>
+			<array>
+				<string>application/x-sparklecast</string>
+			</array>
 			<key>CFBundleTypeName</key>
 			<string>SparkleCaster Document</string>
 			<key>CFBundleTypeOSTypes</key>

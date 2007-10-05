@@ -42,6 +42,8 @@ static NSString* 	MyDocToolbarIdentifier 		= @"My Document Toolbar Identifier";
 static NSString*	ProductInfoToolbarItemIdentifier 	= @"Product Info Item Identifier";
 static NSString*	AddVersonToolbarItemIdentifier 	= @"Add Version Item Identifier";
 static NSString*	DeleteVersonToolbarItemIdentifier 	= @"Delete Version Item Identifier";
+static NSString*	PublishToolbarItemIdentifier 	= @"Publish Item Identifier";
+static NSString*	ConfigureToolbarItemIdentifier 	= @"Configure Item Identifier";
 
 // This class knows how to validate "most" custom views.  Useful for view items we need to validate.
 @interface ValidatedViewToolbarItem : NSToolbarItem
@@ -158,6 +160,37 @@ static NSString*	DeleteVersonToolbarItemIdentifier 	= @"Delete Version Item Iden
 		[toolbarItem setTarget: versionArrayController];
 		[toolbarItem setAction: @selector(remove:)];
 		
+	} else if([itemIdent isEqual: PublishToolbarItemIdentifier]) {
+        toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier: itemIdent] autorelease];
+		
+        // Set the text label to be displayed in the toolbar and customization palette 
+		[toolbarItem setLabel: @"Publish"];
+		[toolbarItem setPaletteLabel: @"Publish RSS"];
+		
+		// Set up a reasonable tooltip, and image   Note, these aren't localized, but you will likely want to localize many of the item's properties 
+		[toolbarItem setToolTip: @"Publish this RSS feed"];
+		[toolbarItem setImage: [NSImage imageNamed: @"Publish"]];
+		
+		// Tell the item what message to send when it is clicked 
+		// [toolbarItem setTarget: versionArrayController];
+		// [toolbarItem setAction: @selector(remove:)];		
+		
+	} else if([itemIdent isEqual: ConfigureToolbarItemIdentifier]) {
+        toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier: itemIdent] autorelease];
+		
+        // Set the text label to be displayed in the toolbar and customization palette 
+		[toolbarItem setLabel: @"Configure"];
+		[toolbarItem setPaletteLabel: @"Configure Server"];
+		
+		// Set up a reasonable tooltip, and image   Note, these aren't localized, but you will likely want to localize many of the item's properties 
+		[toolbarItem setToolTip: @"Configure feed server settings"];
+		[toolbarItem setImage: [NSImage imageNamed: @"Configure"]];
+		
+		// Tell the item what message to send when it is clicked 
+		[toolbarItem setTarget: self];
+		[toolbarItem setAction: @selector(showConfigSheet:)];
+		
+		
     } else {
 		// itemIdent refered to a toolbar item that is not provide or supported by us or cocoa 
 		// Returning nil will inform the toolbar this kind of item is not supported 
@@ -170,14 +203,14 @@ static NSString*	DeleteVersonToolbarItemIdentifier 	= @"Delete Version Item Iden
     // Required delegate method:  Returns the ordered list of items to be shown in the toolbar by default    
     // If during the toolbar's initialization, no overriding values are found in the user defaults, or if the
     // user chooses to revert to the default items this set will be used 
-    return [NSArray arrayWithObjects: ProductInfoToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, AddVersonToolbarItemIdentifier, DeleteVersonToolbarItemIdentifier, nil];
+    return [NSArray arrayWithObjects: ProductInfoToolbarItemIdentifier, ConfigureToolbarItemIdentifier, NSToolbarSeparatorItemIdentifier, PublishToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, AddVersonToolbarItemIdentifier, DeleteVersonToolbarItemIdentifier, nil];
 }
 
 - (NSArray *) toolbarAllowedItemIdentifiers: (NSToolbar *) toolbar {
     // Required delegate method:  Returns the list of all allowed items by identifier.  By default, the toolbar 
     // does not assume any items are allowed, even the separator.  So, every allowed item must be explicitly listed   
     // The set of allowed items is used to construct the customization palette 
-    return [NSArray arrayWithObjects: 	ProductInfoToolbarItemIdentifier, AddVersonToolbarItemIdentifier, DeleteVersonToolbarItemIdentifier,  NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
+    return [NSArray arrayWithObjects: 	PublishToolbarItemIdentifier, ConfigureToolbarItemIdentifier, ProductInfoToolbarItemIdentifier, AddVersonToolbarItemIdentifier, DeleteVersonToolbarItemIdentifier,  NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
 }  
 
 - (BOOL) validateToolbarItem: (NSToolbarItem *) toolbarItem {
@@ -191,6 +224,8 @@ static NSString*	DeleteVersonToolbarItemIdentifier 	= @"Delete Version Item Iden
 		enable = [versionArrayController canAdd];
     } else if ([[toolbarItem itemIdentifier] isEqual: DeleteVersonToolbarItemIdentifier]) {
 		enable = [versionArrayController canRemove];
+	} else if ([[toolbarItem itemIdentifier] isEqual: ConfigureToolbarItemIdentifier]) {
+		enable = YES;
     }	
     return enable;
 }
@@ -319,6 +354,11 @@ static NSString*	DeleteVersonToolbarItemIdentifier 	= @"Delete Version Item Iden
 	{
 		[self insertObject:[versionInfoController content] inVersionListArrayAtIndex:0];
 	}
+}
+
+- (void)didEndServerConfigSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
+{
+    [serverConfigSheet orderOut:self];
 }
 
 #pragma mark XML Stuff
@@ -506,6 +546,17 @@ static NSString*	DeleteVersonToolbarItemIdentifier 	= @"Delete Version Item Iden
 - (IBAction)saveXML:(id)sender;
 {
 	[self writeAppCastToURL:[NSURL URLWithString:NSHomeDirectory()]];
+}
+
+- (IBAction)showConfigSheet:(id)sender;
+{
+	[NSBundle loadNibNamed:@"ServerConfig" owner:self];
+	[NSApp beginSheet:serverConfigSheet modalForWindow:mainWindow modalDelegate:self didEndSelector:@selector(didEndServerConfigSheet:returnCode:contextInfo:) contextInfo:nil];
+}
+
+- (IBAction)closeServerConfigSheet:(id)sender;
+{
+	[NSApp endSheet:serverConfigSheet];
 }
 
 #pragma mark FileDropImageView Delegate Methods

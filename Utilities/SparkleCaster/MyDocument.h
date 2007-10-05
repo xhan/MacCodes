@@ -62,6 +62,7 @@ typedef enum
 	IBOutlet NSProgressIndicator	*xmlProgressIndicator;
 	IBOutlet NSArrayController		*versionArrayController;
 	IBOutlet NSObjectController		*versionInfoController;
+	IBOutlet NSWindow				*serverConfigSheet;
 	
 	NSMutableArray				*versionListArray;
 	NSMutableDictionary			*productInfoDictionary;
@@ -92,11 +93,14 @@ typedef enum
 - (IBAction)previewReleaseNotes:(id)sender;
 - (IBAction)showProjectInfoSheet:(id)sender;
 - (IBAction)closeProjectInfoSheet:(id)sender;
+- (IBAction)closeServerConfigSheet:(id)sender;
 - (IBAction)saveXML:(id)sender;
+- (IBAction)showConfigSheet:(id)sender;
 
 #pragma mark Private Functions
 - (void)didEndProjectInfoSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 - (void)didEndVersionInfoSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
+- (void)didEndServerConfigSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 - (void)displayAlertWithMessage:(NSString *)message informativeText:(NSString *)informativeText buttons:(NSArray *)buttons alertStyle:(NSAlertStyle)alertStyle forWindow:(NSWindow *)window;
 
 - (void)addVersion;
