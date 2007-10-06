@@ -1,0 +1,46 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                addNewVersion = id; 
+                cancelVersionInfoSheet = id; 
+                closeProjectInfoSheet = id; 
+                okVersionInfoSheet = id; 
+                previewReleaseNotes = id; 
+                saveXML = id; 
+                showConfigSheet = id; 
+                showProjectInfoSheet = id; 
+            }; 
+            CLASS = MyDocument; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                fileDropImageView = FileDropImageView; 
+                mainWindow = NSWindow; 
+                previewMatrix = NSMatrix; 
+                projectInfoSheet = NSWindow; 
+                serverConfigSheet = NSWindow; 
+                urlPreviewPanel = NSPanel; 
+                urlTextField = NSTextField; 
+                versionArrayController = NSArrayController; 
+                versionInfoController = NSObjectController; 
+                versionInfoSheet = NSWindow; 
+                versionListTableView = NSTableView; 
+                webView = WebView; 
+                xmlProgressIndicator = NSProgressIndicator; 
+            }; 
+            SUPERCLASS = NSDocument; 
+        }, 
+        {
+            CLASS = ServerConfigController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                dotMacAccountStatus = NSTextField; 
+                dotMacPasswordTextField = NSTextField; 
+                dotMacUserNameTextField = NSTextField; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}
