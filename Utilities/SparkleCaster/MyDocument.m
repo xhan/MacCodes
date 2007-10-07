@@ -270,6 +270,16 @@ static NSString*	ConfigureToolbarItemIdentifier 	= @"Configure Item Identifier";
 	return versionInfoDictionary;
 }
 
+- (void) setProductName:(NSString *)newName;
+{
+	[productInfoDictionary setObject:newName forKey:SCProductNameKey];
+}
+
+- (void) setProductURL:(NSString *)newProductURL;
+{
+	[productInfoDictionary setObject:newProductURL forKey:SCProductURLKey];
+}
+
 - (void) setVersionInfoDictionary:(NSMutableDictionary *)newVersionInfoDictionary {
 	if(versionInfoDictionary != newVersionInfoDictionary) {
 		[versionInfoDictionary setDictionary:newVersionInfoDictionary];
@@ -422,8 +432,8 @@ static NSString*	ConfigureToolbarItemIdentifier 	= @"Configure Item Identifier";
 		// Setup the Channel Element
 		NSXMLElement *channelElement = [NSXMLNode elementWithName:@"channel"];
 		[rootElement addChild:channelElement];
-		[channelElement addChild:[NSXMLNode elementWithName:@"title" stringValue:[productInfoDictionary objectForKey:@"productName"]]];
-		[channelElement addChild:[NSXMLNode elementWithName:@"link" stringValue:[[productInfoDictionary objectForKey:@"productLink"] absoluteString]]];
+		[channelElement addChild:[NSXMLNode elementWithName:@"title" stringValue:[productInfoDictionary objectForKey:SCProductNameKey]]];
+		[channelElement addChild:[NSXMLNode elementWithName:@"link" stringValue:[[productInfoDictionary objectForKey:SCProductURLKey] absoluteString]]];
 		[channelElement addChild:[NSXMLNode elementWithName:@"description" stringValue:[productInfoDictionary objectForKey:@"productDescription"]]];
 		NSString *generatorString = [NSString stringWithFormat:@"SparkleCaster %@ - http://www.glassmonkey.co.uk/sparklecaster.html", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
 		[channelElement addChild:[NSXMLNode elementWithName:@"generator" stringValue:generatorString]];
@@ -445,7 +455,7 @@ static NSString*	ConfigureToolbarItemIdentifier 	= @"Configure Item Identifier";
 			NSDictionary *itemDictionary = anObject;
 			
 			NSXMLElement *item = [NSXMLNode elementWithName:@"item"];
-			NSString *titleString = [NSString stringWithFormat:@"%@ %@", [productInfoDictionary objectForKey:@"productName"], [itemDictionary objectForKey:@"version"]];
+			NSString *titleString = [NSString stringWithFormat:@"%@ %@", [productInfoDictionary objectForKey:SCProductNameKey], [itemDictionary objectForKey:@"version"]];
 			[item addChild:[NSXMLNode elementWithName:@"title" stringValue:titleString]];
 			NSXMLNode *releaseNotesNode = [[NSXMLNode alloc] initWithKind:NSXMLTextKind options:NSXMLNodeIsCDATA];
 			[releaseNotesNode setStringValue:[[itemDictionary objectForKey:@"releaseNotes"] absoluteString]];
@@ -545,7 +555,8 @@ static NSString*	ConfigureToolbarItemIdentifier 	= @"Configure Item Identifier";
 
 - (IBAction)saveXML:(id)sender;
 {
-	[self writeAppCastToURL:[NSURL URLWithString:NSHomeDirectory()]];
+	// saves the feed as an xml document to the current user's home directory in a file called "test.xml"
+	[self writeAppCastToURL:[NSURL fileURLWithPath:[[NSHomeDirectory() stringByExpandingTildeInPath] stringByAppendingPathComponent:@"test.xml"]]];
 }
 
 - (IBAction)showConfigSheet:(id)sender;
@@ -563,8 +574,7 @@ static NSString*	ConfigureToolbarItemIdentifier 	= @"Configure Item Identifier";
 
 - (void)filesWereDropped:(NSArray *)fileArray;
 {
-	NSLog([fileArray description]);
-	[self setValue:[fileArray objectAtIndex:0] forKeyPath:@"versionListArray.selection.enclosure"];
+	[self setValue:[fileArray objectAtIndex:0] forKeyPath:@"versionInfoDictionary.selection.enclosure"];
 }
 
 @end

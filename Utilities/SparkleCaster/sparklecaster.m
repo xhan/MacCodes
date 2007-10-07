@@ -1,6 +1,6 @@
 #import <getopt.h>
 #import <Foundation/Foundation.h>
-#import "CasterModel.h"
+#import "MyDocument.h"
 
 int version = 0;
 int help = 0;
@@ -134,7 +134,7 @@ static void createCasterDoc(void)
 		[caster setProductName:[NSString stringWithCString:productstr]];
 	
 	if (pagestr)
-		[caster setProductPage:[NSString stringWithCString:pagestr]];
+		[caster setProductURL:[NSString stringWithCString:pagestr]];
 	
 	if (descriptionstr)
 		[caster setProductDescription:[NSString stringWithCString:descriptionstr]];
@@ -158,7 +158,7 @@ static void updateCasterDoc(void)
 			[caster setProductName:[NSString stringWithCString:productstr]];
 		
 		if (pagestr)
-			[caster setProductPage:[NSString stringWithCString:pagestr]];
+			[caster setProductURL:[NSString stringWithCString:pagestr]];
 		
 		if (descriptionstr)
 			[caster setProductDescription:[NSString stringWithCString:descriptionstr]];

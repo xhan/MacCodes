@@ -48,6 +48,9 @@ typedef enum
 	SCOKButton,
 } SCDialogButtons;
 
+#define SCProductNameKey @"productName"
+#define SCProductURLKey @"productURL"
+
 @interface MyDocument : NSDocument
 {
 	IBOutlet NSWindow				*mainWindow;
@@ -85,6 +88,9 @@ typedef enum
 
 - (NSMutableDictionary *) versionInfoDictionary;
 - (void) setVersionInfoDictionary:(NSMutableDictionary *)newVersionInfoDictionary;
+
+- (void) setProductName:(NSString *)newName;
+- (void) setProductURL:(NSString *)newProductURL;
 
 #pragma mark IBAction Methods
 - (IBAction)addNewVersion:(id)sender;
