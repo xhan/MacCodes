@@ -19,9 +19,11 @@
                 addNewVersion = id; 
                 cancelVersionInfoSheet = id; 
                 closeProjectInfoSheet = id; 
+                closeServerConfigSheet = id; 
                 okVersionInfoSheet = id; 
                 previewReleaseNotes = id; 
                 saveXML = id; 
+                showConfigSheet = id; 
                 showProjectInfoSheet = id; 
             }; 
             CLASS = MyDocument; 
@@ -31,6 +33,8 @@
                 mainWindow = NSWindow; 
                 previewMatrix = NSMatrix; 
                 projectInfoSheet = NSWindow; 
+                serverConfigSheet = NSWindow; 
+                statusTextField = NSTextField; 
                 urlPreviewPanel = NSPanel; 
                 urlTextField = NSTextField; 
                 versionArrayController = NSArrayController; 

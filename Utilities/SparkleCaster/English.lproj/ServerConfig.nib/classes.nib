@@ -6,6 +6,7 @@
                 addNewVersion = id; 
                 cancelVersionInfoSheet = id; 
                 closeProjectInfoSheet = id; 
+                closeServerConfigSheet = id; 
                 okVersionInfoSheet = id; 
                 previewReleaseNotes = id; 
                 saveXML = id; 
@@ -19,7 +20,9 @@
                 mainWindow = NSWindow; 
                 previewMatrix = NSMatrix; 
                 projectInfoSheet = NSWindow; 
+                serverConfigController = ServerConfigController; 
                 serverConfigSheet = NSWindow; 
+                statusTextField = NSTextField; 
                 urlPreviewPanel = NSPanel; 
                 urlTextField = NSTextField; 
                 versionArrayController = NSArrayController; 
@@ -35,9 +38,11 @@
             CLASS = ServerConfigController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                appcastURL = NSTextField; 
                 dotMacAccountStatus = NSTextField; 
                 dotMacPasswordTextField = NSTextField; 
                 dotMacUserNameTextField = NSTextField; 
+                enclosureURL = NSTextField; 
             }; 
             SUPERCLASS = NSObject; 
         }

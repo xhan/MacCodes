@@ -33,6 +33,7 @@
 		6608D9DD0C8DB90B00763CC8 /* URLFormatter.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6608D9DC0C8DB90B00763CC8 /* URLFormatter.h */; };
 		6608D9EC0C8DB93F00763CC8 /* URLFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6608D9EB0C8DB93F00763CC8 /* URLFormatter.m */; };
 		661A7B5D0CB5155A006F4CD8 /* sparklecaster.m in Sources */ = {isa = PBXBuildFile; fileRef = 661A7B5C0CB5155A006F4CD8 /* sparklecaster.m */; };
+		663175260CBD087700A689BC /* exportRSS.tif in Resources */ = {isa = PBXBuildFile; fileRef = 663175250CBD087700A689BC /* exportRSS.tif */; };
 		6644FC790C94388D005C5CED /* FileDropImageView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6644FC770C94388D005C5CED /* FileDropImageView.h */; };
 		6644FC7A0C94388D005C5CED /* FileDropImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6644FC780C94388D005C5CED /* FileDropImageView.m */; };
 		66553D1A0C956E04003EA010 /* SparkleCaster.icns in Resources */ = {isa = PBXBuildFile; fileRef = 66553D190C956E04003EA010 /* SparkleCaster.icns */; };
@@ -134,6 +135,7 @@
 		6608D9EB0C8DB93F00763CC8 /* URLFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = URLFormatter.m; sourceTree = "<group>"; };
 		661A7B470CB5137E006F4CD8 /* sparklecaster */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sparklecaster; sourceTree = BUILT_PRODUCTS_DIR; };
 		661A7B5C0CB5155A006F4CD8 /* sparklecaster.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = sparklecaster.m; sourceTree = "<group>"; };
+		663175250CBD087700A689BC /* exportRSS.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = exportRSS.tif; sourceTree = "<group>"; };
 		6644FC770C94388D005C5CED /* FileDropImageView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = FileDropImageView.h; sourceTree = "<group>"; };
 		6644FC780C94388D005C5CED /* FileDropImageView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = FileDropImageView.m; sourceTree = "<group>"; };
 		66553D190C956E04003EA010 /* SparkleCaster.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = SparkleCaster.icns; sourceTree = "<group>"; };
@@ -254,6 +256,7 @@
 		2A37F4B8FDCFA73011CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				663175250CBD087700A689BC /* exportRSS.tif */,
 				666D66BC0CB40C8D006815ED /* DotMac.tif */,
 				6683B5AE0CB28B1600F1C5E0 /* SCAST.icns */,
 				6683B59D0CB27FA600F1C5E0 /* Configure.tiff */,
@@ -377,6 +380,7 @@
 				6683B5AF0CB28B1700F1C5E0 /* SCAST.icns in Resources */,
 				666D66A30CB3FE86006815ED /* ServerConfig.nib in Resources */,
 				666D66BD0CB40C8E006815ED /* DotMac.tif in Resources */,
+				663175260CBD087700A689BC /* exportRSS.tif in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -536,6 +540,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = "$(inherited)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
@@ -564,6 +569,7 @@
 					ppc,
 					i386,
 				);
+				CURRENT_PROJECT_VERSION = "$(inherited)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",

@@ -2,6 +2,15 @@
 
 @implementation ServerConfigController
 
+- (id) init {
+	self = [super init];
+	if (self != nil) {
+		serverConfigSettings = [NSMutableDictionary dictionaryWithCapacity:0];
+	}
+	return self;
+}
+
+
 - (void) awakeFromNib
 {
 	[self performSelector:@selector(getDotMacUserDetails) withObject:nil afterDelay:0.5];
@@ -37,5 +46,30 @@
 	NSString *statusString = [NSString stringWithFormat:@"You have %d days left on your account."];
 	[dotMacAccountStatus setStringValue:statusString];
 }
+
+- (NSMutableDictionary	*) serverConfigSettings {
+	return serverConfigSettings;
+}
+- (void) setServerConfigSettings:(NSMutableDictionary	*)newServerConfigSettings {
+	if(serverConfigSettings != newServerConfigSettings) {
+		[serverConfigSettings setDictionary:newServerConfigSettings];
+	}
+}
+
+- (NSString *) appcastURL;
+{
+	return [serverConfigSettings objectForKey:@"appcastURL"];
+}
+
+- (NSString *) enclosureURLPrefix;
+{
+	return [serverConfigSettings objectForKey:@"enclosureURLPrefix"];
+}
+
+- (void) dealloc {
+	[serverConfigSettings release];
+	[super dealloc];
+}
+
 
 @end

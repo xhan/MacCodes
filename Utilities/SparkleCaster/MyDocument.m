@@ -44,6 +44,7 @@ static NSString*	AddVersonToolbarItemIdentifier 	= @"Add Version Item Identifier
 static NSString*	DeleteVersonToolbarItemIdentifier 	= @"Delete Version Item Identifier";
 static NSString*	PublishToolbarItemIdentifier 	= @"Publish Item Identifier";
 static NSString*	ConfigureToolbarItemIdentifier 	= @"Configure Item Identifier";
+static NSString*	ExportRSSToolbarItemIdentifier 	= @"Export RSS Item Identifier";
 
 // This class knows how to validate "most" custom views.  Useful for view items we need to validate.
 @interface ValidatedViewToolbarItem : NSToolbarItem
@@ -90,6 +91,52 @@ static NSString*	ConfigureToolbarItemIdentifier 	= @"Configure Item Identifier";
     [super windowControllerDidLoadNib:aController];
     // Add any code here that needs to be executed once the windowController has loaded the document's window.
 	[self setupToolbar];
+	[NSBundle loadNibNamed:@"ServerConfig" owner:self];
+}
+
+- (NSNumber *) sizeOfFileAtPath:(NSString *)filePath;
+{
+	NSFileManager * fm = [NSFileManager defaultManager];
+	unsigned long long size = 0;
+	BOOL isDirectory;
+	
+	if ([fm fileExistsAtPath:filePath isDirectory:&isDirectory] && isDirectory) {
+		size = 0;
+	} else {
+		size = [[[fm fileAttributesAtPath:filePath traverseLink:NO] objectForKey:NSFileSize] unsignedLongLongValue];
+	}
+	
+	// Return Total Size in Bytes
+	return [NSNumber numberWithUnsignedLongLong:size];
+}
+
+- (NSString *) mimeTypeForFileAtPath:(NSString *)filePath;
+{
+	NSFileManager * fm = [NSFileManager defaultManager];
+	BOOL isDirectory;
+	NSString *mimeType = @"";
+	
+	// Determine Paths to Add
+	if ([fm fileExistsAtPath:filePath isDirectory:&isDirectory]) {
+		if (!isDirectory){
+			NSString *extension = [filePath pathExtension];
+			
+			if ([extension isEqualToString:@"zip"])
+				mimeType = @"application/zip";
+			else if ([extension isEqualToString:@"tar"])
+				mimeType = @"application/x-tar";
+			else if ([extension isEqualToString:@"tgz"])
+				mimeType = @"application/x-gzip";
+			else if ([extension isEqualToString:@"tbz"])
+				mimeType = @"application/x-bzip";
+			else if ([extension isEqualToString:@"dmg"])
+				mimeType = @"application/x-apple-diskimage";
+			else
+				mimeType = @"application/unknown";
+		}
+	}
+	// Return the mimeType string
+	return mimeType;
 }
 
 #pragma mark NSToolbar Related Methods
@@ -134,11 +181,11 @@ static NSString*	ConfigureToolbarItemIdentifier 	= @"Configure Item Identifier";
         toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier: itemIdent] autorelease];
 		
         // Set the text label to be displayed in the toolbar and customization palette 
-		[toolbarItem setLabel: @"Add Version"];
+		[toolbarItem setLabel: @"Add"];
 		[toolbarItem setPaletteLabel: @"Add Version"];
 		
 		// Set up a reasonable tooltip, and image   Note, these aren't localized, but you will likely want to localize many of the item's properties 
-		[toolbarItem setToolTip: @"Add New Version"];
+		[toolbarItem setToolTip: @"Add a new version"];
 		[toolbarItem setImage: [NSImage imageNamed: @"Add"]];
 		
 		// Tell the item what message to send when it is clicked 
@@ -149,16 +196,16 @@ static NSString*	ConfigureToolbarItemIdentifier 	= @"Configure Item Identifier";
         toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier: itemIdent] autorelease];
 		
         // Set the text label to be displayed in the toolbar and customization palette 
-		[toolbarItem setLabel: @"Delete Version"];
-		[toolbarItem setPaletteLabel: @"Delete Version"];
+		[toolbarItem setLabel: @"Remove"];
+		[toolbarItem setPaletteLabel: @"Remove Version"];
 		
 		// Set up a reasonable tooltip, and image   Note, these aren't localized, but you will likely want to localize many of the item's properties 
-		[toolbarItem setToolTip: @"Delete Version"];
+		[toolbarItem setToolTip: @"Remove selected version"];
 		[toolbarItem setImage: [NSImage imageNamed: @"Remove"]];
 		
 		// Tell the item what message to send when it is clicked 
-		[toolbarItem setTarget: versionArrayController];
-		[toolbarItem setAction: @selector(remove:)];
+		[toolbarItem setTarget: self];
+		[toolbarItem setAction: @selector(removeSelectedObjectFromVersionListArray)];
 		
 	} else if([itemIdent isEqual: PublishToolbarItemIdentifier]) {
         toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier: itemIdent] autorelease];
@@ -190,6 +237,20 @@ static NSString*	ConfigureToolbarItemIdentifier 	= @"Configure Item Identifier";
 		[toolbarItem setTarget: self];
 		[toolbarItem setAction: @selector(showConfigSheet:)];
 		
+	} else if([itemIdent isEqual: ExportRSSToolbarItemIdentifier]) {
+        toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier: itemIdent] autorelease];
+		
+        // Set the text label to be displayed in the toolbar and customization palette 
+		[toolbarItem setLabel: @"Export"];
+		[toolbarItem setPaletteLabel: @"Export RSS"];
+		
+		// Set up a reasonable tooltip, and image   Note, these aren't localized, but you will likely want to localize many of the item's properties 
+		[toolbarItem setToolTip: @"Export RSS XML Document"];
+		[toolbarItem setImage: [NSImage imageNamed: @"exportRSS"]];
+		
+		// Tell the item what message to send when it is clicked 
+		[toolbarItem setTarget: self];
+		[toolbarItem setAction: @selector(saveXML:)];
 		
     } else {
 		// itemIdent refered to a toolbar item that is not provide or supported by us or cocoa 
@@ -203,14 +264,14 @@ static NSString*	ConfigureToolbarItemIdentifier 	= @"Configure Item Identifier";
     // Required delegate method:  Returns the ordered list of items to be shown in the toolbar by default    
     // If during the toolbar's initialization, no overriding values are found in the user defaults, or if the
     // user chooses to revert to the default items this set will be used 
-    return [NSArray arrayWithObjects: ProductInfoToolbarItemIdentifier, ConfigureToolbarItemIdentifier, NSToolbarSeparatorItemIdentifier, PublishToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, AddVersonToolbarItemIdentifier, DeleteVersonToolbarItemIdentifier, nil];
+    return [NSArray arrayWithObjects: ProductInfoToolbarItemIdentifier, ConfigureToolbarItemIdentifier, NSToolbarSeparatorItemIdentifier, ExportRSSToolbarItemIdentifier, PublishToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, AddVersonToolbarItemIdentifier, DeleteVersonToolbarItemIdentifier, nil];
 }
 
 - (NSArray *) toolbarAllowedItemIdentifiers: (NSToolbar *) toolbar {
     // Required delegate method:  Returns the list of all allowed items by identifier.  By default, the toolbar 
     // does not assume any items are allowed, even the separator.  So, every allowed item must be explicitly listed   
     // The set of allowed items is used to construct the customization palette 
-    return [NSArray arrayWithObjects: 	PublishToolbarItemIdentifier, ConfigureToolbarItemIdentifier, ProductInfoToolbarItemIdentifier, AddVersonToolbarItemIdentifier, DeleteVersonToolbarItemIdentifier,  NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
+    return [NSArray arrayWithObjects: 	PublishToolbarItemIdentifier, ConfigureToolbarItemIdentifier, ProductInfoToolbarItemIdentifier, AddVersonToolbarItemIdentifier, DeleteVersonToolbarItemIdentifier,  NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, ExportRSSToolbarItemIdentifier, nil];
 }  
 
 - (BOOL) validateToolbarItem: (NSToolbarItem *) toolbarItem {
@@ -225,8 +286,14 @@ static NSString*	ConfigureToolbarItemIdentifier 	= @"Configure Item Identifier";
     } else if ([[toolbarItem itemIdentifier] isEqual: DeleteVersonToolbarItemIdentifier]) {
 		enable = [versionArrayController canRemove];
 	} else if ([[toolbarItem itemIdentifier] isEqual: ConfigureToolbarItemIdentifier]) {
+#ifdef kDebugBuild
 		enable = YES;
-    }	
+#else
+		enable = NO;
+#endif
+	} else if ([[toolbarItem itemIdentifier] isEqual: ExportRSSToolbarItemIdentifier]) {
+		enable = YES;
+    }
     return enable;
 }
 
@@ -286,6 +353,11 @@ static NSString*	ConfigureToolbarItemIdentifier 	= @"Configure Item Identifier";
 	}
 }
 
+- (void) removeSelectedObjectFromVersionListArray;
+{
+	[versionArrayController remove:self];
+}
+
 #pragma mark Document Read/Write
 
 - (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError {
@@ -334,9 +406,6 @@ static NSString*	ConfigureToolbarItemIdentifier 	= @"Configure Item Identifier";
 	
 	[newVersionDict setObject:date forKey:@"date"];
 	[versionInfoController setContent:newVersionDict];
-#ifdef kDebugBuild
-	NSLog([versionInfoDictionary description]);
-#endif
 }
 
 - (void)previewURL:(NSURL *)url;
@@ -371,22 +440,18 @@ static NSString*	ConfigureToolbarItemIdentifier 	= @"Configure Item Identifier";
     [serverConfigSheet orderOut:self];
 }
 
+- (void)xmlExportSavePanelDidEnd:(NSSavePanel *)sheet returnCode:(int)returnCode  contextInfo:(void  *)contextInfo;
+{
+	[sheet orderOut:self];
+	
+	if ((returnCode == NSOKButton) && ([[sheet URL] isFileURL]))
+	{
+		if (![self writeAppCastToURL:[sheet URL]])
+			[self displayAlertWithMessage:@"Could not save XML" informativeText:@"An unknown error prevented the XML file from being written" buttons:[NSArray arrayWithObject:@"OK"] alertStyle:NSInformationalAlertStyle forWindow:mainWindow];
+	}
+}
+
 #pragma mark XML Stuff
-
-- (NSXMLDocument *)xmlDocument
-{
-    return [[xmlDocument retain] autorelease];
-}
-
-- (void)setXMLDocument:(NSXMLDocument *)newXMLDocument
-{
-    if (xmlDocument != newXMLDocument)
-    {
-        [newXMLDocument retain];
-        [xmlDocument release];
-        xmlDocument = newXMLDocument;
-    }
-}
 
 /*
  <?xml version="1.0" encoding="utf-8"?>
@@ -411,15 +476,19 @@ static NSString*	ConfigureToolbarItemIdentifier 	= @"Configure Item Identifier";
  </rss>
 */
 
-- (void)writeAppCastToURL:(NSURL *)url;
+- (BOOL)writeAppCastToURL:(NSURL *)url;
 {
-	if (!url)
+	// This currently only works for file:// URLs
+	BOOL success = NO;
+	if ((!url) | (![url isFileURL]))
 	{
 		[self displayAlertWithMessage:@"Invalid URL" informativeText:@"Please check the URL" buttons:[NSArray arrayWithObject:@"OK"] alertStyle:nil forWindow:mainWindow];
 	}
 	else
 	{
 		[xmlProgressIndicator startAnimation:self];
+		[statusTextField setStringValue:@"Saving XML..."];
+		[statusTextField setHidden:NO];
 		// Create the root element
 		NSXMLElement *rootElement = [NSXMLNode elementWithName:@"rss"];
 		xmlDocument = [NSXMLDocument documentWithRootElement:rootElement];
@@ -433,7 +502,7 @@ static NSString*	ConfigureToolbarItemIdentifier 	= @"Configure Item Identifier";
 		NSXMLElement *channelElement = [NSXMLNode elementWithName:@"channel"];
 		[rootElement addChild:channelElement];
 		[channelElement addChild:[NSXMLNode elementWithName:@"title" stringValue:[productInfoDictionary objectForKey:SCProductNameKey]]];
-		[channelElement addChild:[NSXMLNode elementWithName:@"link" stringValue:[[productInfoDictionary objectForKey:SCProductURLKey] absoluteString]]];
+		[channelElement addChild:[NSXMLNode elementWithName:@"link" stringValue:[productInfoDictionary objectForKey:SCProductURLKey]]];
 		[channelElement addChild:[NSXMLNode elementWithName:@"description" stringValue:[productInfoDictionary objectForKey:@"productDescription"]]];
 		NSString *generatorString = [NSString stringWithFormat:@"SparkleCaster %@ - http://www.glassmonkey.co.uk/sparklecaster.html", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
 		[channelElement addChild:[NSXMLNode elementWithName:@"generator" stringValue:generatorString]];
@@ -457,13 +526,20 @@ static NSString*	ConfigureToolbarItemIdentifier 	= @"Configure Item Identifier";
 			NSXMLElement *item = [NSXMLNode elementWithName:@"item"];
 			NSString *titleString = [NSString stringWithFormat:@"%@ %@", [productInfoDictionary objectForKey:SCProductNameKey], [itemDictionary objectForKey:@"version"]];
 			[item addChild:[NSXMLNode elementWithName:@"title" stringValue:titleString]];
-			NSXMLNode *releaseNotesNode = [[NSXMLNode alloc] initWithKind:NSXMLTextKind options:NSXMLNodeIsCDATA];
-			[releaseNotesNode setStringValue:[[itemDictionary objectForKey:@"releaseNotes"] absoluteString]];
-			[item addChild:[NSXMLNode elementWithName:@"description" stringValue:[releaseNotesNode XMLStringWithOptions:NSXMLNodePreserveCDATA]]];
+			NSXMLNode *releaseNotesTextNode = [[NSXMLNode alloc] initWithKind:NSXMLTextKind options:NSXMLNodeIsCDATA];
+			[releaseNotesTextNode setStringValue:[[itemDictionary objectForKey:@"releaseNotes"] absoluteString]];
+			NSXMLElement *releaseNotesElement = [NSXMLNode elementWithName:@"description"];
+			[releaseNotesElement addChild:releaseNotesTextNode];
+			[item addChild:releaseNotesElement];
 			[item addChild:[NSXMLNode elementWithName:@"pubDate" stringValue:[[itemDictionary objectForKey:@"date"] description]]];
 			NSXMLElement *enclosureElement = [NSXMLNode elementWithName:@"enclosure"];
-			[enclosureElement addAttribute:[NSXMLNode attributeWithName:@"url" stringValue:[itemDictionary objectForKey:@"enclosure"]]];
-			// Need to add attributes for enclosure length and MIME type
+#warning Need to sort out the enclosure URL stuff - this is a quick hack...
+			if (![itemDictionary objectForKey:@"enclosureURL"])
+				[enclosureElement addAttribute:[NSXMLNode attributeWithName:@"url" stringValue:[itemDictionary objectForKey:@"enclosureLocalPath"]]];
+			else
+				[enclosureElement addAttribute:[NSXMLNode attributeWithName:@"url" stringValue:[itemDictionary objectForKey:@"enclosureURL"]]];
+			[enclosureElement addAttribute:[NSXMLNode attributeWithName:@"length" stringValue:[[self sizeOfFileAtPath:[itemDictionary objectForKey:@"enclosureLocalPath"]] stringValue]]];
+			[enclosureElement addAttribute:[NSXMLNode attributeWithName:@"type" stringValue:[self mimeTypeForFileAtPath:[itemDictionary objectForKey:@"enclosureLocalPath"]]]];
 			[enclosureElement addAttribute:[NSXMLNode attributeWithName:@"sparkle:version" stringValue:[itemDictionary objectForKey:@"version"]]];
 			[item addChild:enclosureElement];
 			// Set the GUID to the product name and version
@@ -473,17 +549,21 @@ static NSString*	ConfigureToolbarItemIdentifier 	= @"Configure Item Identifier";
 			
 			// Add the item to the channel and release the item and itemDictionary ready for the next item in the array.
 			[channelElement addChild:item];
-			[releaseNotesNode release];
-			[itemDictionary release];
 		}
 		
 		// Now write the XML data to the URL
 		NSData *xmlData = [xmlDocument XMLDataWithOptions:NSXMLNodePrettyPrint];
-		if (![xmlData writeToURL:url atomically:NO])
-			NSBeep();
+		NSError *err;
+		if (![xmlData writeToURL:url options:NSAtomicWrite error:&err]){
+			[NSApp willPresentError:err];
+		}
 		
 		[xmlProgressIndicator stopAnimation:self];
+		[statusTextField setHidden:YES];
+		success = YES;
 	}
+	
+	return success;
 }
 
 #pragma mark Alert Convienience Methods
@@ -555,13 +635,25 @@ static NSString*	ConfigureToolbarItemIdentifier 	= @"Configure Item Identifier";
 
 - (IBAction)saveXML:(id)sender;
 {
+#ifdef kDebugBuild
 	// saves the feed as an xml document to the current user's home directory in a file called "test.xml"
 	[self writeAppCastToURL:[NSURL fileURLWithPath:[[NSHomeDirectory() stringByExpandingTildeInPath] stringByAppendingPathComponent:@"test.xml"]]];
+#else
+	NSSavePanel *sp;
+	
+	/* create or get the shared instance of NSSavePanel */
+	sp = [NSSavePanel savePanel];
+	
+	[sp setAllowedFileTypes:[NSArray arrayWithObjects:@"xml", @"rss", nil]];
+	[sp setCanSelectHiddenExtension:YES];
+	
+	/* display the NSSavePanel */
+	[sp beginSheetForDirectory:NSHomeDirectory() file:[NSString stringWithFormat:@"%@_appcast.xml", [productInfoDictionary objectForKey:@"productName"]] modalForWindow:mainWindow modalDelegate:self didEndSelector:@selector(xmlExportSavePanelDidEnd:returnCode:contextInfo:) contextInfo:nil];
+#endif
 }
 
 - (IBAction)showConfigSheet:(id)sender;
 {
-	[NSBundle loadNibNamed:@"ServerConfig" owner:self];
 	[NSApp beginSheet:serverConfigSheet modalForWindow:mainWindow modalDelegate:self didEndSelector:@selector(didEndServerConfigSheet:returnCode:contextInfo:) contextInfo:nil];
 }
 
@@ -574,7 +666,8 @@ static NSString*	ConfigureToolbarItemIdentifier 	= @"Configure Item Identifier";
 
 - (void)filesWereDropped:(NSArray *)fileArray;
 {
-	[self setValue:[fileArray objectAtIndex:0] forKeyPath:@"versionInfoDictionary.selection.enclosure"];
+	[versionInfoController setValue:[fileArray objectAtIndex:0] forKeyPath:@"selection.enclosureLocalPath"];
+	[versionInfoController setValue:[[fileArray objectAtIndex:0] lastPathComponent] forKeyPath:@"selection.enclosureName"];
 }
 
 @end

@@ -39,6 +39,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 
 #import <Cocoa/Cocoa.h>
 #import <WebKit/WebKit.h>
+#import "ServerConfigController.h"
 #import "URLFormatter.h"
 #import "FileDropImageView.h"
 
@@ -66,6 +67,9 @@ typedef enum
 	IBOutlet NSArrayController		*versionArrayController;
 	IBOutlet NSObjectController		*versionInfoController;
 	IBOutlet NSWindow				*serverConfigSheet;
+	IBOutlet NSTextField			*statusTextField;
+	
+	IBOutlet ServerConfigController	*serverConfigController;
 	
 	NSMutableArray				*versionListArray;
 	NSMutableDictionary			*productInfoDictionary;
@@ -92,6 +96,11 @@ typedef enum
 - (void) setProductName:(NSString *)newName;
 - (void) setProductURL:(NSString *)newProductURL;
 
+- (void) removeSelectedObjectFromVersionListArray;
+
+- (NSNumber *) sizeOfFileAtPath:(NSString *)filePath;
+- (NSString *) mimeTypeForFileAtPath:(NSString *)filePath;
+
 #pragma mark IBAction Methods
 - (IBAction)addNewVersion:(id)sender;
 - (IBAction)okVersionInfoSheet:(id)sender;
@@ -107,12 +116,13 @@ typedef enum
 - (void)didEndProjectInfoSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 - (void)didEndVersionInfoSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 - (void)didEndServerConfigSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
+- (void)xmlExportSavePanelDidEnd:(NSSavePanel *)sheet returnCode:(int)returnCode  contextInfo:(void  *)contextInfo;
 - (void)displayAlertWithMessage:(NSString *)message informativeText:(NSString *)informativeText buttons:(NSArray *)buttons alertStyle:(NSAlertStyle)alertStyle forWindow:(NSWindow *)window;
 
 - (void)addVersion;
 - (void)previewURL:(NSURL *)url;
 
-- (void)writeAppCastToURL:(NSURL *)url;
+- (BOOL)writeAppCastToURL:(NSURL *)url;
 
 #pragma mark FileDropImageView Delegate Methods
 - (void)filesWereDropped:(NSArray *)fileArray;
