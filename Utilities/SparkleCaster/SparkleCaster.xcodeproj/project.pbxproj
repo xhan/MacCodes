@@ -57,8 +57,6 @@
 		66CB24370C8D88000007DFB4 /* button-minus.png in Resources */ = {isa = PBXBuildFile; fileRef = 66CB24320C8D88000007DFB4 /* button-minus.png */; };
 		66F914BB0C96BF6700CEF407 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F914B90C96BF6700CEF407 /* AppDelegate.m */; };
 		66F914BC0C96BF6700CEF407 /* AppDelegate.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 66F914BA0C96BF6700CEF407 /* AppDelegate.h */; };
-		66F915730C9705E500CEF407 /* URLToFilenameTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F915710C9705E500CEF407 /* URLToFilenameTransformer.m */; };
-		66F915740C9705E500CEF407 /* URLToFilenameTransformer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 66F915720C9705E500CEF407 /* URLToFilenameTransformer.h */; };
 		8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */; };
 		8D15AC2D0486D014006FF6A4 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B6FDCFA73011CA2CEA /* MainMenu.nib */; };
 		8D15AC2E0486D014006FF6A4 /* MyDocument.nib in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B4FDCFA73011CA2CEA /* MyDocument.nib */; };
@@ -95,7 +93,6 @@
 				6608D9DD0C8DB90B00763CC8 /* URLFormatter.h in CopyFiles */,
 				6644FC790C94388D005C5CED /* FileDropImageView.h in CopyFiles */,
 				66F914BC0C96BF6700CEF407 /* AppDelegate.h in CopyFiles */,
-				66F915740C9705E500CEF407 /* URLToFilenameTransformer.h in CopyFiles */,
 				666D66840CB3F9DB006815ED /* ServerConfigController.h in CopyFiles */,
 				663D87480CC13CA000A20471 /* VersionInfoController.h in CopyFiles */,
 			);
@@ -161,8 +158,6 @@
 		66CB24320C8D88000007DFB4 /* button-minus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-minus.png"; sourceTree = "<group>"; };
 		66F914B90C96BF6700CEF407 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		66F914BA0C96BF6700CEF407 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		66F915710C9705E500CEF407 /* URLToFilenameTransformer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = URLToFilenameTransformer.m; sourceTree = "<group>"; };
-		66F915720C9705E500CEF407 /* URLToFilenameTransformer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = URLToFilenameTransformer.h; sourceTree = "<group>"; };
 		8D15AC360486D014006FF6A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D15AC370486D014006FF6A4 /* SparkleCaster.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SparkleCaster.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -241,8 +236,6 @@
 				6644FC780C94388D005C5CED /* FileDropImageView.m */,
 				66F914B90C96BF6700CEF407 /* AppDelegate.m */,
 				66F914BA0C96BF6700CEF407 /* AppDelegate.h */,
-				66F915710C9705E500CEF407 /* URLToFilenameTransformer.m */,
-				66F915720C9705E500CEF407 /* URLToFilenameTransformer.h */,
 				666D66820CB3F9DB006815ED /* ServerConfigController.h */,
 				666D66830CB3F9DB006815ED /* ServerConfigController.m */,
 				663D87460CC13CA000A20471 /* VersionInfoController.h */,
@@ -411,7 +404,6 @@
 				6608D9EC0C8DB93F00763CC8 /* URLFormatter.m in Sources */,
 				6644FC7A0C94388D005C5CED /* FileDropImageView.m in Sources */,
 				66F914BB0C96BF6700CEF407 /* AppDelegate.m in Sources */,
-				66F915730C9705E500CEF407 /* URLToFilenameTransformer.m in Sources */,
 				666D66850CB3F9DB006815ED /* ServerConfigController.m in Sources */,
 				663D87490CC13CA000A20471 /* VersionInfoController.m in Sources */,
 			);

@@ -95,6 +95,7 @@ static NSString*	ExportRSSToolbarItemIdentifier		= @"Export RSS Item Identifier"
     // Add any code here that needs to be executed once the windowController has loaded the document's window.
 	[self setupToolbar];
 	[NSBundle loadNibNamed:@"ServerConfig" owner:self];
+	[versionListTableView setDoubleAction:nil];
 }
 
 - (NSNumber *) sizeOfFileAtPath:(NSString *)filePath;
