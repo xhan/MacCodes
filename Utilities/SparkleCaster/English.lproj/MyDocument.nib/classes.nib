@@ -18,8 +18,12 @@
             ACTIONS = {
                 addNewVersion = id; 
                 cancelVersionInfoSheet = id; 
+                changeReleaseNotesView = id; 
+                chooseEnclosure = id; 
                 closeProjectInfoSheet = id; 
                 closeServerConfigSheet = id; 
+                editReleaseNotes = id; 
+                finishEditingReleaseNotes = id; 
                 okVersionInfoSheet = id; 
                 previewReleaseNotes = id; 
                 saveXML = id; 
@@ -29,19 +33,22 @@
             CLASS = MyDocument; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                addReleaseNotesItemButton = NSButton; 
+                doneEditReleaseNotesButton = NSButton; 
+                editReleaseNotesButton = NSButton; 
                 fileDropImageView = FileDropImageView; 
                 mainWindow = NSWindow; 
                 previewMatrix = NSMatrix; 
                 projectInfoSheet = NSWindow; 
-                serverConfigSheet = NSWindow; 
+                releaseNotesWebView = WebView; 
+                removeReleaseNotesItemButton = NSButton; 
+                serverConfigController = ServerConfigController; 
                 statusTextField = NSTextField; 
-                urlPreviewPanel = NSPanel; 
                 urlTextField = NSTextField; 
                 versionArrayController = NSArrayController; 
                 versionInfoController = NSObjectController; 
                 versionInfoSheet = NSWindow; 
                 versionListTableView = NSTableView; 
-                webView = WebView; 
                 xmlProgressIndicator = NSProgressIndicator; 
             }; 
             SUPERCLASS = NSDocument; 
@@ -67,7 +74,12 @@
         {CLASS = NSObject; LANGUAGE = ObjC; }, 
         {CLASS = NSSegmentedControl; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 
         {CLASS = NSTitledFrame; LANGUAGE = ObjC; SUPERCLASS = NSFrameView; }, 
-        {CLASS = URLFormatter; LANGUAGE = ObjC; SUPERCLASS = NSFormatter; }
+        {CLASS = URLFormatter; LANGUAGE = ObjC; SUPERCLASS = NSFormatter; }, 
+        {
+            CLASS = VersionInfoController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObjectController; 
+        }
     ); 
     IBVersion = 1; 
 }

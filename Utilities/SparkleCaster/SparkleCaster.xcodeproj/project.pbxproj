@@ -34,6 +34,8 @@
 		6608D9EC0C8DB93F00763CC8 /* URLFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6608D9EB0C8DB93F00763CC8 /* URLFormatter.m */; };
 		661A7B5D0CB5155A006F4CD8 /* sparklecaster.m in Sources */ = {isa = PBXBuildFile; fileRef = 661A7B5C0CB5155A006F4CD8 /* sparklecaster.m */; };
 		663175260CBD087700A689BC /* exportRSS.tif in Resources */ = {isa = PBXBuildFile; fileRef = 663175250CBD087700A689BC /* exportRSS.tif */; };
+		663D87480CC13CA000A20471 /* VersionInfoController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 663D87460CC13CA000A20471 /* VersionInfoController.h */; };
+		663D87490CC13CA000A20471 /* VersionInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 663D87470CC13CA000A20471 /* VersionInfoController.m */; };
 		6644FC790C94388D005C5CED /* FileDropImageView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6644FC770C94388D005C5CED /* FileDropImageView.h */; };
 		6644FC7A0C94388D005C5CED /* FileDropImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6644FC780C94388D005C5CED /* FileDropImageView.m */; };
 		66553D1A0C956E04003EA010 /* SparkleCaster.icns in Resources */ = {isa = PBXBuildFile; fileRef = 66553D190C956E04003EA010 /* SparkleCaster.icns */; };
@@ -95,6 +97,7 @@
 				66F914BC0C96BF6700CEF407 /* AppDelegate.h in CopyFiles */,
 				66F915740C9705E500CEF407 /* URLToFilenameTransformer.h in CopyFiles */,
 				666D66840CB3F9DB006815ED /* ServerConfigController.h in CopyFiles */,
+				663D87480CC13CA000A20471 /* VersionInfoController.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,6 +139,8 @@
 		661A7B470CB5137E006F4CD8 /* sparklecaster */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sparklecaster; sourceTree = BUILT_PRODUCTS_DIR; };
 		661A7B5C0CB5155A006F4CD8 /* sparklecaster.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = sparklecaster.m; sourceTree = "<group>"; };
 		663175250CBD087700A689BC /* exportRSS.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = exportRSS.tif; sourceTree = "<group>"; };
+		663D87460CC13CA000A20471 /* VersionInfoController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = VersionInfoController.h; sourceTree = "<group>"; };
+		663D87470CC13CA000A20471 /* VersionInfoController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = VersionInfoController.m; sourceTree = "<group>"; };
 		6644FC770C94388D005C5CED /* FileDropImageView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = FileDropImageView.h; sourceTree = "<group>"; };
 		6644FC780C94388D005C5CED /* FileDropImageView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = FileDropImageView.m; sourceTree = "<group>"; };
 		66553D190C956E04003EA010 /* SparkleCaster.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = SparkleCaster.icns; sourceTree = "<group>"; };
@@ -240,6 +245,8 @@
 				66F915720C9705E500CEF407 /* URLToFilenameTransformer.h */,
 				666D66820CB3F9DB006815ED /* ServerConfigController.h */,
 				666D66830CB3F9DB006815ED /* ServerConfigController.m */,
+				663D87460CC13CA000A20471 /* VersionInfoController.h */,
+				663D87470CC13CA000A20471 /* VersionInfoController.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -406,6 +413,7 @@
 				66F914BB0C96BF6700CEF407 /* AppDelegate.m in Sources */,
 				66F915730C9705E500CEF407 /* URLToFilenameTransformer.m in Sources */,
 				666D66850CB3F9DB006815ED /* ServerConfigController.m in Sources */,
+				663D87490CC13CA000A20471 /* VersionInfoController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -5,6 +5,7 @@
             ACTIONS = {
                 addNewVersion = id; 
                 cancelVersionInfoSheet = id; 
+                chooseEnclosure = id; 
                 closeProjectInfoSheet = id; 
                 closeServerConfigSheet = id; 
                 okVersionInfoSheet = id; 
@@ -21,7 +22,6 @@
                 previewMatrix = NSMatrix; 
                 projectInfoSheet = NSWindow; 
                 serverConfigController = ServerConfigController; 
-                serverConfigSheet = NSWindow; 
                 statusTextField = NSTextField; 
                 urlPreviewPanel = NSPanel; 
                 urlTextField = NSTextField; 
@@ -39,10 +39,12 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 appcastURL = NSTextField; 
+                documentController = MyDocument; 
                 dotMacAccountStatus = NSTextField; 
                 dotMacPasswordTextField = NSTextField; 
                 dotMacUserNameTextField = NSTextField; 
                 enclosureURL = NSTextField; 
+                serverConfigSheet = NSWindow; 
             }; 
             SUPERCLASS = NSObject; 
         }

@@ -10,10 +10,20 @@
 	return self;
 }
 
-
-- (void) awakeFromNib
+- (void)showConfigSheet;
 {
-	[self performSelector:@selector(getDotMacUserDetails) withObject:nil afterDelay:0.5];
+	[NSApp beginSheet:serverConfigSheet modalForWindow:[documentController mainWindow] modalDelegate:self didEndSelector:@selector(didEndServerConfigSheet:returnCode:contextInfo:) contextInfo:nil];
+	[self getDotMacUserDetails];
+}
+
+- (void)closeConfigSheet;
+{
+	[NSApp endSheet:serverConfigSheet];
+}
+	
+- (void)didEndServerConfigSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
+{
+    [serverConfigSheet orderOut:self];
 }
 
 - (void) getDotMacUserDetails;

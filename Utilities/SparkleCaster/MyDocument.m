@@ -38,20 +38,23 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 
 #import "MyDocument.h"
 
-static NSString* 	MyDocToolbarIdentifier 		= @"My Document Toolbar Identifier";
-static NSString*	ProductInfoToolbarItemIdentifier 	= @"Product Info Item Identifier";
-static NSString*	AddVersonToolbarItemIdentifier 	= @"Add Version Item Identifier";
+static NSString* 	MyDocToolbarIdentifier				= @"My Document Toolbar Identifier";
+static NSString*	ProductInfoToolbarItemIdentifier	= @"Product Info Item Identifier";
+static NSString*	AddVersonToolbarItemIdentifier		= @"Add Version Item Identifier";
 static NSString*	DeleteVersonToolbarItemIdentifier 	= @"Delete Version Item Identifier";
-static NSString*	PublishToolbarItemIdentifier 	= @"Publish Item Identifier";
-static NSString*	ConfigureToolbarItemIdentifier 	= @"Configure Item Identifier";
-static NSString*	ExportRSSToolbarItemIdentifier 	= @"Export RSS Item Identifier";
+static NSString*	PublishToolbarItemIdentifier		= @"Publish Item Identifier";
+static NSString*	ConfigureToolbarItemIdentifier		= @"Configure Item Identifier";
+static NSString*	ExportRSSToolbarItemIdentifier		= @"Export RSS Item Identifier";
 
 // This class knows how to validate "most" custom views.  Useful for view items we need to validate.
 @interface ValidatedViewToolbarItem : NSToolbarItem
 @end
 
 @interface MyDocument (Private)
+- (void)animateReleaseNotesTypeChangeToType:(SCReleaseNotesType)releaseNotesType;
 - (void)setupToolbar;
+- (NSNumber *) sizeOfFileAtPath:(NSString *)filePath;
+- (NSString *) mimeTypeForFileAtPath:(NSString *)filePath;
 @end
 
 @implementation MyDocument
@@ -106,17 +109,16 @@ static NSString*	ExportRSSToolbarItemIdentifier 	= @"Export RSS Item Identifier"
 		size = [[[fm fileAttributesAtPath:filePath traverseLink:NO] objectForKey:NSFileSize] unsignedLongLongValue];
 	}
 	
-	// Return Total Size in Bytes
-	return [NSNumber numberWithUnsignedLongLong:size];
+	// Return Total Size in KBytes
+	return [NSNumber numberWithUnsignedLongLong:(size/1024)];
 }
 
 - (NSString *) mimeTypeForFileAtPath:(NSString *)filePath;
 {
 	NSFileManager * fm = [NSFileManager defaultManager];
 	BOOL isDirectory;
-	NSString *mimeType = @"";
+	NSString *mimeType = @"application/unknown";
 	
-	// Determine Paths to Add
 	if ([fm fileExistsAtPath:filePath isDirectory:&isDirectory]) {
 		if (!isDirectory){
 			NSString *extension = [filePath pathExtension];
@@ -131,11 +133,9 @@ static NSString*	ExportRSSToolbarItemIdentifier 	= @"Export RSS Item Identifier"
 				mimeType = @"application/x-bzip";
 			else if ([extension isEqualToString:@"dmg"])
 				mimeType = @"application/x-apple-diskimage";
-			else
-				mimeType = @"application/unknown";
 		}
 	}
-	// Return the mimeType string
+	// Return the mimeType
 	return mimeType;
 }
 
@@ -299,6 +299,11 @@ static NSString*	ExportRSSToolbarItemIdentifier 	= @"Export RSS Item Identifier"
 
 #pragma mark Accessor Methods
 
+- (NSWindow *)mainWindow;
+{
+	return mainWindow;
+}
+
 - (NSMutableArray *) versionListArray {
 	return versionListArray;
 }
@@ -399,6 +404,115 @@ static NSString*	ExportRSSToolbarItemIdentifier 	= @"Export RSS Item Identifier"
 
 #pragma mark Misc Methods
 
+- (void)animateReleaseNotesTypeChangeToType:(SCReleaseNotesType)releaseNotesType;
+{
+	// urlTextField, releaseNotesWebView are outlets
+    NSViewAnimation			*theAnim;
+    NSRect					webViewFrame;
+	NSRect					newWebViewFrame;
+    NSMutableDictionary		*urlTextFieldViewDict;
+    NSMutableDictionary		*webViewViewDict;
+	NSMutableDictionary		*editButtonDict;
+	
+	if (releaseNotesType == SCReleaseNotesFromURL)
+	{
+		
+		// Create the attributes dictionary for the WebView.
+		webViewViewDict = [NSMutableDictionary dictionaryWithCapacity:3];
+		webViewFrame = [releaseNotesWebView frame];
+		
+		// Specify which view to modify.
+		[webViewViewDict setObject:releaseNotesWebView forKey:NSViewAnimationTargetKey];
+		
+		// Specify the starting position of the view.
+		[webViewViewDict setObject:[NSValue valueWithRect:webViewFrame]
+							forKey:NSViewAnimationStartFrameKey];
+		
+		// Change the ending position of the view.
+		newWebViewFrame = webViewFrame;
+		newWebViewFrame.size.height -= 30;
+		[webViewViewDict setObject:[NSValue valueWithRect:newWebViewFrame]
+							forKey:NSViewAnimationEndFrameKey];
+
+		
+		// Create the attributes dictionary for the text view.
+		urlTextFieldViewDict = [NSMutableDictionary dictionaryWithCapacity:3];
+		
+		// Set the target object to the second view.
+		[urlTextFieldViewDict setObject:urlTextField forKey:NSViewAnimationTargetKey];
+		
+		// Set this view to fade in
+		[urlTextFieldViewDict setObject:NSViewAnimationFadeInEffect
+								 forKey:NSViewAnimationEffectKey];
+		
+		// Create the attributes dictionary for the edit button.
+		editButtonDict = [NSMutableDictionary dictionaryWithCapacity:3];
+		
+		// Set the target object to the second view.
+		[editButtonDict setObject:editReleaseNotesButton forKey:NSViewAnimationTargetKey];
+		
+		// Set this view to fade in
+		[editButtonDict setObject:NSViewAnimationFadeOutEffect
+								 forKey:NSViewAnimationEffectKey];
+		
+	} else if (releaseNotesType == SCReleaseNotesEmbeded) {
+		
+		// Create the attributes dictionary for the WebView.
+		webViewViewDict = [NSMutableDictionary dictionaryWithCapacity:3];
+		webViewFrame = [releaseNotesWebView frame];
+		
+		// Specify which view to modify.
+		[webViewViewDict setObject:releaseNotesWebView forKey:NSViewAnimationTargetKey];
+		
+		// Specify the starting position of the view.
+		[webViewViewDict setObject:[NSValue valueWithRect:webViewFrame]
+							forKey:NSViewAnimationStartFrameKey];
+		
+		// Change the ending position of the view.
+		newWebViewFrame = webViewFrame;
+		newWebViewFrame.size.height += 30;
+		[webViewViewDict setObject:[NSValue valueWithRect:newWebViewFrame]
+							forKey:NSViewAnimationEndFrameKey];
+		
+		
+		
+		// Create the attributes dictionary for the second view.
+		urlTextFieldViewDict = [NSMutableDictionary dictionaryWithCapacity:3];
+		
+		// Set the target object to the second view.
+		[urlTextFieldViewDict setObject:urlTextField forKey:NSViewAnimationTargetKey];
+		
+		// Set this view to fade in
+		[urlTextFieldViewDict setObject:NSViewAnimationFadeOutEffect
+								 forKey:NSViewAnimationEffectKey];
+		
+		// Create the attributes dictionary for the edit button.
+		editButtonDict = [NSMutableDictionary dictionaryWithCapacity:3];
+		
+		// Set the target object to the second view.
+		[editButtonDict setObject:editReleaseNotesButton forKey:NSViewAnimationTargetKey];
+		
+		// Set this view to fade in
+		[editButtonDict setObject:NSViewAnimationFadeInEffect
+						   forKey:NSViewAnimationEffectKey];
+		
+	}
+	
+    // Create the view animation object.
+    theAnim = [[NSViewAnimation alloc] initWithViewAnimations:[NSArray
+                arrayWithObjects: editButtonDict, webViewViewDict, urlTextFieldViewDict, nil]];
+	
+    // Set some additional attributes for the animation.
+    [theAnim setDuration:0.2];    // 0.2 of a second.
+    [theAnim setAnimationCurve:NSAnimationEaseInOut];
+	
+    // Run the animation.
+    [theAnim startAnimation];
+	
+    // The animation has finished, so go ahead and release it.
+    [theAnim release];
+}
+
 - (void)addVersion;
 {
 	NSMutableDictionary *newVersionDict = [NSMutableDictionary dictionaryWithCapacity:4];
@@ -414,8 +528,7 @@ static NSString*	ExportRSSToolbarItemIdentifier 	= @"Export RSS Item Identifier"
 	
 	if (urlRequest != nil)
 	{
-		[urlPreviewPanel makeKeyAndOrderFront:self];
-		[[webView mainFrame] loadRequest:urlRequest];
+		[[releaseNotesWebView mainFrame] loadRequest:urlRequest];
 	}
 }
 
@@ -433,11 +546,6 @@ static NSString*	ExportRSSToolbarItemIdentifier 	= @"Export RSS Item Identifier"
 	{
 		[self insertObject:[versionInfoController content] inVersionListArrayAtIndex:0];
 	}
-}
-
-- (void)didEndServerConfigSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
-{
-    [serverConfigSheet orderOut:self];
 }
 
 - (void)xmlExportSavePanelDidEnd:(NSSavePanel *)sheet returnCode:(int)returnCode  contextInfo:(void  *)contextInfo;
@@ -539,7 +647,7 @@ static NSString*	ExportRSSToolbarItemIdentifier 	= @"Export RSS Item Identifier"
 			else
 				[enclosureElement addAttribute:[NSXMLNode attributeWithName:@"url" stringValue:[itemDictionary objectForKey:@"enclosureURL"]]];
 			[enclosureElement addAttribute:[NSXMLNode attributeWithName:@"length" stringValue:[[self sizeOfFileAtPath:[itemDictionary objectForKey:@"enclosureLocalPath"]] stringValue]]];
-			[enclosureElement addAttribute:[NSXMLNode attributeWithName:@"type" stringValue:[self mimeTypeForFileAtPath:[itemDictionary objectForKey:@"enclosureLocalPath"]]]];
+			[enclosureElement addAttribute:[NSXMLNode attributeWithName:@"type" stringValue:[itemDictionary objectForKey:@"enclosureMimeType"]]];
 			[enclosureElement addAttribute:[NSXMLNode attributeWithName:@"sparkle:version" stringValue:[itemDictionary objectForKey:@"version"]]];
 			[item addChild:enclosureElement];
 			// Set the GUID to the product name and version
@@ -609,7 +717,7 @@ static NSString*	ExportRSSToolbarItemIdentifier 	= @"Export RSS Item Identifier"
 
 - (IBAction)previewReleaseNotes:(id)sender;
 {
-	if (([previewMatrix selectedTag] == 0) && ([[urlTextField stringValue] length] != 0))
+	if ([[urlTextField stringValue] length] != 0)
 	{
 		NSURL *url = [NSURL URLWithString:[urlTextField stringValue]];
 		if (url != nil)
@@ -654,12 +762,48 @@ static NSString*	ExportRSSToolbarItemIdentifier 	= @"Export RSS Item Identifier"
 
 - (IBAction)showConfigSheet:(id)sender;
 {
-	[NSApp beginSheet:serverConfigSheet modalForWindow:mainWindow modalDelegate:self didEndSelector:@selector(didEndServerConfigSheet:returnCode:contextInfo:) contextInfo:nil];
+	[serverConfigController showConfigSheet];
 }
 
 - (IBAction)closeServerConfigSheet:(id)sender;
 {
-	[NSApp endSheet:serverConfigSheet];
+	[serverConfigController closeConfigSheet];
+}
+
+- (IBAction)chooseEnclosure:(id)sender;
+{
+	int result;
+    NSArray *fileTypes = [NSArray arrayWithObjects:@"zip", @"tar", @"tgz", @"tbz", @"dmg", nil];
+    NSOpenPanel *oPanel = [NSOpenPanel openPanel];
+	
+    [oPanel setAllowsMultipleSelection:NO];
+    result = [oPanel runModalForDirectory:NSHomeDirectory()
+									 file:nil types:fileTypes];
+    if (result == NSOKButton) {
+        [versionInfoController setValue:[[oPanel filenames] objectAtIndex:0] forKeyPath:@"selection.enclosureLocalPath"];
+    }
+	[fileDropImageView setImage:[[NSWorkspace sharedWorkspace] iconForFile:[[oPanel filenames] objectAtIndex:0]]];
+}
+
+- (IBAction)changeReleaseNotesView:(id)sender;
+{
+	[self animateReleaseNotesTypeChangeToType:[[sender selectedCell] tag]];
+}
+
+- (IBAction)editReleaseNotes:(id)sender;
+{
+	[releaseNotesWebView setEditable:YES];
+	[doneEditReleaseNotesButton setHidden:NO];
+	[addReleaseNotesItemButton setHidden:NO];
+	[removeReleaseNotesItemButton setHidden:NO];
+}
+
+- (IBAction)finishEditingReleaseNotes:(id)sender;
+{
+	[releaseNotesWebView setEditable:NO];
+	[doneEditReleaseNotesButton setHidden:YES];
+	[addReleaseNotesItemButton setHidden:YES];
+	[removeReleaseNotesItemButton setHidden:YES];
 }
 
 #pragma mark FileDropImageView Delegate Methods
@@ -668,6 +812,7 @@ static NSString*	ExportRSSToolbarItemIdentifier 	= @"Export RSS Item Identifier"
 {
 	[versionInfoController setValue:[fileArray objectAtIndex:0] forKeyPath:@"selection.enclosureLocalPath"];
 	[versionInfoController setValue:[[fileArray objectAtIndex:0] lastPathComponent] forKeyPath:@"selection.enclosureName"];
+	[versionInfoController setValue:[self mimeTypeForFileAtPath:[fileArray objectAtIndex:0]] forKeyPath:@"selection.enclosureMimeType"];
 }
 
 @end

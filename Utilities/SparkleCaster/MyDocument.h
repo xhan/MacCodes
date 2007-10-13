@@ -49,15 +49,20 @@ typedef enum
 	SCOKButton,
 } SCDialogButtons;
 
+typedef enum
+{
+	SCReleaseNotesEmbeded,
+	SCReleaseNotesFromURL
+} SCReleaseNotesType;
+
 #define SCProductNameKey @"productName"
 #define SCProductURLKey @"productURL"
 
 @interface MyDocument : NSDocument
 {
 	IBOutlet NSWindow				*mainWindow;
-	IBOutlet NSPanel				*urlPreviewPanel;
 	IBOutlet NSTextField			*urlTextField;
-	IBOutlet WebView				*webView;
+	IBOutlet WebView				*releaseNotesWebView;
 	IBOutlet NSMatrix				*previewMatrix;
 	IBOutlet NSTableView			*versionListTableView;
 	IBOutlet FileDropImageView		*fileDropImageView;
@@ -66,8 +71,11 @@ typedef enum
 	IBOutlet NSProgressIndicator	*xmlProgressIndicator;
 	IBOutlet NSArrayController		*versionArrayController;
 	IBOutlet NSObjectController		*versionInfoController;
-	IBOutlet NSWindow				*serverConfigSheet;
 	IBOutlet NSTextField			*statusTextField;
+	IBOutlet NSButton				*editReleaseNotesButton;
+	IBOutlet NSButton				*doneEditReleaseNotesButton;
+	IBOutlet NSButton				*addReleaseNotesItemButton;
+	IBOutlet NSButton				*removeReleaseNotesItemButton;
 	
 	IBOutlet ServerConfigController	*serverConfigController;
 	
@@ -78,6 +86,7 @@ typedef enum
 	NSXMLDocument				*xmlDocument;
 }
 
+- (NSWindow *)mainWindow;
 - (NSMutableArray *) versionListArray;
 - (void) setVersionListArray:(NSMutableArray *)newVersionListArray;
 
@@ -98,9 +107,6 @@ typedef enum
 
 - (void) removeSelectedObjectFromVersionListArray;
 
-- (NSNumber *) sizeOfFileAtPath:(NSString *)filePath;
-- (NSString *) mimeTypeForFileAtPath:(NSString *)filePath;
-
 #pragma mark IBAction Methods
 - (IBAction)addNewVersion:(id)sender;
 - (IBAction)okVersionInfoSheet:(id)sender;
@@ -111,11 +117,14 @@ typedef enum
 - (IBAction)closeServerConfigSheet:(id)sender;
 - (IBAction)saveXML:(id)sender;
 - (IBAction)showConfigSheet:(id)sender;
+- (IBAction)chooseEnclosure:(id)sender;
+- (IBAction)changeReleaseNotesView:(id)sender;
+- (IBAction)editReleaseNotes:(id)sender;
+- (IBAction)finishEditingReleaseNotes:(id)sender;
 
 #pragma mark Private Functions
 - (void)didEndProjectInfoSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 - (void)didEndVersionInfoSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
-- (void)didEndServerConfigSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 - (void)xmlExportSavePanelDidEnd:(NSSavePanel *)sheet returnCode:(int)returnCode  contextInfo:(void  *)contextInfo;
 - (void)displayAlertWithMessage:(NSString *)message informativeText:(NSString *)informativeText buttons:(NSArray *)buttons alertStyle:(NSAlertStyle)alertStyle forWindow:(NSWindow *)window;
 
