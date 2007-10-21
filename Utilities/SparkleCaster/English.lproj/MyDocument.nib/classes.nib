@@ -18,14 +18,9 @@
             ACTIONS = {
                 addNewVersion = id; 
                 cancelVersionInfoSheet = id; 
-                changeReleaseNotesView = id; 
-                chooseEnclosure = id; 
                 closeProjectInfoSheet = id; 
                 closeServerConfigSheet = id; 
-                editReleaseNotes = id; 
-                finishEditingReleaseNotes = id; 
                 okVersionInfoSheet = id; 
-                previewReleaseNotes = id; 
                 saveXML = id; 
                 showConfigSheet = id; 
                 showProjectInfoSheet = id; 
@@ -33,18 +28,10 @@
             CLASS = MyDocument; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                addReleaseNotesItemButton = NSButton; 
-                doneEditReleaseNotesButton = NSButton; 
-                editReleaseNotesButton = NSButton; 
-                fileDropImageView = FileDropImageView; 
                 mainWindow = NSWindow; 
-                previewMatrix = NSMatrix; 
                 projectInfoSheet = NSWindow; 
-                releaseNotesWebView = WebView; 
-                removeReleaseNotesItemButton = NSButton; 
                 serverConfigController = ServerConfigController; 
                 statusTextField = NSTextField; 
-                urlTextField = NSTextField; 
                 versionArrayController = NSArrayController; 
                 versionInfoController = NSObjectController; 
                 versionInfoSheet = NSWindow; 
@@ -76,8 +63,24 @@
         {CLASS = NSTitledFrame; LANGUAGE = ObjC; SUPERCLASS = NSFrameView; }, 
         {CLASS = URLFormatter; LANGUAGE = ObjC; SUPERCLASS = NSFormatter; }, 
         {
+            ACTIONS = {
+                chooseEnclosure = id; 
+                editReleaseNotes = id; 
+                finishEditingReleaseNotes = id; 
+                previewReleaseNotes = id; 
+            }; 
             CLASS = VersionInfoController; 
             LANGUAGE = ObjC; 
+            OUTLETS = {
+                addReleaseNotesItemButton = NSButton; 
+                doneEditReleaseNotesButton = NSButton; 
+                editReleaseNotesButton = NSButton; 
+                fileDropImageView = FileDropImageView; 
+                myDocument = MyDocument; 
+                releaseNotesWebView = WebView; 
+                removeReleaseNotesItemButton = NSButton; 
+                urlTextField = NSTextField; 
+            }; 
             SUPERCLASS = NSObjectController; 
         }
     ); 

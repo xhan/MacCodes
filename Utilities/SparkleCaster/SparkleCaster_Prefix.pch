@@ -5,4 +5,14 @@
 #ifdef __OBJC__
     #import <Cocoa/Cocoa.h>
 	#import <DotMacKit/DotMacKit.h>
+	#import <WebKit/WebKit.h>
+	#import "ServerConfigController.h"
+	#import "URLFormatter.h"
+	#import "FileDropImageView.h"
 #endif
+
+typedef enum
+{
+	SCReleaseNotesEmbeded,
+	SCReleaseNotesFromURL
+} SCReleaseNotesType;

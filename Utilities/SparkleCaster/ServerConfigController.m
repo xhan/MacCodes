@@ -6,6 +6,8 @@
 	self = [super init];
 	if (self != nil) {
 		serverConfigSettings = [NSMutableDictionary dictionaryWithCapacity:0];
+		if ([[NSUserDefaults standardUserDefaults] valueForKey:@"useAccountFromdotMacPreferences"] == NULL)
+			[[NSUserDefaults standardUserDefaults] setValue:[NSNumber numberWithBool:YES] forKey:@"useAccountFromdotMacPreferences"];
 	}
 	return self;
 }
@@ -13,7 +15,7 @@
 - (void)showConfigSheet;
 {
 	[NSApp beginSheet:serverConfigSheet modalForWindow:[documentController mainWindow] modalDelegate:self didEndSelector:@selector(didEndServerConfigSheet:returnCode:contextInfo:) contextInfo:nil];
-	[self getDotMacUserDetails];
+	[self performSelector:@selector(getDotMacUserDetails) withObject:nil afterDelay:0.5];
 }
 
 - (void)closeConfigSheet;
@@ -28,33 +30,42 @@
 
 - (void) getDotMacUserDetails;
 {
-	_dotMacMemberAccount = [DMMemberAccount accountFromPreferencesWithApplicationID:@"SCst"];
-	[_dotMacMemberAccount setApplicationName:@"SparkleCaster"];
-	if ([_dotMacMemberAccount validateCredentials] != kDMSuccess) { 
-		// invalid credentials - sign them up?
+	[dotMacAccountProgressIndicator animate:self];
+	[dotMacAccountStatus setStringValue:@"Getting account details..."];
+	if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"useAccountFromdotMacPreferences"] boolValue] == YES)
+	{
+		_dotMacMemberAccount = [DMMemberAccount accountFromPreferencesWithApplicationID:@"SCst"];
+		
+		[_dotMacMemberAccount setApplicationName:@"SparkleCaster"];
+		[_dotMacMemberAccount setIsSynchronous:YES];
+		[_dotMacMemberAccount setDelegate:self];
+		
+		if ([_dotMacMemberAccount validateCredentials] != kDMSuccess) { 
+			// invalid credentials - sign them up?
+		}
+		
+		DMTransaction *serviceTransaction = [_dotMacMemberAccount servicesAvailableForAccount]; 
+		
+		if ([serviceTransaction isSuccessful]) { 
+			NSArray *services = [serviceTransaction result]; 
+			if ([services containsObject:kDMWebHostingService] == NO) {
+				[dotMacAccountStatus setStringValue:@"Web hosting is not available on this account"];
+			} else {
+				[dotMacAccountStatus setStringValue:@"OK to upload to this account"];
+			}
+		} else { 
+			// handle error
+		}
+		[dotMacUserNameTextField setStringValue:[_dotMacMemberAccount name]];
+		[dotMacAccountProgressIndicator stopAnimation:self];
 	}
-	
-	DMTransaction *serviceTransaction = [_dotMacMemberAccount servicesAvailableForAccount]; 
-	
-	if ([serviceTransaction isSuccessful]) { 
-		NSArray *services = [serviceTransaction result]; 
-		if ([services containsObject:kDMWebHostingService] == NO) {
-			// Web Hosting service is not available
-		} 
-	} else { 
-		// handle error 
-	}
-	
-	[self updateUI];
 }
 
-- (void)updateUI;
+- (void)transactionSuccessful: (DMTransaction *)theTransaction
 {
-	[dotMacUserNameTextField setStringValue:[_dotMacMemberAccount name]];
-	// [dotMacPasswordTextField setStringValue:[_dotMacMemberAccount password]];
+	//Okay this object got notified that its daysLeftUntilExpiration transaction is
+	//complete. So get the payload and update the UI
 	
-	NSString *statusString = [NSString stringWithFormat:@"You have %d days left on your account."];
-	[dotMacAccountStatus setStringValue:statusString];
 }
 
 - (NSMutableDictionary	*) serverConfigSettings {

@@ -49,33 +49,19 @@ typedef enum
 	SCOKButton,
 } SCDialogButtons;
 
-typedef enum
-{
-	SCReleaseNotesEmbeded,
-	SCReleaseNotesFromURL
-} SCReleaseNotesType;
-
 #define SCProductNameKey @"productName"
 #define SCProductURLKey @"productURL"
 
 @interface MyDocument : NSDocument
 {
 	IBOutlet NSWindow				*mainWindow;
-	IBOutlet NSTextField			*urlTextField;
-	IBOutlet WebView				*releaseNotesWebView;
-	IBOutlet NSMatrix				*previewMatrix;
 	IBOutlet NSTableView			*versionListTableView;
-	IBOutlet FileDropImageView		*fileDropImageView;
 	IBOutlet NSWindow				*projectInfoSheet;
 	IBOutlet NSWindow				*versionInfoSheet;
 	IBOutlet NSProgressIndicator	*xmlProgressIndicator;
 	IBOutlet NSArrayController		*versionArrayController;
 	IBOutlet NSObjectController		*versionInfoController;
 	IBOutlet NSTextField			*statusTextField;
-	IBOutlet NSButton				*editReleaseNotesButton;
-	IBOutlet NSButton				*doneEditReleaseNotesButton;
-	IBOutlet NSButton				*addReleaseNotesItemButton;
-	IBOutlet NSButton				*removeReleaseNotesItemButton;
 	
 	IBOutlet ServerConfigController	*serverConfigController;
 	
@@ -111,28 +97,21 @@ typedef enum
 - (IBAction)addNewVersion:(id)sender;
 - (IBAction)okVersionInfoSheet:(id)sender;
 - (IBAction)cancelVersionInfoSheet:(id)sender;
-- (IBAction)previewReleaseNotes:(id)sender;
 - (IBAction)showProjectInfoSheet:(id)sender;
 - (IBAction)closeProjectInfoSheet:(id)sender;
 - (IBAction)closeServerConfigSheet:(id)sender;
 - (IBAction)saveXML:(id)sender;
 - (IBAction)showConfigSheet:(id)sender;
-- (IBAction)chooseEnclosure:(id)sender;
-- (IBAction)changeReleaseNotesView:(id)sender;
-- (IBAction)editReleaseNotes:(id)sender;
-- (IBAction)finishEditingReleaseNotes:(id)sender;
 
-#pragma mark Private Functions
 - (void)didEndProjectInfoSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 - (void)didEndVersionInfoSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 - (void)xmlExportSavePanelDidEnd:(NSSavePanel *)sheet returnCode:(int)returnCode  contextInfo:(void  *)contextInfo;
 - (void)displayAlertWithMessage:(NSString *)message informativeText:(NSString *)informativeText buttons:(NSArray *)buttons alertStyle:(NSAlertStyle)alertStyle forWindow:(NSWindow *)window;
 
 - (void)addVersion;
-- (void)previewURL:(NSURL *)url;
+
+- (NSNumber *) sizeOfFileAtPath:(NSString *)filePath;
+- (NSString *) mimeTypeForFileAtPath:(NSString *)filePath;
 
 - (BOOL)writeAppCastToURL:(NSURL *)url;
-
-#pragma mark FileDropImageView Delegate Methods
-- (void)filesWereDropped:(NSArray *)fileArray;
 @end

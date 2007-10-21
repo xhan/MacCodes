@@ -7,13 +7,14 @@
 
 @interface ServerConfigController : NSObject
 {
-    IBOutlet NSTextField	*dotMacPasswordTextField;
-    IBOutlet NSTextField	*dotMacUserNameTextField;
-	IBOutlet NSTextField	*dotMacAccountStatus;
-	IBOutlet NSTextField	*appcastURL;
-	IBOutlet NSTextField	*enclosureURL;
-	IBOutlet NSWindow		*serverConfigSheet;
-	IBOutlet MyDocument		*documentController;
+    IBOutlet NSTextField			*dotMacPasswordTextField;
+    IBOutlet NSTextField			*dotMacUserNameTextField;
+	IBOutlet NSTextField			*dotMacAccountStatus;
+	IBOutlet NSTextField			*appcastURL;
+	IBOutlet NSTextField			*enclosureURL;
+	IBOutlet NSWindow				*serverConfigSheet;
+	IBOutlet MyDocument				*documentController;
+	IBOutlet NSProgressIndicator	*dotMacAccountProgressIndicator;
 	
 	DMMemberAccount *_dotMacMemberAccount;
 	
@@ -23,7 +24,6 @@
 - (void)getDotMacUserDetails;
 - (void)showConfigSheet;
 - (void)closeConfigSheet;
-- (void)updateUI;
 
 - (void)didEndServerConfigSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 
