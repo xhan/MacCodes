@@ -8,6 +8,7 @@
 		serverConfigSettings = [NSMutableDictionary dictionaryWithCapacity:0];
 		if ([[NSUserDefaults standardUserDefaults] valueForKey:@"useAccountFromdotMacPreferences"] == NULL)
 			[[NSUserDefaults standardUserDefaults] setValue:[NSNumber numberWithBool:YES] forKey:@"useAccountFromdotMacPreferences"];
+		
 	}
 	return self;
 }

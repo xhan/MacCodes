@@ -524,14 +524,13 @@ static NSString*	ExportRSSToolbarItemIdentifier		= @"Export RSS Item Identifier"
 			[item addChild:releaseNotesElement];
 			[item addChild:[NSXMLNode elementWithName:@"pubDate" stringValue:[dFormatter stringFromDate:[itemDictionary objectForKey:@"date"]]]];
 			NSXMLElement *enclosureElement = [NSXMLNode elementWithName:@"enclosure"];
-			
-#warning Need to sort out the enclosure URL stuff - this is a quick hack...
+
 			// If the user has supplied a URL for a remote file, include that
 			if ([itemDictionary objectForKey:@"enclosureURL"]) {
 				[enclosureElement addAttribute:[NSXMLNode attributeWithName:@"url" stringValue:[itemDictionary objectForKey:@"enclosureURL"]]];
 			} else {
 				// otherwise, munge the local file url and the enclosure prefix url to produce a valid link tot he file once it's been uploaded
-				NSString *mungedURLString = [[serverConfigController enclosureURLPrefix] stringByAppendingString:[itemDictionary objectForKey:@"enclosureName"]];
+				NSString *mungedURLString = [[productInfoDictionary objectForKey:@"enclosureURLPrefix"] stringByAppendingString:[itemDictionary objectForKey:@"enclosureName"]];
 				[enclosureElement addAttribute:[NSXMLNode attributeWithName:@"url" stringValue:mungedURLString]];
 			}
 			

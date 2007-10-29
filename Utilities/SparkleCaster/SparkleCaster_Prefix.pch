@@ -9,6 +9,8 @@
 	#import "ServerConfigController.h"
 	#import "URLFormatter.h"
 	#import "FileDropImageView.h"
+	#import	"OmniBase/OmniBase.h"
+	#import	"OmniNetworking/OmniNetworking.h"
 #endif
 
 typedef enum

@@ -31,6 +31,10 @@
 		6644FC790C94388D005C5CED /* FileDropImageView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6644FC770C94388D005C5CED /* FileDropImageView.h */; };
 		6644FC7A0C94388D005C5CED /* FileDropImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6644FC780C94388D005C5CED /* FileDropImageView.m */; };
 		66553D1A0C956E04003EA010 /* SparkleCaster.icns in Resources */ = {isa = PBXBuildFile; fileRef = 66553D190C956E04003EA010 /* SparkleCaster.icns */; };
+		6664CA190CD503EB00F7AF0B /* OmniNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6664CA060CD503EB00F7AF0B /* OmniNetworking.framework */; };
+		6664CA330CD5057500F7AF0B /* OmniBase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6664CA210CD5057500F7AF0B /* OmniBase.framework */; };
+		6664CA360CD5058C00F7AF0B /* OmniNetworking.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6664CA060CD503EB00F7AF0B /* OmniNetworking.framework */; };
+		6664CA470CD5059000F7AF0B /* OmniBase.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6664CA210CD5057500F7AF0B /* OmniBase.framework */; };
 		6665EB2A0CB2676A00FBE6E5 /* Info.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 6665EB290CB2676A00FBE6E5 /* Info.tiff */; };
 		6665EB2C0CB2683900FBE6E5 /* Add.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 6665EB2B0CB2683900FBE6E5 /* Add.tiff */; };
 		6665EB2E0CB2684A00FBE6E5 /* Remove.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 6665EB2D0CB2684A00FBE6E5 /* Remove.tiff */; };
@@ -96,6 +100,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				6664CA470CD5059000F7AF0B /* OmniBase.framework in CopyFiles */,
+				6664CA360CD5058C00F7AF0B /* OmniNetworking.framework in CopyFiles */,
 				666D66730CB3ECCA006815ED /* DotMacKit.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -125,6 +131,8 @@
 		6644FC770C94388D005C5CED /* FileDropImageView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = FileDropImageView.h; sourceTree = "<group>"; };
 		6644FC780C94388D005C5CED /* FileDropImageView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = FileDropImageView.m; sourceTree = "<group>"; };
 		66553D190C956E04003EA010 /* SparkleCaster.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = SparkleCaster.icns; path = Resources/SparkleCaster.icns; sourceTree = "<group>"; };
+		6664CA060CD503EB00F7AF0B /* OmniNetworking.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OmniNetworking.framework; sourceTree = "<group>"; };
+		6664CA210CD5057500F7AF0B /* OmniBase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OmniBase.framework; sourceTree = "<group>"; };
 		6665EB290CB2676A00FBE6E5 /* Info.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = Info.tiff; path = Resources/Info.tiff; sourceTree = "<group>"; };
 		6665EB2B0CB2683900FBE6E5 /* Add.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = Add.tiff; path = Resources/Add.tiff; sourceTree = "<group>"; };
 		6665EB2D0CB2684A00FBE6E5 /* Remove.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = Remove.tiff; path = Resources/Remove.tiff; sourceTree = "<group>"; };
@@ -161,6 +169,8 @@
 				8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */,
 				66CB23E20C8D7AED0007DFB4 /* WebKit.framework in Frameworks */,
 				666D66700CB3ECA7006815ED /* DotMacKit.framework in Frameworks */,
+				6664CA190CD503EB00F7AF0B /* OmniNetworking.framework in Frameworks */,
+				6664CA330CD5057500F7AF0B /* OmniBase.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -170,6 +180,8 @@
 		1058C7A6FEA54F5311CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6664CA210CD5057500F7AF0B /* OmniBase.framework */,
+				6664CA060CD503EB00F7AF0B /* OmniNetworking.framework */,
 				666D66650CB3ECA6006815ED /* DotMacKit.framework */,
 				1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */,
 			);
@@ -514,10 +526,14 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_4)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_5)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SYSTEM_DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_4 = "\"$(SRCROOT)\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_5 = "\"$(SRCROOT)\"";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
@@ -543,10 +559,14 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_4)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_5)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SYSTEM_DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_4 = "\"$(SRCROOT)\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_5 = "\"$(SRCROOT)\"";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
 				INFOPLIST_FILE = Info.plist;

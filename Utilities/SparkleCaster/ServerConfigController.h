@@ -16,6 +16,7 @@
 	IBOutlet MyDocument				*documentController;
 	IBOutlet NSProgressIndicator	*dotMacAccountProgressIndicator;
 	
+	
 	DMMemberAccount *_dotMacMemberAccount;
 	
 	NSMutableDictionary	*serverConfigSettings;
