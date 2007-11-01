@@ -26,23 +26,19 @@
                                             (CFDictionaryRef)dict);
     
     if (ref != NULL) {
-        // Get the image dimensions.
-        NSRect imageRect = NSZeroRect;
-        imageRect.size.height = CGImageGetHeight(ref);
-        imageRect.size.width = CGImageGetWidth(ref);
-        
-        // Create a new image to receive the Quartz image data.
-        NSImage* newImage = [[NSImage alloc] initWithSize:imageRect.size];
-        if (newImage) {
-            [newImage lockFocus];
+        // Take advantage of NSBitmapImageRep's -initWithCGImage: initializer, new in Leopard,
+        // which is a lot more efficient than copying pixel data into a brand new NSImage.
+        // Thanks to Troy Stephens @ Apple for pointing this new method out to me.
+        NSBitmapImageRep *bitmapImageRep = [[NSBitmapImageRep alloc] initWithCGImage:ref];
+        NSImage *newImage = nil;
+        if (bitmapImageRep) {
+            newImage = [[NSImage alloc] initWithSize:[bitmapImageRep size]];
+            [newImage addRepresentation:bitmapImageRep];
+            [bitmapImageRep release];
             
-            // Get the Quartz context and draw.
-            CGContextRef imageContext;
-            imageContext = (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
-            CGContextDrawImage(imageContext, *(CGRect*)&imageRect, ref);
-            [newImage unlockFocus];
-            
-            return [newImage autorelease];
+            if (newImage) {
+                return [newImage autorelease];
+            }
         }
         CFRelease(ref);
     } else {
