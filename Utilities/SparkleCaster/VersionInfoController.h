@@ -11,22 +11,31 @@ typedef enum
 	SCReleaseNotesFromURL
 } SCReleaseNotesType;
 
+typedef enum
+{
+	SCCancelButton,
+	SCOKButton,
+} SCDialogButtons;
+
 @interface VersionInfoController : NSObjectController
 {
 	IBOutlet MyDocument				*myDocument;
+	IBOutlet NSWindow				*versionInfoSheet;
+	IBOutlet NSWindow				*mainWindow;
 	IBOutlet FileDropImageView		*fileDropImageView;
 	IBOutlet WebView				*releaseNotesWebView;
 	IBOutlet NSTextField			*urlTextField;
-	IBOutlet NSButton				*editReleaseNotesButton;
-	IBOutlet NSButton				*doneEditReleaseNotesButton;
-	IBOutlet NSButton				*addReleaseNotesItemButton;
-	IBOutlet NSButton				*removeReleaseNotesItemButton;
+	IBOutlet NSSegmentedControl		*editSegmentedControl;
 }
 
-- (IBAction)editReleaseNotes:(id)sender;
-- (IBAction)finishEditingReleaseNotes:(id)sender;
+- (IBAction)editSegmentClicked:(id)sender;
 - (IBAction)chooseEnclosure:(id)sender;
 - (IBAction)previewReleaseNotes:(id)sender;
+- (IBAction)addNewVersion:(id)sender;
+- (IBAction)okVersionInfoSheet:(id)sender;
+- (IBAction)cancelVersionInfoSheet:(id)sender;
+
+- (void)didEndVersionInfoSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 
 - (void)filesWereDropped:(NSArray *)fileArray;
 - (void)previewURL:(NSURL *)url;

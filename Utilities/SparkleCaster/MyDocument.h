@@ -43,12 +43,6 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 #import "URLFormatter.h"
 #import "FileDropImageView.h"
 
-typedef enum
-{
-	SCCancelButton,
-	SCOKButton,
-} SCDialogButtons;
-
 #define SCProductNameKey @"productName"
 #define SCProductURLKey @"productURL"
 
@@ -62,6 +56,8 @@ typedef enum
 	IBOutlet NSArrayController		*versionArrayController;
 	IBOutlet NSObjectController		*versionInfoController;
 	IBOutlet NSTextField			*statusTextField;
+	IBOutlet NSSegmentedControl		*htmlEditButton;
+	IBOutlet NSMenu					*htmlEditMenu;
 	
 	IBOutlet ServerConfigController	*serverConfigController;
 	
@@ -94,17 +90,14 @@ typedef enum
 - (void) removeSelectedObjectFromVersionListArray;
 
 #pragma mark IBAction Methods
-- (IBAction)addNewVersion:(id)sender;
-- (IBAction)okVersionInfoSheet:(id)sender;
-- (IBAction)cancelVersionInfoSheet:(id)sender;
 - (IBAction)showProjectInfoSheet:(id)sender;
 - (IBAction)closeProjectInfoSheet:(id)sender;
 - (IBAction)closeServerConfigSheet:(id)sender;
 - (IBAction)saveXML:(id)sender;
 - (IBAction)showConfigSheet:(id)sender;
+- (IBAction)testFTPConnection:(id)sender;
 
 - (void)didEndProjectInfoSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
-- (void)didEndVersionInfoSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 - (void)xmlExportSavePanelDidEnd:(NSSavePanel *)sheet returnCode:(int)returnCode  contextInfo:(void  *)contextInfo;
 - (void)displayAlertWithMessage:(NSString *)message informativeText:(NSString *)informativeText buttons:(NSArray *)buttons alertStyle:(NSAlertStyle)alertStyle forWindow:(NSWindow *)window;
 

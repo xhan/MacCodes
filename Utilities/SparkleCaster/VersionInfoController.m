@@ -2,20 +2,75 @@
 
 @implementation VersionInfoController
 
-- (IBAction)editReleaseNotes:(id)sender;
+- (void)awakeFromNib;
 {
-	[releaseNotesWebView setEditable:YES];
-	[doneEditReleaseNotesButton setHidden:NO];
-	[addReleaseNotesItemButton setHidden:NO];
-	[removeReleaseNotesItemButton setHidden:NO];
+	[fileDropImageView setDelegate:self];
+	[self addObserver:self forKeyPath:@"releaseNotesEmbeded" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:NULL];
 }
 
-- (IBAction)finishEditingReleaseNotes:(id)sender;
+- (IBAction)addNewVersion:(id)sender;
 {
-	[releaseNotesWebView setEditable:NO];
-	[doneEditReleaseNotesButton setHidden:YES];
-	[addReleaseNotesItemButton setHidden:YES];
-	[removeReleaseNotesItemButton setHidden:YES];
+	// Perform any setup before showing the sheet
+	NSMutableDictionary *newVersionDict = [NSMutableDictionary dictionaryWithCapacity:4];
+	NSDate *date = [NSDate date]; // Today
+	
+	[newVersionDict setObject:date forKey:@"date"];
+	[self setContent:newVersionDict];
+	[fileDropImageView setImage:[NSImage imageNamed:@"drop-target"]];
+	
+	// Show the sheet
+	[NSApp beginSheet:versionInfoSheet modalForWindow:mainWindow modalDelegate:self didEndSelector:@selector(didEndVersionInfoSheet:returnCode:contextInfo:) contextInfo:nil];
+}
+
+- (void)didEndVersionInfoSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
+{
+	[versionInfoSheet orderOut:self];
+	if (returnCode == SCOKButton)
+	{
+		[myDocument insertObject:[self content] inVersionListArrayAtIndex:0];
+	}
+}
+
+- (IBAction)okVersionInfoSheet:(id)sender;
+{
+	[NSApp endSheet:versionInfoSheet returnCode:SCOKButton];
+}
+
+- (IBAction)cancelVersionInfoSheet:(id)sender;
+{
+	[NSApp endSheet:versionInfoSheet returnCode:SCCancelButton];
+}
+
+- (IBAction)editSegmentClicked:(id)sender;
+{
+	int clickedSegment = [sender selectedSegment];
+	
+	if (clickedSegment == 0) // Edit segment clicked
+	{
+		if ([releaseNotesWebView isEditable])
+		{
+			[releaseNotesWebView setEditable:NO];
+			[sender setEnabled:NO forSegment:1];
+			[sender setEnabled:NO forSegment:2];
+		}
+		else
+		{
+			[releaseNotesWebView setEditable:YES];
+			[sender setEnabled:YES forSegment:1];
+			[sender setEnabled:YES forSegment:2];
+		}
+	}
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+	if ([keyPath isEqual:@"releaseNotesEmbeded"])
+	{
+		BOOL enabled = ([change objectForKey:NSKeyValueChangeNewKey] == YES) ? NO : YES;
+		[editSegmentedControl setEnabled:enabled forSegment:0];
+	}
+	
+	[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
 - (IBAction)chooseEnclosure:(id)sender;

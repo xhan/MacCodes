@@ -1,88 +1,185 @@
-{
-    IBClasses = (
-        {CLASS = EtchedText; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
-        {CLASS = EtchedTextCell; LANGUAGE = ObjC; SUPERCLASS = NSTextFieldCell; }, 
-        {
-            CLASS = FileDropImageView; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {delegate = id; }; 
-            SUPERCLASS = NSImageView; 
-        }, 
-        {
-            ACTIONS = {"" = id; }; 
-            CLASS = FirstResponder; 
-            LANGUAGE = ObjC; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {
-            ACTIONS = {
-                addNewVersion = id; 
-                cancelVersionInfoSheet = id; 
-                closeProjectInfoSheet = id; 
-                closeServerConfigSheet = id; 
-                okVersionInfoSheet = id; 
-                saveXML = id; 
-                showConfigSheet = id; 
-                showProjectInfoSheet = id; 
-            }; 
-            CLASS = MyDocument; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                mainWindow = NSWindow; 
-                projectInfoSheet = NSWindow; 
-                serverConfigController = ServerConfigController; 
-                statusTextField = NSTextField; 
-                versionArrayController = NSArrayController; 
-                versionInfoController = NSObjectController; 
-                versionInfoSheet = NSWindow; 
-                versionListTableView = NSTableView; 
-                xmlProgressIndicator = NSProgressIndicator; 
-            }; 
-            SUPERCLASS = NSDocument; 
-        }, 
-        {CLASS = NFHUDButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
-        {CLASS = NFHUDButtonCell; LANGUAGE = ObjC; SUPERCLASS = NSButtonCell; }, 
-        {CLASS = NFHUDPopUpButton; LANGUAGE = ObjC; SUPERCLASS = NSPopUpButton; }, 
-        {
-            CLASS = NFHUDPopUpButtonCell; 
-            LANGUAGE = ObjC; 
-            SUPERCLASS = NSPopUpButtonCell; 
-        }, 
-        {CLASS = NFHUDSlider; LANGUAGE = ObjC; SUPERCLASS = NSSlider; }, 
-        {CLASS = NFHUDSliderCell; LANGUAGE = ObjC; SUPERCLASS = NSSliderCell; }, 
-        {CLASS = NFHUDWindow; LANGUAGE = ObjC; SUPERCLASS = NSPanel; }, 
-        {CLASS = NFIButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
-        {CLASS = NFIButtonCell; LANGUAGE = ObjC; SUPERCLASS = NSButtonCell; }, 
-        {CLASS = NFIPopUpButton; LANGUAGE = ObjC; SUPERCLASS = NSPopUpButton; }, 
-        {CLASS = NFIPopUpButtonCell; LANGUAGE = ObjC; SUPERCLASS = NSPopUpButtonCell; }, 
-        {CLASS = NFIWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
-        {CLASS = NSDatePicker; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 
-        {CLASS = NSFrameView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
-        {CLASS = NSObject; LANGUAGE = ObjC; }, 
-        {CLASS = NSSegmentedControl; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 
-        {CLASS = NSTitledFrame; LANGUAGE = ObjC; SUPERCLASS = NSFrameView; }, 
-        {CLASS = URLFormatter; LANGUAGE = ObjC; SUPERCLASS = NSFormatter; }, 
-        {
-            ACTIONS = {
-                chooseEnclosure = id; 
-                editReleaseNotes = id; 
-                finishEditingReleaseNotes = id; 
-                previewReleaseNotes = id; 
-            }; 
-            CLASS = VersionInfoController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                addReleaseNotesItemButton = NSButton; 
-                doneEditReleaseNotesButton = NSButton; 
-                editReleaseNotesButton = NSButton; 
-                fileDropImageView = FileDropImageView; 
-                myDocument = MyDocument; 
-                releaseNotesWebView = WebView; 
-                removeReleaseNotesItemButton = NSButton; 
-                urlTextField = NSTextField; 
-            }; 
-            SUPERCLASS = NSObjectController; 
-        }
-    ); 
-    IBVersion = 1; 
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IBClasses</key>
+	<array>
+		<dict>
+			<key>CLASS</key>
+			<string>FileDropImageView</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>delegate</key>
+				<string>id</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSImageView</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>setupDotMacAccount</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>ServerConfigController</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>appcastURL</key>
+				<string>NSTextField</string>
+				<key>documentController</key>
+				<string>SCDocument</string>
+				<key>dotMacAccountProgressIndicator</key>
+				<string>NSProgressIndicator</string>
+				<key>dotMacAccountStatus</key>
+				<string>NSTextField</string>
+				<key>dotMacAccountStatusIcon</key>
+				<string>NSImageView</string>
+				<key>dotMacPasswordTextField</key>
+				<string>NSTextField</string>
+				<key>dotMacUserNameTextField</key>
+				<string>NSTextField</string>
+				<key>enclosureURL</key>
+				<string>NSTextField</string>
+				<key>serverConfigSheet</key>
+				<string>NSWindow</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key></key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>NSObject</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>closeProjectInfoSheet</key>
+				<string>id</string>
+				<key>closeServerConfigSheet</key>
+				<string>id</string>
+				<key>saveXML</key>
+				<string>id</string>
+				<key>showConfigSheet</key>
+				<string>id</string>
+				<key>showProjectInfoSheet</key>
+				<string>id</string>
+				<key>testFTPConnection</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>MyDocument</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>htmlEditButton</key>
+				<string>NSSegmentedControl</string>
+				<key>htmlEditMenu</key>
+				<string>NSMenu</string>
+				<key>mainWindow</key>
+				<string>NSWindow</string>
+				<key>projectInfoSheet</key>
+				<string>NSWindow</string>
+				<key>serverConfigController</key>
+				<string>ServerConfigController</string>
+				<key>statusTextField</key>
+				<string>NSTextField</string>
+				<key>versionArrayController</key>
+				<string>NSArrayController</string>
+				<key>versionInfoController</key>
+				<string>NSObjectController</string>
+				<key>versionInfoSheet</key>
+				<string>NSWindow</string>
+				<key>versionListTableView</key>
+				<string>NSTableView</string>
+				<key>xmlProgressIndicator</key>
+				<string>NSProgressIndicator</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSDocument</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>NSDatePicker</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSControl</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>addNewVersion</key>
+				<string>id</string>
+				<key>cancelVersionInfoSheet</key>
+				<string>id</string>
+				<key>chooseEnclosure</key>
+				<string>id</string>
+				<key>editReleaseNotes</key>
+				<string>id</string>
+				<key>editSegmentClicked</key>
+				<string>id</string>
+				<key>finishEditingReleaseNotes</key>
+				<string>id</string>
+				<key>okVersionInfoSheet</key>
+				<string>id</string>
+				<key>previewReleaseNotes</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>VersionInfoController</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>editSegmentedControl</key>
+				<string>NSSegmentedControl</string>
+				<key>fileDropImageView</key>
+				<string>FileDropImageView</string>
+				<key>mainWindow</key>
+				<string>NSWindow</string>
+				<key>myDocument</key>
+				<string>MyDocument</string>
+				<key>releaseNotesWebView</key>
+				<string>WebView</string>
+				<key>urlTextField</key>
+				<string>NSTextField</string>
+				<key>versionInfoSheet</key>
+				<string>NSWindow</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSObjectController</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>URLFormatter</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSFormatter</string>
+		</dict>
+	</array>
+	<key>IBVersion</key>
+	<string>1</string>
+</dict>
+</plist>

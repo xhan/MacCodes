@@ -93,6 +93,7 @@ static NSString*	ExportRSSToolbarItemIdentifier		= @"Export RSS Item Identifier"
 	[self setupToolbar];
 	[NSBundle loadNibNamed:@"ServerConfig" owner:self];
 	[versionListTableView setDoubleAction:nil];
+	[htmlEditButton setMenu:htmlEditMenu forSegment:0];
 }
 
 - (NSNumber *) sizeOfFileAtPath:(NSString *)filePath;
@@ -104,10 +105,10 @@ static NSString*	ExportRSSToolbarItemIdentifier		= @"Export RSS Item Identifier"
 	if ([fm fileExistsAtPath:filePath isDirectory:&isDirectory] && isDirectory) {
 		size = [NSNumber numberWithInt:0];
 	} else {
-		size = [[fm fileAttributesAtPath:filePath traverseLink:NO] objectForKey:NSFileSize];
+		size = [NSNumber numberWithUnsignedLongLong:[[fm fileAttributesAtPath:filePath traverseLink:NO] fileSize]];
 	}
 	
-	// Return Total Size in Bytes
+	// Return Total Size in KBytes
 	return size;
 }
 
@@ -187,7 +188,7 @@ static NSString*	ExportRSSToolbarItemIdentifier		= @"Export RSS Item Identifier"
 		[toolbarItem setImage: [NSImage imageNamed: @"Add"]];
 		
 		// Tell the item what message to send when it is clicked 
-		[toolbarItem setTarget: self];
+		[toolbarItem setTarget: versionInfoController];
 		[toolbarItem setAction: @selector(addNewVersion:)];
 		
 	} else if([itemIdent isEqual: DeleteVersonToolbarItemIdentifier]) {
@@ -398,31 +399,11 @@ static NSString*	ExportRSSToolbarItemIdentifier		= @"Export RSS Item Identifier"
 	return readSuccess;
 }
 
-#pragma mark Misc Methods
-
-- (void)addVersion;
-{
-	NSMutableDictionary *newVersionDict = [NSMutableDictionary dictionaryWithCapacity:4];
-	NSDate *date = [NSDate date]; // Today
-	
-	[newVersionDict setObject:date forKey:@"date"];
-	[versionInfoController setContent:newVersionDict];
-}
-
 #pragma mark Sheet Callback Methods
 
 - (void)didEndProjectInfoSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 {
     [projectInfoSheet orderOut:self];
-}
-
-- (void)didEndVersionInfoSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
-{
-	[versionInfoSheet orderOut:self];
-	if (returnCode == SCOKButton)
-	{
-		[self insertObject:[versionInfoController content] inVersionListArrayAtIndex:0];
-	}
 }
 
 - (void)xmlExportSavePanelDidEnd:(NSSavePanel *)sheet returnCode:(int)returnCode  contextInfo:(void  *)contextInfo;
@@ -587,20 +568,8 @@ static NSString*	ExportRSSToolbarItemIdentifier		= @"Export RSS Item Identifier"
 
 #pragma mark IBActions
 
-- (IBAction)addNewVersion:(id)sender;
-{
-	[self addVersion];
-	[NSApp beginSheet:versionInfoSheet modalForWindow:mainWindow modalDelegate:self didEndSelector:@selector(didEndVersionInfoSheet:returnCode:contextInfo:) contextInfo:nil];
-}
-
-- (IBAction)okVersionInfoSheet:(id)sender;
-{
-	[NSApp endSheet:versionInfoSheet returnCode:SCOKButton];
-}
-
-- (IBAction)cancelVersionInfoSheet:(id)sender;
-{
-	[NSApp endSheet:versionInfoSheet returnCode:SCCancelButton];
+- (IBAction)testFTPConnection:(id)sender; {
+	
 }
 
 - (IBAction)showProjectInfoSheet:(id)sender;

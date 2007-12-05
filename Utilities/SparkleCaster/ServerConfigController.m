@@ -16,7 +16,8 @@
 - (void)showConfigSheet;
 {
 	[NSApp beginSheet:serverConfigSheet modalForWindow:[documentController mainWindow] modalDelegate:self didEndSelector:@selector(didEndServerConfigSheet:returnCode:contextInfo:) contextInfo:nil];
-	[self performSelector:@selector(getDotMacUserDetails) withObject:nil afterDelay:0.5];
+	if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"useAccountFromdotMacPreferences"] boolValue] == YES)
+		[self setupDotMacAccount:self];
 }
 
 - (void)closeConfigSheet;
@@ -29,10 +30,32 @@
     [serverConfigSheet orderOut:self];
 }
 
+- (IBAction)setupDotMacAccount:(id)sender; {
+	if (sender != self) {
+		if (([sender tag] == 0) && ([sender state] == NSOffState))
+		{
+			[dotMacUserNameTextField setStringValue:@""];
+			[dotMacPasswordTextField setStringValue:@""];
+		} else {
+			[dotMacAccountStatusIcon setHidden:YES];
+			[dotMacAccountProgressIndicator startAnimation:self];
+			[dotMacAccountStatus setStringValue:@"Getting .Mac details..."];
+			
+			[NSThread detachNewThreadSelector:@selector(getDotMacUserDetails) toTarget:self withObject:nil];
+		}
+	} else {
+		[dotMacAccountStatusIcon setHidden:YES];
+		[dotMacAccountProgressIndicator startAnimation:self];
+		[dotMacAccountStatus setStringValue:@"Getting .Mac details..."];
+		
+		[NSThread detachNewThreadSelector:@selector(getDotMacUserDetails) toTarget:self withObject:nil];
+	}
+}
+
 - (void) getDotMacUserDetails;
 {
-	[dotMacAccountProgressIndicator animate:self];
-	[dotMacAccountStatus setStringValue:@"Getting account details..."];
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	
 	if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"useAccountFromdotMacPreferences"] boolValue] == YES)
 	{
 		_dotMacMemberAccount = [DMMemberAccount accountFromPreferencesWithApplicationID:@"SCst"];
@@ -41,25 +64,68 @@
 		[_dotMacMemberAccount setIsSynchronous:YES];
 		[_dotMacMemberAccount setDelegate:self];
 		
-		if ([_dotMacMemberAccount validateCredentials] != kDMSuccess) { 
-			// invalid credentials - sign them up?
-		}
-		
-		DMTransaction *serviceTransaction = [_dotMacMemberAccount servicesAvailableForAccount]; 
-		
-		if ([serviceTransaction isSuccessful]) { 
-			NSArray *services = [serviceTransaction result]; 
-			if ([services containsObject:kDMWebHostingService] == NO) {
-				[dotMacAccountStatus setStringValue:@"Web hosting is not available on this account"];
-			} else {
-				[dotMacAccountStatus setStringValue:@"OK to upload to this account"];
+		if ([_dotMacMemberAccount validateCredentials] != kDMSuccess) {
+			[dotMacAccountStatus setStringValue:@"Account details incorrect, please check"];
+			[dotMacAccountStatusIcon setImage:[NSImage imageNamed:@"small_red_cross"]];
+			[dotMacAccountStatusIcon setHidden:NO];
+		} else {
+			
+			NSString *accountName = [_dotMacMemberAccount name];
+			[dotMacUserNameTextField setStringValue:accountName];
+			
+			DMTransaction *serviceTransaction = [_dotMacMemberAccount servicesAvailableForAccount]; 
+			
+			if ([serviceTransaction isSuccessful]) { 
+				NSArray *services = [serviceTransaction result]; 
+				if ([services containsObject:kDMWebHostingService] == NO) {
+					[dotMacAccountStatus setStringValue:@"Web hosting is not available on this account"];
+					[dotMacAccountStatusIcon setImage:[NSImage imageNamed:@"small_red_cross"]];
+					[dotMacAccountStatusIcon setHidden:NO];
+				} else {
+					[dotMacAccountStatus setStringValue:@"OK to upload to this account"];
+					[dotMacAccountStatusIcon setImage:[NSImage imageNamed:@"small_green_check"]];
+					[dotMacAccountStatusIcon setHidden:NO];
+				}
+			} else { 
+				// handle error
 			}
-		} else { 
-			// handle error
 		}
-		[dotMacUserNameTextField setStringValue:[_dotMacMemberAccount name]];
-		[dotMacAccountProgressIndicator stopAnimation:self];
+	} else {
+		_dotMacMemberAccount = [DMMemberAccount accountWithName:[dotMacUserNameTextField stringValue] password:[dotMacPasswordTextField stringValue] applicationID:@"SCst"];
+		
+		[_dotMacMemberAccount setApplicationName:@"SparkleCaster"];
+		[_dotMacMemberAccount setIsSynchronous:YES];
+		[_dotMacMemberAccount setDelegate:self];
+		
+		if ([_dotMacMemberAccount validateCredentials] != kDMSuccess) {
+			[dotMacAccountStatus setStringValue:@"Account details incorrect, please check"];
+			[dotMacAccountStatusIcon setImage:[NSImage imageNamed:@"small_red_cross"]];
+			[dotMacAccountStatusIcon setHidden:NO];
+		} else {
+			
+			NSString *accountName = [_dotMacMemberAccount name];
+			[dotMacUserNameTextField setStringValue:accountName];
+			
+			DMTransaction *serviceTransaction = [_dotMacMemberAccount servicesAvailableForAccount]; 
+			
+			if ([serviceTransaction isSuccessful]) { 
+				NSArray *services = [serviceTransaction result]; 
+				if ([services containsObject:kDMWebHostingService] == NO) {
+					[dotMacAccountStatus setStringValue:@"Web hosting is not available on this account"];
+					[dotMacAccountStatusIcon setImage:[NSImage imageNamed:@"small_red_cross"]];
+					[dotMacAccountStatusIcon setHidden:NO];
+				} else {
+					[dotMacAccountStatus setStringValue:@"OK to upload to this account"];
+					[dotMacAccountStatusIcon setImage:[NSImage imageNamed:@"small_green_check"]];
+					[dotMacAccountStatusIcon setHidden:NO];
+				}
+			} else { 
+				// handle error
+			}
+		}
 	}
+	[dotMacAccountProgressIndicator stopAnimation:self];
+	[pool release];
 }
 
 - (void)transactionSuccessful: (DMTransaction *)theTransaction
