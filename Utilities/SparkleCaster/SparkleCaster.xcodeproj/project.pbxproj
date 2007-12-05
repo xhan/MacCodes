@@ -153,6 +153,8 @@
 		8D15AC370486D014006FF6A4 /* SparkleCaster.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SparkleCaster.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9736F4B0D05A0C300024D38 /* dotMacController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dotMacController.h; sourceTree = "<group>"; };
 		F9736F4C0D05A0C300024D38 /* dotMacController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = dotMacController.m; sourceTree = "<group>"; };
+		F9809C3F0D07294B002CD3F9 /* small_red_cross.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = small_red_cross.tif; path = Resources/small_red_cross.tif; sourceTree = "<group>"; };
+		F9809C400D07294B002CD3F9 /* small_green_check.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = small_green_check.tif; path = Resources/small_green_check.tif; sourceTree = "<group>"; };
 		F9F2FE0A0CF9DF82008850E3 /* ActionArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ActionArrow.png; path = Resources/ActionArrow.png; sourceTree = "<group>"; };
 		F9F2FE430CFA3B14008850E3 /* edit.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = edit.tif; path = Resources/edit.tif; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -257,6 +259,8 @@
 		2A37F4B8FDCFA73011CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F9809C3F0D07294B002CD3F9 /* small_red_cross.tif */,
+				F9809C400D07294B002CD3F9 /* small_green_check.tif */,
 				F9F2FE430CFA3B14008850E3 /* edit.tif */,
 				F9F2FE0A0CF9DF82008850E3 /* ActionArrow.png */,
 				663175250CBD087700A689BC /* exportRSS.tif */,
