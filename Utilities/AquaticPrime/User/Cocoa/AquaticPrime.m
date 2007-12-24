@@ -255,7 +255,7 @@
 	NSPropertyListFormat format;
 	NSString *error;
 	NSMutableDictionary *licenseDict = [NSPropertyListSerialization propertyListFromData:data mutabilityOption:NSPropertyListMutableContainersAndLeaves format:&format errorDescription:&error];
-	if (error)
+	if (![licenseDict isKindOfClass:[NSMutableDictionary class]] || error)
 		return nil;
 		
 	NSData *signature = [licenseDict objectForKey:@"Signature"];
