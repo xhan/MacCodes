@@ -41,27 +41,6 @@
 	[NSApp endSheet:versionInfoSheet returnCode:SCCancelButton];
 }
 
-- (IBAction)editSegmentClicked:(id)sender;
-{
-	int clickedSegment = [sender selectedSegment];
-	
-	if (clickedSegment == 0) // Edit segment clicked
-	{
-		if ([releaseNotesWebView isEditable])
-		{
-			[releaseNotesWebView setEditable:NO];
-			[sender setEnabled:NO forSegment:1];
-			[sender setEnabled:NO forSegment:2];
-		}
-		else
-		{
-			[releaseNotesWebView setEditable:YES];
-			[sender setEnabled:YES forSegment:1];
-			[sender setEnabled:YES forSegment:2];
-		}
-	}
-}
-
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
 	if ([keyPath isEqual:@"releaseNotesEmbeded"])

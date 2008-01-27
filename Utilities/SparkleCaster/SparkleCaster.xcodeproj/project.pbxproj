@@ -56,7 +56,9 @@
 		8D15AC310486D014006FF6A4 /* MyDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4ACFDCFA73011CA2CEA /* MyDocument.m */; settings = {ATTRIBUTES = (); }; };
 		8D15AC320486D014006FF6A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4B0FDCFA73011CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
+		F930598D0D4C0A3F002567A3 /* VersionInfo.nib in Resources */ = {isa = PBXBuildFile; fileRef = F930598C0D4C0A3F002567A3 /* VersionInfo.nib */; };
 		F9736F4D0D05A0C300024D38 /* dotMacController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9736F4C0D05A0C300024D38 /* dotMacController.m */; };
+		F9E1E3740D0C2DD400246720 /* HTMLEditController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9E1E3730D0C2DD400246720 /* HTMLEditController.m */; };
 		F9F2FE0B0CF9DF82008850E3 /* ActionArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = F9F2FE0A0CF9DF82008850E3 /* ActionArrow.png */; };
 		F9F2FE440CFA3B14008850E3 /* edit.tif in Resources */ = {isa = PBXBuildFile; fileRef = F9F2FE430CFA3B14008850E3 /* edit.tif */; };
 /* End PBXBuildFile section */
@@ -155,6 +157,9 @@
 		F9736F4C0D05A0C300024D38 /* dotMacController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = dotMacController.m; sourceTree = "<group>"; };
 		F9809C3F0D07294B002CD3F9 /* small_red_cross.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = small_red_cross.tif; path = Resources/small_red_cross.tif; sourceTree = "<group>"; };
 		F9809C400D07294B002CD3F9 /* small_green_check.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = small_green_check.tif; path = Resources/small_green_check.tif; sourceTree = "<group>"; };
+		F9E1E3720D0C2DD400246720 /* HTMLEditController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTMLEditController.h; sourceTree = "<group>"; };
+		F9E1E3730D0C2DD400246720 /* HTMLEditController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTMLEditController.m; sourceTree = "<group>"; };
+		F9E1E3800D0C31CA00246720 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/VersionInfo.nib; sourceTree = "<group>"; };
 		F9F2FE0A0CF9DF82008850E3 /* ActionArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ActionArrow.png; path = Resources/ActionArrow.png; sourceTree = "<group>"; };
 		F9F2FE430CFA3B14008850E3 /* edit.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = edit.tif; path = Resources/edit.tif; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -224,6 +229,8 @@
 		2A37F4ABFDCFA73011CA2CEA /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				F9E1E3720D0C2DD400246720 /* HTMLEditController.h */,
+				F9E1E3730D0C2DD400246720 /* HTMLEditController.m */,
 				F9736F4B0D05A0C300024D38 /* dotMacController.h */,
 				F9736F4C0D05A0C300024D38 /* dotMacController.m */,
 				6647A1430CD9087F00642DC3 /* GMStreamController.h */,
@@ -281,6 +288,7 @@
 				2A37F4B4FDCFA73011CA2CEA /* MyDocument.nib */,
 				8D15AC360486D014006FF6A4 /* Info.plist */,
 				089C165FFE840EACC02AAC07 /* InfoPlist.strings */,
+				F930598C0D4C0A3F002567A3 /* VersionInfo.nib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -379,6 +387,7 @@
 				663175260CBD087700A689BC /* exportRSS.tif in Resources */,
 				F9F2FE0B0CF9DF82008850E3 /* ActionArrow.png in Resources */,
 				F9F2FE440CFA3B14008850E3 /* edit.tif in Resources */,
+				F930598D0D4C0A3F002567A3 /* VersionInfo.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -405,6 +414,7 @@
 				666D66850CB3F9DB006815ED /* ServerConfigController.m in Sources */,
 				663D87490CC13CA000A20471 /* VersionInfoController.m in Sources */,
 				F9736F4D0D05A0C300024D38 /* dotMacController.m in Sources */,
+				F9E1E3740D0C2DD400246720 /* HTMLEditController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -462,6 +472,14 @@
 				666D667C0CB3F933006815ED /* English */,
 			);
 			name = ServerConfig.nib;
+			sourceTree = "<group>";
+		};
+		F930598C0D4C0A3F002567A3 /* VersionInfo.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F9E1E3800D0C31CA00246720 /* English */,
+			);
+			name = VersionInfo.nib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
