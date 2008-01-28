@@ -5,13 +5,11 @@
 	<key>IBFramework Version</key>
 	<string>629</string>
 	<key>IBLastKnownRelativeProjectPath</key>
-	<string>../SparkleCaster.xcodeproj</string>
+	<string>../../SparkleCaster.xcodeproj</string>
 	<key>IBOldestOS</key>
-	<integer>4</integer>
+	<integer>5</integer>
 	<key>IBOpenObjects</key>
-	<array>
-		<integer>21</integer>
-	</array>
+	<array/>
 	<key>IBSystem Version</key>
 	<string>9B18</string>
 	<key>targetFramework</key>

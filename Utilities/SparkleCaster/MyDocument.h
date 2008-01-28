@@ -101,8 +101,6 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 - (void)xmlExportSavePanelDidEnd:(NSSavePanel *)sheet returnCode:(int)returnCode  contextInfo:(void  *)contextInfo;
 - (void)displayAlertWithMessage:(NSString *)message informativeText:(NSString *)informativeText buttons:(NSArray *)buttons alertStyle:(NSAlertStyle)alertStyle forWindow:(NSWindow *)window;
 
-- (void)addVersion;
-
 - (NSNumber *) sizeOfFileAtPath:(NSString *)filePath;
 - (NSString *) mimeTypeForFileAtPath:(NSString *)filePath;
 

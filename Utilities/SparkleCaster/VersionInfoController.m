@@ -45,7 +45,7 @@
 {
 	if ([keyPath isEqual:@"releaseNotesEmbeded"])
 	{
-		BOOL enabled = ([change objectForKey:NSKeyValueChangeNewKey] == YES) ? NO : YES;
+		BOOL enabled = ([change objectForKey:NSKeyValueChangeNewKey] == [NSNumber numberWithBool:YES]) ? NO : YES;
 		[editSegmentedControl setEnabled:enabled forSegment:0];
 	}
 	
@@ -81,6 +81,13 @@
 			// Handle Error
 		}
 	}
+}
+
+- (IBAction)editSegmentClicked:(id)sender;
+{
+#if kDebugBuild
+	NSLog(@"edit Segment Clicked");
+#endif
 }
 
 - (void)previewURL:(NSURL *)url;
