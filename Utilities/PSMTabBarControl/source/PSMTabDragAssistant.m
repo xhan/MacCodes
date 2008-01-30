@@ -497,8 +497,8 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
 - (void)draggingBeganAt:(NSPoint)aPoint
 {
 	if (_draggedTab) {
-		[[_draggedTab window] orderFront:nil];
 		[[_draggedTab window] setFrameTopLeftPoint:aPoint];
+		[[_draggedTab window] orderFront:nil];
 		
 		if ([[[self sourceTabBar] tabView] numberOfTabViewItems] == 1) {
 			[self draggingExitedTabBar:[self sourceTabBar]];
