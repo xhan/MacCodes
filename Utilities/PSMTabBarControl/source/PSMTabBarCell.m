@@ -437,7 +437,6 @@
     if (self) {
         if ([aDecoder allowsKeyedCoding]) {
             _frame = [aDecoder decodeRectForKey:@"frame"];
-            NSLog(@"decoding cell");
             _stringSize = [aDecoder decodeSizeForKey:@"stringSize"];
             _currentStep = [aDecoder decodeIntForKey:@"currentStep"];
             _isPlaceholder = [aDecoder decodeBoolForKey:@"isPlaceholder"];
