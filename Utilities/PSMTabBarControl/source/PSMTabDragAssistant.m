@@ -823,7 +823,7 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
     for (i = (cellCount - 1); i >= 0; i--) {
         PSMTabBarCell *cell = [[control cells] objectAtIndex:i];
         if ([cell isPlaceholder]) {
-            [[control cells] removeObject:cell];
+			[control removeTabForCell:cell];
         }
     }
     // redraw
