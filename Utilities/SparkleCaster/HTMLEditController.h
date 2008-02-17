@@ -41,6 +41,6 @@
 }
 
 - (IBAction)editSegmentClicked:(id)sender;
-- (void)addNewSection;
-- (void)removeCurrentSection;
+//- (void)addNewSection;
+//- (void)removeCurrentSection;
 @end
