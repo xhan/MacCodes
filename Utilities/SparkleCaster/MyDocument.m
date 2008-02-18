@@ -318,12 +318,15 @@ static NSString*	ExportRSSToolbarItemIdentifier		= @"Export RSS Item Identifier"
 }
 - (void) insertObject:(NSObject *)obj inVersionListArrayAtIndex:(unsigned)idx {
 	[versionListArray insertObject:obj atIndex:idx];
+	[self updateChangeCount:NSChangeDone];
 }
 - (void) removeObjectFromVersionListArrayAtIndex:(unsigned)idx {
 	[versionListArray removeObjectAtIndex:idx];
+	[self updateChangeCount:NSChangeDone];
 }
 - (void) replaceObjectInVersionListArrayAtIndex:(unsigned)idx withObject:(NSObject *)obj {
 	[versionListArray replaceObjectAtIndex:idx withObject:obj];
+	[self updateChangeCount:NSChangeDone];
 }
 
 - (NSMutableDictionary *) productInfoDictionary {
@@ -332,6 +335,7 @@ static NSString*	ExportRSSToolbarItemIdentifier		= @"Export RSS Item Identifier"
 - (void) setProductInfoDictionary:(NSMutableDictionary *)newProductInfoDictionary {
 	if(productInfoDictionary != newProductInfoDictionary) {
 		[productInfoDictionary setDictionary:newProductInfoDictionary];
+		[self updateChangeCount:NSChangeDone];
 	}
 }
 
@@ -358,6 +362,7 @@ static NSString*	ExportRSSToolbarItemIdentifier		= @"Export RSS Item Identifier"
 - (void) removeSelectedObjectFromVersionListArray;
 {
 	[versionArrayController remove:self];
+	[self updateChangeCount:NSChangeDone];
 }
 
 #pragma mark Document Read/Write
