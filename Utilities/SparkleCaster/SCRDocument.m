@@ -36,7 +36,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 
 */
 
-#import "MyDocument.h"
+#import "SCRDocument.h"
 
 static NSString* 	MyDocToolbarIdentifier				= @"My Document Toolbar Identifier";
 static NSString*	ProductInfoToolbarItemIdentifier	= @"Product Info Item Identifier";
@@ -50,11 +50,11 @@ static NSString*	ExportRSSToolbarItemIdentifier		= @"Export RSS Item Identifier"
 @interface ValidatedViewToolbarItem : NSToolbarItem
 @end
 
-@interface MyDocument (Private)
+@interface SCRDocument (Private)
 - (void)setupToolbar;
 @end
 
-@implementation MyDocument
+@implementation SCRDocument
 
 - (id) init {
 	self = [super init];

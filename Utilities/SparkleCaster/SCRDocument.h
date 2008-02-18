@@ -46,7 +46,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 #define SCProductNameKey @"productName"
 #define SCProductURLKey @"productURL"
 
-@interface MyDocument : NSDocument
+@interface SCRDocument : NSDocument
 {
 	IBOutlet NSWindow				*mainWindow;
 	IBOutlet NSTableView			*versionListTableView;

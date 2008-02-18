@@ -5,6 +5,60 @@
 	<key>IBClasses</key>
 	<array>
 		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>closeProjectInfoSheet</key>
+				<string>id</string>
+				<key>closeServerConfigSheet</key>
+				<string>id</string>
+				<key>saveXML</key>
+				<string>id</string>
+				<key>showConfigSheet</key>
+				<string>id</string>
+				<key>showProjectInfoSheet</key>
+				<string>id</string>
+				<key>testFTPConnection</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>SCRDocument</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>htmlEditButton</key>
+				<string>NSSegmentedControl</string>
+				<key>htmlEditMenu</key>
+				<string>NSMenu</string>
+				<key>mainWindow</key>
+				<string>NSWindow</string>
+				<key>projectInfoSheet</key>
+				<string>NSWindow</string>
+				<key>serverConfigController</key>
+				<string>ServerConfigController</string>
+				<key>statusTextField</key>
+				<string>NSTextField</string>
+				<key>versionArrayController</key>
+				<string>NSArrayController</string>
+				<key>versionInfoController</key>
+				<string>NSObjectController</string>
+				<key>versionInfoSheet</key>
+				<string>NSWindow</string>
+				<key>versionListTableView</key>
+				<string>NSTableView</string>
+				<key>xmlProgressIndicator</key>
+				<string>NSProgressIndicator</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSDocument</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>NSObject</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+		</dict>
+		<dict>
 			<key>CLASS</key>
 			<string>FileDropImageView</string>
 			<key>LANGUAGE</key>
@@ -52,68 +106,6 @@
 			<string>NSObject</string>
 		</dict>
 		<dict>
-			<key>CLASS</key>
-			<string>FirstResponder</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>NSObject</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
-			<string>NSObject</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-		</dict>
-		<dict>
-			<key>ACTIONS</key>
-			<dict>
-				<key>closeProjectInfoSheet</key>
-				<string>id</string>
-				<key>closeServerConfigSheet</key>
-				<string>id</string>
-				<key>saveXML</key>
-				<string>id</string>
-				<key>showConfigSheet</key>
-				<string>id</string>
-				<key>showProjectInfoSheet</key>
-				<string>id</string>
-				<key>testFTPConnection</key>
-				<string>id</string>
-			</dict>
-			<key>CLASS</key>
-			<string>MyDocument</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>OUTLETS</key>
-			<dict>
-				<key>htmlEditButton</key>
-				<string>NSSegmentedControl</string>
-				<key>htmlEditMenu</key>
-				<string>NSMenu</string>
-				<key>mainWindow</key>
-				<string>NSWindow</string>
-				<key>projectInfoSheet</key>
-				<string>NSWindow</string>
-				<key>serverConfigController</key>
-				<string>ServerConfigController</string>
-				<key>statusTextField</key>
-				<string>NSTextField</string>
-				<key>versionArrayController</key>
-				<string>NSArrayController</string>
-				<key>versionInfoController</key>
-				<string>NSObjectController</string>
-				<key>versionInfoSheet</key>
-				<string>NSWindow</string>
-				<key>versionListTableView</key>
-				<string>NSTableView</string>
-				<key>xmlProgressIndicator</key>
-				<string>NSProgressIndicator</string>
-			</dict>
-			<key>SUPERCLASS</key>
-			<string>NSDocument</string>
-		</dict>
-		<dict>
 			<key>ACTIONS</key>
 			<dict>
 				<key>addNewVersion</key>
@@ -142,7 +134,7 @@
 				<key>mainWindow</key>
 				<string>NSWindow</string>
 				<key>myDocument</key>
-				<string>MyDocument</string>
+				<string>SCRDocument</string>
 				<key>releaseNotesWebView</key>
 				<string>WebView</string>
 				<key>urlTextField</key>
@@ -160,6 +152,14 @@
 			<string>ObjC</string>
 			<key>SUPERCLASS</key>
 			<string>NSFormatter</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
 		</dict>
 	</array>
 	<key>IBVersion</key>

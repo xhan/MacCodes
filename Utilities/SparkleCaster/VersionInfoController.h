@@ -3,7 +3,7 @@
 #import <Cocoa/Cocoa.h>
 #import <WebKit/WebKit.h>
 #import "FileDropImageView.h"
-#import "MyDocument.h"
+#import "SCRDocument.h"
 
 typedef enum
 {
@@ -19,7 +19,7 @@ typedef enum
 
 @interface VersionInfoController : NSObjectController
 {
-	IBOutlet MyDocument				*myDocument;
+	IBOutlet SCRDocument				*myDocument;
 	IBOutlet NSWindow				*versionInfoSheet;
 	IBOutlet NSWindow				*mainWindow;
 	IBOutlet FileDropImageView		*fileDropImageView;
