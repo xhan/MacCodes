@@ -55,7 +55,10 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 
 - (void)openRecentSCDocument;
 {
+#ifdef kDebugBuild
 	NSLog([NSString stringWithFormat:@"%d", [recentDocsTableView clickedRow]]);
+	NSLog([[[documentController recentDocumentURLs] objectAtIndex:[recentDocsTableView clickedRow]] absoluteString]);
+#endif
 	[documentController openDocumentWithContentsOfURL:[[documentController recentDocumentURLs] objectAtIndex:[recentDocsTableView clickedRow]] display:YES];
 }
 
