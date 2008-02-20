@@ -78,7 +78,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 				[self setImage:[[NSWorkspace sharedWorkspace] iconForFile:[files objectAtIndex:0]]];
 		}
 		else
-			NSLog(@"The delegate does not respond to selector filesWereDropped");
+			NSLog(@"FileDropImageView: The delegate does not respond to selector filesWereDropped:");
     }
     return YES;
 }
@@ -92,6 +92,8 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 
 - (void)shouldAcceptMultipleFiles:(BOOL)acceptMultipleFiles;
 {
+	// Set whether this FileDropImageView should allow more than one file to be dropped on it. If set to YES, the filesWereDropped: selector will return an array of the file URLs; otherwise, it returns an array with only one entry.
+	// Default is YES
 	_acceptsMultipleFiles = acceptMultipleFiles;
 }
 - (BOOL)acceptsMultipleFiles;

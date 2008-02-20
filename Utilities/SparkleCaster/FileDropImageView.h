@@ -37,7 +37,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 
 @interface FileDropImageView : NSImageView
 {
-	BOOL	_acceptsMultipleFiles;
+	BOOL	_acceptsMultipleFiles;			// Default YES
 	id		delegate;
 }
 

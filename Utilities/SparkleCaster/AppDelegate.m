@@ -39,8 +39,6 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 {
 	[recentDocsTableView setTarget:self];
 	[recentDocsTableView setDoubleAction:@selector(openRecentSCDocument)];
-	
-	documentController = [NSDocumentController sharedDocumentController];
 }
 
 - (void) dealloc {
@@ -50,16 +48,16 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender
 {
-	return NO;
+	return NO; // Prevents the app from creating a blank document on startup
 }
 
 - (void)openRecentSCDocument;
 {
 #ifdef kDebugBuild
 	NSLog([NSString stringWithFormat:@"%d", [recentDocsTableView clickedRow]]);
-	NSLog([[[documentController recentDocumentURLs] objectAtIndex:[recentDocsTableView clickedRow]] absoluteString]);
+	NSLog([[[[NSDocumentController sharedDocumentController] recentDocumentURLs] objectAtIndex:[recentDocsTableView clickedRow]] absoluteString]);
 #endif
-	[documentController openDocumentWithContentsOfURL:[[documentController recentDocumentURLs] objectAtIndex:[recentDocsTableView clickedRow]] display:YES];
+	[[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:[[[NSDocumentController sharedDocumentController] recentDocumentURLs] objectAtIndex:[recentDocsTableView clickedRow]] display:YES];
 }
 
 - (IBAction)newSCDocument:(id)sender;
