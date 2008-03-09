@@ -56,7 +56,8 @@
 		8D15AC310486D014006FF6A4 /* SCRDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4ACFDCFA73011CA2CEA /* SCRDocument.m */; settings = {ATTRIBUTES = (); }; };
 		8D15AC320486D014006FF6A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4B0FDCFA73011CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
-		F930598D0D4C0A3F002567A3 /* VersionInfo.nib in Resources */ = {isa = PBXBuildFile; fileRef = F930598C0D4C0A3F002567A3 /* VersionInfo.nib */; };
+		F910D6A00D77549D0039D916 /* Connection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F910D69F0D77549D0039D916 /* Connection.framework */; };
+		F916C72A0D848C54008306D4 /* Connection.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F910D69F0D77549D0039D916 /* Connection.framework */; };
 		F9736F4D0D05A0C300024D38 /* dotMacController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9736F4C0D05A0C300024D38 /* dotMacController.m */; };
 		F9E1E3740D0C2DD400246720 /* HTMLEditController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9E1E3730D0C2DD400246720 /* HTMLEditController.m */; };
 		F9F2FE0B0CF9DF82008850E3 /* ActionArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = F9F2FE0A0CF9DF82008850E3 /* ActionArrow.png */; };
@@ -101,6 +102,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				F916C72A0D848C54008306D4 /* Connection.framework in CopyFiles */,
 				666D66730CB3ECCA006815ED /* DotMacKit.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -153,13 +155,13 @@
 		66F914BA0C96BF6700CEF407 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		8D15AC360486D014006FF6A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D15AC370486D014006FF6A4 /* SparkleCaster.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SparkleCaster.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F910D69F0D77549D0039D916 /* Connection.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Connection.framework; sourceTree = "<group>"; };
 		F9736F4B0D05A0C300024D38 /* dotMacController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dotMacController.h; sourceTree = "<group>"; };
 		F9736F4C0D05A0C300024D38 /* dotMacController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = dotMacController.m; sourceTree = "<group>"; };
 		F9809C3F0D07294B002CD3F9 /* small_red_cross.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = small_red_cross.tif; path = Resources/small_red_cross.tif; sourceTree = "<group>"; };
 		F9809C400D07294B002CD3F9 /* small_green_check.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = small_green_check.tif; path = Resources/small_green_check.tif; sourceTree = "<group>"; };
 		F9E1E3720D0C2DD400246720 /* HTMLEditController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTMLEditController.h; sourceTree = "<group>"; };
 		F9E1E3730D0C2DD400246720 /* HTMLEditController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTMLEditController.m; sourceTree = "<group>"; };
-		F9E1E3800D0C31CA00246720 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/VersionInfo.nib; sourceTree = "<group>"; };
 		F9F2FE0A0CF9DF82008850E3 /* ActionArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ActionArrow.png; path = Resources/ActionArrow.png; sourceTree = "<group>"; };
 		F9F2FE430CFA3B14008850E3 /* edit.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = edit.tif; path = Resources/edit.tif; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -179,6 +181,7 @@
 				8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */,
 				66CB23E20C8D7AED0007DFB4 /* WebKit.framework in Frameworks */,
 				666D66700CB3ECA7006815ED /* DotMacKit.framework in Frameworks */,
+				F910D6A00D77549D0039D916 /* Connection.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -188,6 +191,7 @@
 		1058C7A6FEA54F5311CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F910D69F0D77549D0039D916 /* Connection.framework */,
 				666D66650CB3ECA6006815ED /* DotMacKit.framework */,
 				1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */,
 			);
@@ -288,7 +292,6 @@
 				2A37F4B4FDCFA73011CA2CEA /* MyDocument.nib */,
 				8D15AC360486D014006FF6A4 /* Info.plist */,
 				089C165FFE840EACC02AAC07 /* InfoPlist.strings */,
-				F930598C0D4C0A3F002567A3 /* VersionInfo.nib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -387,7 +390,6 @@
 				663175260CBD087700A689BC /* exportRSS.tif in Resources */,
 				F9F2FE0B0CF9DF82008850E3 /* ActionArrow.png in Resources */,
 				F9F2FE440CFA3B14008850E3 /* edit.tif in Resources */,
-				F930598D0D4C0A3F002567A3 /* VersionInfo.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -474,14 +476,6 @@
 			name = ServerConfig.nib;
 			sourceTree = "<group>";
 		};
-		F930598C0D4C0A3F002567A3 /* VersionInfo.nib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				F9E1E3800D0C31CA00246720 /* English */,
-			);
-			name = VersionInfo.nib;
-			sourceTree = "<group>";
-		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -565,12 +559,14 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_4)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_5)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SYSTEM_DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_4 = "\"$(SRCROOT)\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_5 = "\"$(SRCROOT)\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)\"";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
@@ -598,12 +594,14 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_4)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_5)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_6)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SYSTEM_DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_4 = "\"$(SRCROOT)\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_5 = "\"$(SRCROOT)\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_6 = "\"$(SRCROOT)\"";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
 				INFOPLIST_FILE = Info.plist;

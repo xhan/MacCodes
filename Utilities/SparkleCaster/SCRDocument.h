@@ -42,6 +42,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 #import "ServerConfigController.h"
 #import "URLFormatter.h"
 #import "FileDropImageView.h"
+#import "CommunicationController.h"
 
 #define SCProductNameKey @"productName"
 #define SCProductURLKey @"productURL"

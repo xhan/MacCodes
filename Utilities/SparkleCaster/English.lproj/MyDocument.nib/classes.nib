@@ -5,6 +5,66 @@
 	<key>IBClasses</key>
 	<array>
 		<dict>
+			<key>CLASS</key>
+			<string>FileDropImageView</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>delegate</key>
+				<string>id</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSImageView</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>setupDotMacAccount</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>ServerConfigController</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>appcastURL</key>
+				<string>NSTextField</string>
+				<key>documentController</key>
+				<string>SCDocument</string>
+				<key>dotMacAccountProgressIndicator</key>
+				<string>NSProgressIndicator</string>
+				<key>dotMacAccountStatus</key>
+				<string>NSTextField</string>
+				<key>dotMacAccountStatusIcon</key>
+				<string>NSImageView</string>
+				<key>dotMacPasswordTextField</key>
+				<string>NSTextField</string>
+				<key>dotMacUserNameTextField</key>
+				<string>NSTextField</string>
+				<key>enclosureURL</key>
+				<string>NSTextField</string>
+				<key>serverConfigSheet</key>
+				<string>NSWindow</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key></key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
 			<key>ACTIONS</key>
 			<dict>
 				<key>closeProjectInfoSheet</key>
@@ -57,53 +117,6 @@
 			<string>NSObject</string>
 			<key>LANGUAGE</key>
 			<string>ObjC</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
-			<string>FileDropImageView</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>OUTLETS</key>
-			<dict>
-				<key>delegate</key>
-				<string>id</string>
-			</dict>
-			<key>SUPERCLASS</key>
-			<string>NSImageView</string>
-		</dict>
-		<dict>
-			<key>ACTIONS</key>
-			<dict>
-				<key>setupDotMacAccount</key>
-				<string>id</string>
-			</dict>
-			<key>CLASS</key>
-			<string>ServerConfigController</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>OUTLETS</key>
-			<dict>
-				<key>appcastURL</key>
-				<string>NSTextField</string>
-				<key>documentController</key>
-				<string>SCDocument</string>
-				<key>dotMacAccountProgressIndicator</key>
-				<string>NSProgressIndicator</string>
-				<key>dotMacAccountStatus</key>
-				<string>NSTextField</string>
-				<key>dotMacAccountStatusIcon</key>
-				<string>NSImageView</string>
-				<key>dotMacPasswordTextField</key>
-				<string>NSTextField</string>
-				<key>dotMacUserNameTextField</key>
-				<string>NSTextField</string>
-				<key>enclosureURL</key>
-				<string>NSTextField</string>
-				<key>serverConfigSheet</key>
-				<string>NSWindow</string>
-			</dict>
-			<key>SUPERCLASS</key>
-			<string>NSObject</string>
 		</dict>
 		<dict>
 			<key>CLASS</key>
@@ -164,19 +177,6 @@
 			<string>ObjC</string>
 			<key>SUPERCLASS</key>
 			<string>NSFormatter</string>
-		</dict>
-		<dict>
-			<key>ACTIONS</key>
-			<dict>
-				<key></key>
-				<string>id</string>
-			</dict>
-			<key>CLASS</key>
-			<string>FirstResponder</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>NSObject</string>
 		</dict>
 	</array>
 	<key>IBVersion</key>
