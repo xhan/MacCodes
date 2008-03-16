@@ -20,7 +20,11 @@
 		<dict>
 			<key>ACTIONS</key>
 			<dict>
+				<key>publishAppcast</key>
+				<string>id</string>
 				<key>setupDotMacAccount</key>
+				<string>id</string>
+				<key>testConnection</key>
 				<string>id</string>
 			</dict>
 			<key>CLASS</key>
@@ -31,6 +35,16 @@
 			<dict>
 				<key>appcastURL</key>
 				<string>NSTextField</string>
+				<key>con</key>
+				<string>id</string>
+				<key>connectionProgressIndicator</key>
+				<string>NSProgressIndicator</string>
+				<key>connectionStatusIcon</key>
+				<string>NSImageView</string>
+				<key>connectionStatusTextField</key>
+				<string>NSTextField</string>
+				<key>connectionTypeTabView</key>
+				<string>NSTabView</string>
 				<key>documentController</key>
 				<string>SCDocument</string>
 				<key>dotMacAccountProgressIndicator</key>
@@ -45,8 +59,20 @@
 				<string>NSTextField</string>
 				<key>enclosureURL</key>
 				<string>NSTextField</string>
+				<key>savePasswordCheckbox</key>
+				<string>NSButton</string>
 				<key>serverConfigSheet</key>
 				<string>NSWindow</string>
+				<key>serverConnectionTypePopupButton</key>
+				<string>NSPopUpButton</string>
+				<key>serverPasswordTextField</key>
+				<string>NSTextField</string>
+				<key>serverPortTextField</key>
+				<string>NSTextField</string>
+				<key>serverURLTextField</key>
+				<string>NSTextField</string>
+				<key>serverUsernameTextField</key>
+				<string>NSTextField</string>
 			</dict>
 			<key>SUPERCLASS</key>
 			<string>NSObject</string>
@@ -63,6 +89,12 @@
 			<string>ObjC</string>
 			<key>SUPERCLASS</key>
 			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>NSObject</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
 		</dict>
 		<dict>
 			<key>ACTIONS</key>
@@ -111,12 +143,6 @@
 			</dict>
 			<key>SUPERCLASS</key>
 			<string>NSDocument</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
-			<string>NSObject</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
 		</dict>
 		<dict>
 			<key>CLASS</key>

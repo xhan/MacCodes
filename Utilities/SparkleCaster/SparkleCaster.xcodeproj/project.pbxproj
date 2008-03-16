@@ -40,7 +40,6 @@
 		666D66840CB3F9DB006815ED /* ServerConfigController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 666D66820CB3F9DB006815ED /* ServerConfigController.h */; };
 		666D66850CB3F9DB006815ED /* ServerConfigController.m in Sources */ = {isa = PBXBuildFile; fileRef = 666D66830CB3F9DB006815ED /* ServerConfigController.m */; };
 		666D66A30CB3FE86006815ED /* ServerConfig.nib in Resources */ = {isa = PBXBuildFile; fileRef = 666D66A20CB3FE86006815ED /* ServerConfig.nib */; };
-		666D66BD0CB40C8E006815ED /* DotMac.tif in Resources */ = {isa = PBXBuildFile; fileRef = 666D66BC0CB40C8D006815ED /* DotMac.tif */; };
 		6683B59E0CB27FA600F1C5E0 /* Configure.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 6683B59D0CB27FA600F1C5E0 /* Configure.tiff */; };
 		6683B5AF0CB28B1700F1C5E0 /* SCAST.icns in Resources */ = {isa = PBXBuildFile; fileRef = 6683B5AE0CB28B1600F1C5E0 /* SCAST.icns */; };
 		66CB23E20C8D7AED0007DFB4 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66CB23E10C8D7AED0007DFB4 /* WebKit.framework */; };
@@ -58,7 +57,10 @@
 		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
 		F910D6A00D77549D0039D916 /* Connection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F910D69F0D77549D0039D916 /* Connection.framework */; };
 		F916C72A0D848C54008306D4 /* Connection.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F910D69F0D77549D0039D916 /* Connection.framework */; };
+		F916C7450D8493B6008306D4 /* dotmaclogo.tif in Resources */ = {isa = PBXBuildFile; fileRef = F916C7440D8493B6008306D4 /* dotmaclogo.tif */; };
 		F9736F4D0D05A0C300024D38 /* dotMacController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9736F4C0D05A0C300024D38 /* dotMacController.m */; };
+		F9748D390D84BAED009070EB /* small_green_check.tif in Resources */ = {isa = PBXBuildFile; fileRef = F9809C400D07294B002CD3F9 /* small_green_check.tif */; };
+		F9748D3A0D84BAED009070EB /* small_red_cross.tif in Resources */ = {isa = PBXBuildFile; fileRef = F9809C3F0D07294B002CD3F9 /* small_red_cross.tif */; };
 		F9E1E3740D0C2DD400246720 /* HTMLEditController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9E1E3730D0C2DD400246720 /* HTMLEditController.m */; };
 		F9F2FE0B0CF9DF82008850E3 /* ActionArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = F9F2FE0A0CF9DF82008850E3 /* ActionArrow.png */; };
 		F9F2FE440CFA3B14008850E3 /* edit.tif in Resources */ = {isa = PBXBuildFile; fileRef = F9F2FE430CFA3B14008850E3 /* edit.tif */; };
@@ -131,8 +133,6 @@
 		663D87470CC13CA000A20471 /* VersionInfoController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = VersionInfoController.m; sourceTree = "<group>"; };
 		6644FC770C94388D005C5CED /* FileDropImageView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = FileDropImageView.h; sourceTree = "<group>"; };
 		6644FC780C94388D005C5CED /* FileDropImageView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = FileDropImageView.m; sourceTree = "<group>"; };
-		6647A1430CD9087F00642DC3 /* GMStreamController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMStreamController.h; sourceTree = "<group>"; };
-		6647A1440CD9087F00642DC3 /* GMStreamController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMStreamController.m; sourceTree = "<group>"; };
 		66553D190C956E04003EA010 /* SparkleCaster.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = SparkleCaster.icns; path = Resources/SparkleCaster.icns; sourceTree = "<group>"; };
 		6665EB290CB2676A00FBE6E5 /* Info.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = Info.tiff; path = Resources/Info.tiff; sourceTree = "<group>"; };
 		6665EB2B0CB2683900FBE6E5 /* Add.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = Add.tiff; path = Resources/Add.tiff; sourceTree = "<group>"; };
@@ -142,9 +142,6 @@
 		666D667C0CB3F933006815ED /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/ServerConfig.nib; sourceTree = "<group>"; };
 		666D66820CB3F9DB006815ED /* ServerConfigController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ServerConfigController.h; sourceTree = "<group>"; };
 		666D66830CB3F9DB006815ED /* ServerConfigController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ServerConfigController.m; sourceTree = "<group>"; };
-		666D66BC0CB40C8D006815ED /* DotMac.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = DotMac.tif; path = Resources/DotMac.tif; sourceTree = "<group>"; };
-		66791F640CD66F280047F702 /* CommunicationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommunicationController.h; sourceTree = "<group>"; };
-		66791F650CD66F280047F702 /* CommunicationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommunicationController.m; sourceTree = "<group>"; };
 		6683B59D0CB27FA600F1C5E0 /* Configure.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = Configure.tiff; path = Resources/Configure.tiff; sourceTree = "<group>"; };
 		6683B5AE0CB28B1600F1C5E0 /* SCAST.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = SCAST.icns; path = Resources/SCAST.icns; sourceTree = "<group>"; };
 		66CB23E10C8D7AED0007DFB4 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /Developer/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
@@ -156,6 +153,7 @@
 		8D15AC360486D014006FF6A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D15AC370486D014006FF6A4 /* SparkleCaster.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SparkleCaster.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F910D69F0D77549D0039D916 /* Connection.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Connection.framework; sourceTree = "<group>"; };
+		F916C7440D8493B6008306D4 /* dotmaclogo.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = dotmaclogo.tif; sourceTree = "<group>"; };
 		F9736F4B0D05A0C300024D38 /* dotMacController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dotMacController.h; sourceTree = "<group>"; };
 		F9736F4C0D05A0C300024D38 /* dotMacController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = dotMacController.m; sourceTree = "<group>"; };
 		F9809C3F0D07294B002CD3F9 /* small_red_cross.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = small_red_cross.tif; path = Resources/small_red_cross.tif; sourceTree = "<group>"; };
@@ -237,8 +235,6 @@
 				F9E1E3730D0C2DD400246720 /* HTMLEditController.m */,
 				F9736F4B0D05A0C300024D38 /* dotMacController.h */,
 				F9736F4C0D05A0C300024D38 /* dotMacController.m */,
-				6647A1430CD9087F00642DC3 /* GMStreamController.h */,
-				6647A1440CD9087F00642DC3 /* GMStreamController.m */,
 				661A7B5C0CB5155A006F4CD8 /* sparklecaster.m */,
 				6608D9DC0C8DB90B00763CC8 /* URLFormatter.h */,
 				6608D9EB0C8DB93F00763CC8 /* URLFormatter.m */,
@@ -250,8 +246,6 @@
 				66F914BA0C96BF6700CEF407 /* AppDelegate.h */,
 				666D66820CB3F9DB006815ED /* ServerConfigController.h */,
 				666D66830CB3F9DB006815ED /* ServerConfigController.m */,
-				66791F640CD66F280047F702 /* CommunicationController.h */,
-				66791F650CD66F280047F702 /* CommunicationController.m */,
 				663D87460CC13CA000A20471 /* VersionInfoController.h */,
 				663D87470CC13CA000A20471 /* VersionInfoController.m */,
 			);
@@ -270,12 +264,12 @@
 		2A37F4B8FDCFA73011CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F916C7440D8493B6008306D4 /* dotmaclogo.tif */,
 				F9809C3F0D07294B002CD3F9 /* small_red_cross.tif */,
 				F9809C400D07294B002CD3F9 /* small_green_check.tif */,
 				F9F2FE430CFA3B14008850E3 /* edit.tif */,
 				F9F2FE0A0CF9DF82008850E3 /* ActionArrow.png */,
 				663175250CBD087700A689BC /* exportRSS.tif */,
-				666D66BC0CB40C8D006815ED /* DotMac.tif */,
 				6683B5AE0CB28B1600F1C5E0 /* SCAST.icns */,
 				6683B59D0CB27FA600F1C5E0 /* Configure.tiff */,
 				6665EBA30CB26FD800FBE6E5 /* Publish.tiff */,
@@ -371,6 +365,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F9748D390D84BAED009070EB /* small_green_check.tif in Resources */,
+				F9748D3A0D84BAED009070EB /* small_red_cross.tif in Resources */,
 				8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */,
 				8D15AC2D0486D014006FF6A4 /* MainMenu.nib in Resources */,
 				8D15AC2E0486D014006FF6A4 /* MyDocument.nib in Resources */,
@@ -386,10 +382,10 @@
 				6683B59E0CB27FA600F1C5E0 /* Configure.tiff in Resources */,
 				6683B5AF0CB28B1700F1C5E0 /* SCAST.icns in Resources */,
 				666D66A30CB3FE86006815ED /* ServerConfig.nib in Resources */,
-				666D66BD0CB40C8E006815ED /* DotMac.tif in Resources */,
 				663175260CBD087700A689BC /* exportRSS.tif in Resources */,
 				F9F2FE0B0CF9DF82008850E3 /* ActionArrow.png in Resources */,
 				F9F2FE440CFA3B14008850E3 /* edit.tif in Resources */,
+				F916C7450D8493B6008306D4 /* dotmaclogo.tif in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -614,10 +610,7 @@
 		C05733CC08A9546B00998B17 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
+				ARCHS = "$(NATIVE_ARCH)";
 				CURRENT_PROJECT_VERSION = 221;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_ENABLE_SSE3_EXTENSIONS = YES;

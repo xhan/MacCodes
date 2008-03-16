@@ -43,7 +43,6 @@ static NSString*	ProductInfoToolbarItemIdentifier	= @"Product Info Item Identifi
 static NSString*	AddVersonToolbarItemIdentifier		= @"Add Version Item Identifier";
 static NSString*	DeleteVersonToolbarItemIdentifier 	= @"Delete Version Item Identifier";
 static NSString*	PublishToolbarItemIdentifier		= @"Publish Item Identifier";
-static NSString*	ConfigureToolbarItemIdentifier		= @"Configure Item Identifier";
 static NSString*	ExportRSSToolbarItemIdentifier		= @"Export RSS Item Identifier";
 
 // This class knows how to validate "most" custom views.  Useful for view items we need to validate.
@@ -218,21 +217,6 @@ static NSString*	ExportRSSToolbarItemIdentifier		= @"Export RSS Item Identifier"
 		[toolbarItem setImage: [NSImage imageNamed: @"Publish"]];
 		
 		// Tell the item what message to send when it is clicked 
-		// [toolbarItem setTarget: versionArrayController];
-		// [toolbarItem setAction: @selector(remove:)];		
-		
-	} else if([itemIdent isEqual: ConfigureToolbarItemIdentifier]) {
-        toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier: itemIdent] autorelease];
-		
-        // Set the text label to be displayed in the toolbar and customization palette 
-		[toolbarItem setLabel: @"Configure"];
-		[toolbarItem setPaletteLabel: @"Configure Server"];
-		
-		// Set up a reasonable tooltip, and image   Note, these aren't localized, but you will likely want to localize many of the item's properties 
-		[toolbarItem setToolTip: @"Configure feed server settings"];
-		[toolbarItem setImage: [NSImage imageNamed: @"Configure"]];
-		
-		// Tell the item what message to send when it is clicked 
 		[toolbarItem setTarget: self];
 		[toolbarItem setAction: @selector(showConfigSheet:)];
 		
@@ -263,14 +247,14 @@ static NSString*	ExportRSSToolbarItemIdentifier		= @"Export RSS Item Identifier"
     // Required delegate method:  Returns the ordered list of items to be shown in the toolbar by default    
     // If during the toolbar's initialization, no overriding values are found in the user defaults, or if the
     // user chooses to revert to the default items this set will be used 
-    return [NSArray arrayWithObjects: ProductInfoToolbarItemIdentifier, ConfigureToolbarItemIdentifier, NSToolbarSeparatorItemIdentifier, ExportRSSToolbarItemIdentifier, PublishToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, AddVersonToolbarItemIdentifier, DeleteVersonToolbarItemIdentifier, nil];
+    return [NSArray arrayWithObjects: ProductInfoToolbarItemIdentifier, NSToolbarSeparatorItemIdentifier, ExportRSSToolbarItemIdentifier, PublishToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, AddVersonToolbarItemIdentifier, DeleteVersonToolbarItemIdentifier, nil];
 }
 
 - (NSArray *) toolbarAllowedItemIdentifiers: (NSToolbar *) toolbar {
     // Required delegate method:  Returns the list of all allowed items by identifier.  By default, the toolbar 
     // does not assume any items are allowed, even the separator.  So, every allowed item must be explicitly listed   
     // The set of allowed items is used to construct the customization palette 
-    return [NSArray arrayWithObjects: 	PublishToolbarItemIdentifier, ConfigureToolbarItemIdentifier, ProductInfoToolbarItemIdentifier, AddVersonToolbarItemIdentifier, DeleteVersonToolbarItemIdentifier,  NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, ExportRSSToolbarItemIdentifier, nil];
+    return [NSArray arrayWithObjects: 	PublishToolbarItemIdentifier, ProductInfoToolbarItemIdentifier, AddVersonToolbarItemIdentifier, DeleteVersonToolbarItemIdentifier,  NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, ExportRSSToolbarItemIdentifier, nil];
 }  
 
 - (BOOL) validateToolbarItem: (NSToolbarItem *) toolbarItem {
@@ -284,8 +268,6 @@ static NSString*	ExportRSSToolbarItemIdentifier		= @"Export RSS Item Identifier"
 		enable = [versionArrayController canAdd];
     } else if ([[toolbarItem itemIdentifier] isEqual: DeleteVersonToolbarItemIdentifier]) {
 		enable = [versionArrayController canRemove];
-	} else if ([[toolbarItem itemIdentifier] isEqual: ConfigureToolbarItemIdentifier]) {
-		enable = YES;
 	} else if ([[toolbarItem itemIdentifier] isEqual: PublishToolbarItemIdentifier]) {
 		enable = YES;
 	} else if ([[toolbarItem itemIdentifier] isEqual: ExportRSSToolbarItemIdentifier]) {
