@@ -153,7 +153,7 @@
 		8D15AC360486D014006FF6A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D15AC370486D014006FF6A4 /* SparkleCaster.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SparkleCaster.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F910D69F0D77549D0039D916 /* Connection.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Connection.framework; sourceTree = "<group>"; };
-		F916C7440D8493B6008306D4 /* dotmaclogo.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = dotmaclogo.tif; sourceTree = "<group>"; };
+		F916C7440D8493B6008306D4 /* dotmaclogo.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = dotmaclogo.tif; path = Resources/dotmaclogo.tif; sourceTree = "<group>"; };
 		F9736F4B0D05A0C300024D38 /* dotMacController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dotMacController.h; sourceTree = "<group>"; };
 		F9736F4C0D05A0C300024D38 /* dotMacController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = dotMacController.m; sourceTree = "<group>"; };
 		F9809C3F0D07294B002CD3F9 /* small_red_cross.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = small_red_cross.tif; path = Resources/small_red_cross.tif; sourceTree = "<group>"; };

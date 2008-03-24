@@ -431,6 +431,7 @@ static NSString*	ExportRSSToolbarItemIdentifier		= @"Export RSS Item Identifier"
 
 - (BOOL)writeAppCastToURL:(NSURL *)url;
 {
+#warning Wrap this in a Thread!
 	// This currently only works for file:// URLs
 	BOOL success = NO;
 	
@@ -442,6 +443,7 @@ static NSString*	ExportRSSToolbarItemIdentifier		= @"Export RSS Item Identifier"
 	{
 		[self displayAlertWithMessage:@"Invalid URL" informativeText:@"Please check the URL" buttons:[NSArray arrayWithObject:@"OK"] alertStyle:nil forWindow:mainWindow];
 	}
+	
 	else
 	{
 		[xmlProgressIndicator startAnimation:self];
@@ -486,7 +488,7 @@ static NSString*	ExportRSSToolbarItemIdentifier		= @"Export RSS Item Identifier"
 			NSString *titleString = [NSString stringWithFormat:@"%@ %@", [productInfoDictionary objectForKey:SCProductNameKey], [itemDictionary objectForKey:@"version"]];
 			[item addChild:[NSXMLNode elementWithName:@"title" stringValue:titleString]];
 			NSXMLNode *releaseNotesTextNode = [[NSXMLNode alloc] initWithKind:NSXMLTextKind options:NSXMLNodeIsCDATA];
-			[releaseNotesTextNode setStringValue:[[itemDictionary objectForKey:@"releaseNotes"] absoluteString]];
+			[releaseNotesTextNode setStringValue:[itemDictionary objectForKey:@"releaseNotes"]];
 			NSXMLElement *releaseNotesElement = [NSXMLNode elementWithName:@"description"];
 			[releaseNotesElement addChild:releaseNotesTextNode];
 			[item addChild:releaseNotesElement];
@@ -497,8 +499,8 @@ static NSString*	ExportRSSToolbarItemIdentifier		= @"Export RSS Item Identifier"
 			if ([itemDictionary objectForKey:@"enclosureURL"]) {
 				[enclosureElement addAttribute:[NSXMLNode attributeWithName:@"url" stringValue:[itemDictionary objectForKey:@"enclosureURL"]]];
 			} else {
-				// otherwise, munge the local file url and the enclosure prefix url to produce a valid link tot he file once it's been uploaded
-				NSString *mungedURLString = [[productInfoDictionary objectForKey:@"enclosureURLPrefix"] stringByAppendingString:[itemDictionary objectForKey:@"enclosureName"]];
+				// otherwise, munge the local file url and the enclosure prefix url to produce a valid link to the file once it's been uploaded
+				NSString *mungedURLString = [[productInfoDictionary objectForKey:@"enclosurePath"] stringByAppendingString:[itemDictionary objectForKey:@"enclosureName"]];
 				[enclosureElement addAttribute:[NSXMLNode attributeWithName:@"url" stringValue:mungedURLString]];
 			}
 			
@@ -554,10 +556,6 @@ static NSString*	ExportRSSToolbarItemIdentifier		= @"Export RSS Item Identifier"
 }
 
 #pragma mark IBActions
-
-- (IBAction)testFTPConnection:(id)sender; {
-	
-}
 
 - (IBAction)showProjectInfoSheet:(id)sender;
 {

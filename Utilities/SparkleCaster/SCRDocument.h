@@ -38,10 +38,12 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 
 
 #import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 #import <WebKit/WebKit.h>
-#import "ServerConfigController.h"
 #import "URLFormatter.h"
 #import "FileDropImageView.h"
+
+@class ServerConfigController;
 
 #define SCProductNameKey @"productName"
 #define SCProductURLKey @"productURL"
@@ -95,7 +97,6 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 - (IBAction)closeServerConfigSheet:(id)sender;
 - (IBAction)saveXML:(id)sender;
 - (IBAction)showConfigSheet:(id)sender;
-- (IBAction)testFTPConnection:(id)sender;
 
 - (void)didEndProjectInfoSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 - (void)xmlExportSavePanelDidEnd:(NSSavePanel *)sheet returnCode:(int)returnCode  contextInfo:(void  *)contextInfo;

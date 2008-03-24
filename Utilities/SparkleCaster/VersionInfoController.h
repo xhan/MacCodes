@@ -19,7 +19,7 @@ typedef enum
 
 @interface VersionInfoController : NSObjectController
 {
-	IBOutlet SCRDocument				*myDocument;
+	IBOutlet SCRDocument			*myDocument;
 	IBOutlet NSWindow				*versionInfoSheet;
 	IBOutlet NSWindow				*mainWindow;
 	IBOutlet FileDropImageView		*fileDropImageView;

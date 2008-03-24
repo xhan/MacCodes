@@ -46,7 +46,7 @@
 				<key>connectionTypeTabView</key>
 				<string>NSTabView</string>
 				<key>documentController</key>
-				<string>SCDocument</string>
+				<string>SCRDocument</string>
 				<key>dotMacAccountProgressIndicator</key>
 				<string>NSProgressIndicator</string>
 				<key>dotMacAccountStatus</key>
@@ -89,12 +89,6 @@
 			<string>ObjC</string>
 			<key>SUPERCLASS</key>
 			<string>NSObject</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
-			<string>NSObject</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
 		</dict>
 		<dict>
 			<key>ACTIONS</key>
@@ -143,6 +137,12 @@
 			</dict>
 			<key>SUPERCLASS</key>
 			<string>NSDocument</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>NSObject</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
 		</dict>
 		<dict>
 			<key>CLASS</key>

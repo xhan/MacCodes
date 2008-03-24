@@ -1,10 +1,10 @@
 /* ServerConfigController */
 
-#import <Cocoa/Cocoa.h>
+#import "SCRDocument.h"
 #import <DotMacKit/DotMacKit.h>
 #import <Connection/Connection.h>
 
-@class SCDocument;
+@class SCRDocument;
 
 @interface ServerConfigController : NSObject
 {
@@ -14,7 +14,7 @@
 	IBOutlet NSTextField			*appcastURL;
 	IBOutlet NSTextField			*enclosureURL;
 	IBOutlet NSWindow				*serverConfigSheet;
-	IBOutlet SCDocument				*documentController;
+	IBOutlet SCRDocument			*documentController;
 	IBOutlet NSProgressIndicator	*dotMacAccountProgressIndicator;
 	IBOutlet NSImageView			*dotMacAccountStatusIcon;
 	IBOutlet NSImageView			*connectionStatusIcon;
@@ -57,7 +57,7 @@
 - (NSMutableDictionary *) serverConfigSettings;
 - (void) setServerConfigSettings:(NSMutableDictionary *)newServerConfigSettings;
 
-- (NSString *) appcastURL;
-- (NSString *) enclosureURLPrefix;
+- (NSString *) appcastPath;
+- (NSString *) enclosurePath;
 
 @end

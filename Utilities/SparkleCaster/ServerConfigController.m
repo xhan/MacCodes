@@ -156,22 +156,6 @@
 
 #pragma mark Connection Delegate Messages
 
-- (BOOL)connection:(id <AbstractConnectionProtocol>)con authorizeConnectionToHost:(NSString *)host message:(NSString *)message;
-{
-	if (NSRunAlertPanel(@"Authorize Connection?", @"%@\nHost: %@", @"Yes", @"No", nil, message, host) == NSOKButton)
-		return YES;
-	return NO;
-}
-
-- (void)connectionDidSendBadPassword:(AbstractConnection *)aConn
-{
-		[connectionStatusTextField setStringValue:[NSString stringWithFormat:@"Incorrect password. Please try again..."]];
-		[connectionProgressIndicator stopAnimation:self];
-		[connectionProgressIndicator setHidden:YES];
-		[connectionStatusIcon setImage:[NSImage imageNamed:@"small_red_cross"]];
-		[connectionStatusIcon setHidden:NO];
-}
-
 - (void)connection:(AbstractConnection *)aConn didConnectToHost:(NSString *)host
 {
 	if (!_connectionError) {
@@ -185,16 +169,20 @@
 			
 			// export the appcast to the user's Temporary Dirctory
 			NSURL *saveURL = [NSURL fileURLWithPath:[[NSTemporaryDirectory() stringByExpandingTildeInPath] stringByAppendingPathComponent:@"SCTempAppcast.xml"]];
-			BOOL saved = [documentController writeAppCastToURL:saveURL];
+			[documentController writeAppCastToURL:saveURL];
 			
-#warning Don't forget to wrap this in a thread!
-			[aConn uploadFile:[saveURL path] toFile:[self appcastURL] checkRemoteExistence:YES];
+			[aConn uploadFile:[saveURL path] toFile:[self appcastPath] checkRemoteExistence:YES];
 			
 			// Don't forget to delete the temp appcast
 			NSFileManager *fm = [NSFileManager defaultManager];
-			BOOL deleted = [fm removeItemAtPath:[saveURL path] error:NULL];
+			[fm removeItemAtPath:[saveURL path] error:NULL];
 		}
 	}
+}
+
+- (void)connection:(AbstractConnection *)aConn didDisconnectFromHost:(NSString *)host
+{
+	[aConn release];
 }
 
 - (void)connection:(AbstractConnection *)aConn didReceiveError:(NSError *)error
@@ -209,6 +197,90 @@
 		[connectionStatusIcon setHidden:NO];
 	} else {
 		[NSApp presentError:error];
+	}
+}
+
+- (BOOL)connection:(id <AbstractConnectionProtocol>)con authorizeConnectionToHost:(NSString *)host message:(NSString *)message;
+{
+	if (NSRunAlertPanel(@"Authorize Connection?", @"%@\nHost: %@", @"Yes", @"No", nil, message, host) == NSOKButton)
+		return YES;
+	return NO;
+}
+
+- (void)connectionDidSendBadPassword:(AbstractConnection *)aConn
+{
+	[connectionStatusTextField setStringValue:[NSString stringWithFormat:@"Incorrect password. Please try again..."]];
+	[connectionProgressIndicator stopAnimation:self];
+	[connectionProgressIndicator setHidden:YES];
+	[connectionStatusIcon setImage:[NSImage imageNamed:@"small_red_cross"]];
+	[connectionStatusIcon setHidden:NO];
+}
+
+- (NSString *)connection:(AbstractConnection *)aConn needsAccountForUsername:(NSString *)username
+{
+#warning Stub implementation for connection:needsAccountForUsername:
+	return nil;
+}
+
+- (void)connection:(AbstractConnection *)aConn didCreateDirectory:(NSString *)dirPath
+{
+#warning Stub implementation for connection:didCreateDirectory:
+}
+
+- (void)connection:(AbstractConnection *)aConn didSetPermissionsForFile:(NSString *)path
+{
+#warning Stub implementation for connection:didSetPermissionsForFile:
+}
+
+- (void)connection:(AbstractConnection *)aConn didRenameFile:(NSString *)from to:(NSString *)toPath
+{
+#warning Stub implementation for connection:didRenameFile:to:
+}
+
+- (void)connection:(AbstractConnection *)aConn didDeleteFile:(NSString *)path
+{
+	[aConn contentsOfDirectory:[aConn currentDirectory]];
+}
+
+- (void)connection:(AbstractConnection *)aConn didDeleteDirectory:(NSString *)path
+{
+	[aConn contentsOfDirectory:[aConn currentDirectory]];
+}
+
+- (void)connection:(AbstractConnection *)aConn didReceiveContents:(NSArray *)contents ofDirectory:(NSString *)dirPath
+{
+	NSLog(@"%@ %@", NSStringFromSelector(_cmd), dirPath);
+}
+
+- (void)connection:(id <AbstractConnectionProtocol>)con download:(NSString *)path receivedDataOfLength:(unsigned long long)length
+{
+
+}
+
+- (void)connection:(id <AbstractConnectionProtocol>)con upload:(NSString *)remotePath sentDataOfLength:(unsigned long long)length
+{
+
+}
+
+- (void)connection:(id <AbstractConnectionProtocol>)con uploadDidFinish:(NSString *)remotePath
+{
+
+}
+
+- (void)connection:(id <AbstractConnectionProtocol>)con downloadDidFinish:(NSString *)remotePath
+{
+
+}
+
+- (void)connection:(id <AbstractConnectionProtocol>)con checkedExistenceOfPath:(NSString *)path pathExists:(BOOL)exists
+{
+	if (exists)
+	{
+		NSRunAlertPanel(@"File Exists", @"Found path: %@", @"OK", nil, nil, path);
+	}
+	else
+	{
+		NSRunAlertPanel(@"File Not Found", @"Could not find path: %@", @"OK", nil, nil, path);
 	}
 }
 
@@ -308,14 +380,14 @@
 	}
 }
 
-- (NSString *) appcastURL;
+- (NSString *) appcastPath;
 {
-	return [serverConfigSettings objectForKey:@"appcastURL"];
+	return [serverConfigSettings objectForKey:@"appcastPath"];
 }
 
-- (NSString *) enclosureURLPrefix;
+- (NSString *) enclosurePath;
 {
-	return [serverConfigSettings objectForKey:@"enclosureURLPrefix"];
+	return [serverConfigSettings objectForKey:@"enclosurePath"];
 }
 
 - (void) dealloc {
