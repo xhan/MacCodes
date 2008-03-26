@@ -15,6 +15,8 @@
 		
 		_connectionError = NO;
 		_testConnection = NO;
+		
+		fileManager = [NSFileManager defaultManager];
 	}
 	
 	return self;
@@ -22,10 +24,13 @@
 
 - (void)awakeFromNib {
 	
-		EMInternetKeychainItem *keychainItem = [[EMKeychainProxy sharedProxy] internetKeychainItemForServer:myHost withUsername:myUsername path:nil port:[myPort intValue] protocol:kSecProtocolTypeFTP];
-		if (keychainItem != nil) {
-			[serverPasswordTextField setStringValue:[keychainItem password]];
-		}
+	EMInternetKeychainItem *keychainItem = [[EMKeychainProxy sharedProxy] internetKeychainItemForServer:myHost withUsername:myUsername path:nil port:[myPort intValue] protocol:kSecProtocolTypeFTP];
+	if (keychainItem != nil) {
+		[serverPasswordTextField setStringValue:[keychainItem password]];
+	}
+#ifdef kDebugBuild
+		[showTranscriptButton setHidden:NO];
+#endif
 }
 
 - (void)showConfigSheet;
@@ -116,6 +121,12 @@
 	}
 	
 	[con setDelegate:self];
+	NSTextStorage *textStorage = [log textStorage];
+	[textStorage setDelegate:self];		// get notified when text changes
+	[con setTranscript:textStorage];
+	[con setProperty:textStorage forKey:@"RecursiveDirectoryDeletionTranscript"];
+	[con setProperty:textStorage forKey:@"FileCheckingTranscript"];
+	[con setProperty:textStorage forKey:@"RecursiveDownloadTranscript"];
 	
 	[con connect];
 	[releasePool release];
@@ -168,21 +179,27 @@
 			// Connect to the host and publish the feed
 			
 			// export the appcast to the user's Temporary Dirctory
-			NSURL *saveURL = [NSURL fileURLWithPath:[[NSTemporaryDirectory() stringByExpandingTildeInPath] stringByAppendingPathComponent:@"SCTempAppcast.xml"]];
-			[documentController writeAppCastToURL:saveURL];
+			saveURL = [NSURL fileURLWithPath:[[NSTemporaryDirectory() stringByExpandingTildeInPath] stringByAppendingPathComponent:@"SCTempAppcast.xml"]];
+			BOOL wroteFile = [documentController writeAppCastToURL:saveURL];
+			if (wroteFile) {
 			
-			[aConn uploadFile:[saveURL path] toFile:[self appcastPath] checkRemoteExistence:YES];
-			
-			// Don't forget to delete the temp appcast
-			NSFileManager *fm = [NSFileManager defaultManager];
-			[fm removeItemAtPath:[saveURL path] error:NULL];
+				if ([fileManager fileExistsAtPath:[saveURL path]]) {
+					[aConn uploadFile:[saveURL path] toFile:[self appcastPath] checkRemoteExistence:YES];
+				}
+			} else {
+				NSLog(@"There was a problem saving the temporary appcast. ServerConfigController.m:connection:didConnectToHost:");
+			}
 		}
 	}
 }
 
 - (void)connection:(AbstractConnection *)aConn didDisconnectFromHost:(NSString *)host
 {
-	[aConn release];
+	//if ([fileManager fileExistsAtPath:[saveURL path]]) {
+//		// Don't forget to delete the temp appcast
+//		[fileManager removeItemAtPath:[saveURL path] error:NULL];
+//	}
+	// [aConn autorelease];
 }
 
 - (void)connection:(AbstractConnection *)aConn didReceiveError:(NSError *)error
@@ -252,27 +269,30 @@
 	NSLog(@"%@ %@", NSStringFromSelector(_cmd), dirPath);
 }
 
-- (void)connection:(id <AbstractConnectionProtocol>)con download:(NSString *)path receivedDataOfLength:(unsigned long long)length
+- (void)connection:(id <AbstractConnectionProtocol>)aConn download:(NSString *)path receivedDataOfLength:(unsigned long long)length
 {
 
 }
 
-- (void)connection:(id <AbstractConnectionProtocol>)con upload:(NSString *)remotePath sentDataOfLength:(unsigned long long)length
+- (void)connection:(id <AbstractConnectionProtocol>)aConn upload:(NSString *)remotePath sentDataOfLength:(unsigned long long)length
 {
 
 }
 
-- (void)connection:(id <AbstractConnectionProtocol>)con uploadDidFinish:(NSString *)remotePath
+- (void)connection:(id <AbstractConnectionProtocol>)aConn uploadDidFinish:(NSString *)remotePath
+{
+#ifdef kDebugBuild
+	NSLog(@"uploadDidFinish");
+#endif
+	[aConn disconnect];
+}
+
+- (void)connection:(id <AbstractConnectionProtocol>)aConn downloadDidFinish:(NSString *)remotePath
 {
 
 }
 
-- (void)connection:(id <AbstractConnectionProtocol>)con downloadDidFinish:(NSString *)remotePath
-{
-
-}
-
-- (void)connection:(id <AbstractConnectionProtocol>)con checkedExistenceOfPath:(NSString *)path pathExists:(BOOL)exists
+- (void)connection:(id <AbstractConnectionProtocol>)aConn checkedExistenceOfPath:(NSString *)path pathExists:(BOOL)exists
 {
 	if (exists)
 	{

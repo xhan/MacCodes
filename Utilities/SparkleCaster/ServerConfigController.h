@@ -27,11 +27,16 @@
 	IBOutlet NSPopUpButton			*serverConnectionTypePopupButton;
 	IBOutlet NSButton				*savePasswordCheckbox;
 	IBOutlet NSTabView				*connectionTypeTabView;
+	IBOutlet NSTextView				*log;
+	IBOutlet NSButton				*showTranscriptButton;
 	
 	NSString *myHost;
 	NSString *myPort;
 	NSString *myUsername;
 	NSString *myPassword;
+	
+	NSFileManager *fileManager;
+	NSURL *saveURL;
 	
 	DMMemberAccount *_dotMacMemberAccount;
 	
