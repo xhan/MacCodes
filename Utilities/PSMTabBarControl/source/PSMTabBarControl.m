@@ -602,6 +602,7 @@
     
     // bind it up
     [self bindPropertiesForCell:cell andTabViewItem:item];
+    [item addObserver:self forKeyPath:@"identifier" options:nil context:nil];
 	
     // add to collection
     [_cells addObject:cell];
@@ -1955,9 +1956,6 @@
 		}
     }
     
-    // watch for changes in the identifier
-    [item addObserver:self forKeyPath:@"identifier" options:nil context:nil];
-	
     // bind my string value to the label on the represented tab
     [cell bind:@"title" toObject:item withKeyPath:@"label" options:nil];
 }
