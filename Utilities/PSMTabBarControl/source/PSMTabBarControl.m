@@ -62,6 +62,7 @@
 - (id)initWithCoder:(NSCoder *)aDecoder;
 
     // convenience
+- (void)_bindPropertiesForCell:(PSMTabBarCell *)cell andTabViewItem:(NSTabViewItem *)item;
 - (id)cellForPoint:(NSPoint)point cellFrame:(NSRectPointer)outFrame;
 
 - (void)_animateCells:(NSTimer *)timer;
@@ -602,7 +603,6 @@
     
     // bind it up
     [self bindPropertiesForCell:cell andTabViewItem:item];
-    [item addObserver:self forKeyPath:@"identifier" options:nil context:nil];
 	
     // add to collection
     [_cells addObject:cell];
@@ -688,7 +688,7 @@
         PSMTabBarCell *cell;
         while ( (cell = [e nextObject]) ) {
             if ([cell representedObject] == object) {
-                [self bindPropertiesForCell:cell andTabViewItem:object];
+                [self _bindPropertiesForCell:cell andTabViewItem:object];
 			}
         }
     }
@@ -1904,6 +1904,14 @@
 #pragma mark Convenience
 
 - (void)bindPropertiesForCell:(PSMTabBarCell *)cell andTabViewItem:(NSTabViewItem *)item
+{
+    [self _bindPropertiesForCell:cell andTabViewItem:item];
+    
+    // watch for changes in the identifier
+    [item addObserver:self forKeyPath:@"identifier" options:nil context:nil];
+}
+
+- (void)_bindPropertiesForCell:(PSMTabBarCell *)cell andTabViewItem:(NSTabViewItem *)item
 {
     // bind the indicator to the represented object's status (if it exists)
     [[cell indicator] setHidden:YES];
