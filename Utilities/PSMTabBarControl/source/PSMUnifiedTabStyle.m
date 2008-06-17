@@ -509,14 +509,15 @@
 
 	NSRect gradientRect = rect;
 	gradientRect.size.height -= 1.0;
-	if ([[[tabBar tabView] window] isKeyWindow]) {
-		NSBezierPath *path = [NSBezierPath bezierPathWithRect:gradientRect];
-		[path linearGradientFillWithStartColor:[NSColor colorWithCalibratedWhite:0.835 alpha:1.0]
+	
+	NSBezierPath *path = [NSBezierPath bezierPathWithRect:gradientRect];
+	[path linearGradientFillWithStartColor:[NSColor colorWithCalibratedWhite:0.835 alpha:1.0]
 								  endColor:[NSColor colorWithCalibratedWhite:0.843 alpha:1.0]];
-		[[NSColor colorWithCalibratedWhite:0.576 alpha:1.0] set];
-		[NSBezierPath strokeLineFromPoint:NSMakePoint(rect.origin.x, NSMaxY(rect) - 0.5)
-								  toPoint:NSMakePoint(NSMaxX(rect), NSMaxY(rect) - 0.5)];
-	} else {
+	[[NSColor colorWithCalibratedWhite:0.576 alpha:1.0] set];
+	[NSBezierPath strokeLineFromPoint:NSMakePoint(rect.origin.x, NSMaxY(rect) - 0.5)
+							  toPoint:NSMakePoint(NSMaxX(rect), NSMaxY(rect) - 0.5)];
+	
+	if (![[[tabBar tabView] window] isKeyWindow]) {
 		[[NSColor windowBackgroundColor] set];
 		NSRectFill(gradientRect);
 	}

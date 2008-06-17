@@ -248,19 +248,28 @@
 
 - (void)viewWillMoveToWindow:(NSWindow *)aWindow {
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
-    NSWindow *myWindow = [self window];
 	
-    if (myWindow) {
-        [center removeObserver:self name:NSWindowDidMoveNotification object:myWindow];
-		if (_showHideAnimationTimer) {
-			[_showHideAnimationTimer invalidate];
-			[_showHideAnimationTimer release]; _showHideAnimationTimer = nil;
-		}
-    } 
+	[center removeObserver:self name:NSWindowDidBecomeKeyNotification object:nil];
+	[center removeObserver:self name:NSWindowDidResignKeyNotification object:nil];
+	[center removeObserver:self name:NSWindowDidUpdateNotification object:nil];
+	[center removeObserver:self name:NSWindowDidMoveNotification object:nil];
+	
+	if (_showHideAnimationTimer) {
+		[_showHideAnimationTimer invalidate];
+		[_showHideAnimationTimer release]; _showHideAnimationTimer = nil;
+	}
+	
     if (aWindow) {
+		[center addObserver:self selector:@selector(windowStatusDidChange:) name:NSWindowDidBecomeKeyNotification object:aWindow];
+		[center addObserver:self selector:@selector(windowStatusDidChange:) name:NSWindowDidResignKeyNotification object:aWindow];
 		[center addObserver:self selector:@selector(windowDidUpdate:) name:NSWindowDidUpdateNotification object:aWindow];
 		[center addObserver:self selector:@selector(windowDidMove:) name:NSWindowDidMoveNotification object:aWindow];
     }
+}
+
+- (void)windowStatusDidChange:(NSNotification *)notification
+{
+	[self setNeedsDisplay:YES];
 }
 
 #pragma mark -
