@@ -2,7 +2,6 @@
 //  ESSImageCategory.m
 //
 //  Created by Matthias Gansrigler on 1/24/07.
-//  Copyright 2007 Eternal Storms Software. All rights reserved.
 //
 
 #import "ESSImageCategory.h"
