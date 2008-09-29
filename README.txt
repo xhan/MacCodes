@@ -18,6 +18,7 @@ The MacCode repo is a repository hosted on Google Code with a bunch of stuff in 
 
 - PSMTabBarControl
 - Aquatic Prime
+- AutoHyperlinks Framework
 
 Everything is 3 clause BSD.
 
@@ -44,7 +45,11 @@ If you do not want the externals (they can take up a bit of space)
 svn co http://maccode.googlecode.com/svn/trunk/ maccode --ignore-externals 
 
 
-* Getting a commit bit.
+* Getting a code into the repo/a commit bit.
 
-Email Chris Forsythe http://trac.adiumx.com/wiki/the_tick and he will get you access. All code you submit needs to be 3 clause BSD.
+Submit a few patches. If you have a lot of code to get checked in, file a ticket and someone will contact you directly. If you happen to know someone who works on the project, contact them directly to get your code submitted.
+
+All code submitted must be 3 clause BSD licensed. This seems the most fair for providing sample code, while at the same time for getting credit if code is used.
+
+Direct inquiries can be directed to Chris Forsythe http://trac.adiumx.com/wiki/the_tick .
 
