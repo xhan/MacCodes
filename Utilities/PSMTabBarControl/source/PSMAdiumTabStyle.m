@@ -411,31 +411,37 @@
 
 - (float)heightOfAttributedString:(NSAttributedString *)inAttributedString withWidth:(float)width
 {
-    NSTextStorage		*textStorage;
-    NSTextContainer 	*textContainer;
-    NSLayoutManager 	*layoutManager;
-	float				height;
-	
-    //Setup the layout manager and text container
-    textStorage = [[NSTextStorage alloc] initWithAttributedString:inAttributedString];
-    textContainer = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(width, 1e7)];
-    layoutManager = [[NSLayoutManager alloc] init];
-	
-    //Configure
-    [textContainer setLineFragmentPadding:0.0];
-    [layoutManager addTextContainer:textContainer];
-    [textStorage addLayoutManager:layoutManager];
-	
-    //Force the layout manager to layout its text
-    (void)[layoutManager glyphRangeForTextContainer:textContainer];
-	
-	height = [layoutManager usedRectForTextContainer:textContainer].size.height;
-	
-	[textStorage release];
-	[textContainer release];
-	[layoutManager release];
-	
-    return height;
+	static NSMutableDictionary *cache;
+	if (!cache)
+		cache = [[NSMutableDictionary alloc] init];
+	if ([cache count] > 100) //100 items should be trivial in terms of memory overhead, but sufficient
+		[cache removeAllObjects];
+	NSNumber *cachedHeight = [cache objectForKey:inAttributedString];
+	if (cachedHeight)
+		return [cachedHeight floatValue];
+	else {
+		NSTextStorage		*textStorage = [[NSTextStorage alloc] initWithAttributedString:inAttributedString];
+		NSTextContainer 	*textContainer = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(width, 1e7)];
+		NSLayoutManager 	*layoutManager = [[NSLayoutManager alloc] init];
+		
+		//Configure
+		[textContainer setLineFragmentPadding:0.0];
+		[layoutManager addTextContainer:textContainer];
+		[textStorage addLayoutManager:layoutManager];
+		
+		//Force the layout manager to layout its text
+		(void)[layoutManager glyphRangeForTextContainer:textContainer];
+		
+		float height = [layoutManager usedRectForTextContainer:textContainer].size.height;
+		
+		[textStorage release];
+		[textContainer release];
+		[layoutManager release];
+		
+		[cache setObject:[NSNumber numberWithFloat:height] forKey:inAttributedString];
+		
+		return height;
+	}
 }
 
 - (void)drawObjectCounterInCell:(PSMTabBarCell *)cell withRect:(NSRect)myRect
