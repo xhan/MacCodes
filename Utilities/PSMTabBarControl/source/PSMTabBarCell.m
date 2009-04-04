@@ -34,6 +34,7 @@
         _hasCloseButton = YES;
         _isCloseButtonSuppressed = NO;
         _count = 0;
+		_countColor = nil;
         _isEdited = NO;
         _isPlaceholder = NO;
     }
@@ -61,6 +62,7 @@
         _hasCloseButton = YES;
         _isCloseButtonSuppressed = NO;
         _count = 0;
+		_countColor = nil;
         _isEdited = NO;
         
         if (value) {
@@ -74,6 +76,8 @@
 
 - (void)dealloc
 {
+	[_countColor release];
+	
 	[_indicator removeFromSuperviewWithoutNeedingDisplay];
 
     [_indicator release];
@@ -253,6 +257,17 @@
 {
     _count = value;
     //[_controlView update:[[self controlView] automaticallyAnimates]]; // binding notice is too fast
+}
+
+- (NSColor *)countColor
+{
+	return _countColor;
+}
+
+- (void)setCountColor:(NSColor *)color
+{
+	[_countColor release];
+	_countColor = [color retain];
 }
 
 - (BOOL)isPlaceholder

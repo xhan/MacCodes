@@ -32,6 +32,7 @@
     BOOL                _hasIcon;
 	BOOL				_hasLargeImage;
     int                 _count;
+	NSColor				*_countColor;
     BOOL                _isEdited;
 }
 
@@ -72,6 +73,8 @@
 - (void)setHasLargeImage:(BOOL)value;
 - (int)count;
 - (void)setCount:(int)value;
+- (NSColor *)countColor;
+- (void)setCountColor:(NSColor *)value;
 - (BOOL)isPlaceholder;
 - (void)setIsPlaceholder:(BOOL)value;
 - (int)currentStep;

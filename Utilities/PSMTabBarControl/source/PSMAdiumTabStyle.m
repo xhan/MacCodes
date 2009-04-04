@@ -446,7 +446,7 @@
 
 - (void)drawObjectCounterInCell:(PSMTabBarCell *)cell withRect:(NSRect)myRect
 {
-	[[NSColor colorWithCalibratedWhite:0.3 alpha:0.6] set];
+	[[cell countColor] ?: [NSColor colorWithCalibratedWhite:0.3 alpha:0.6] set];
 	NSBezierPath *path = [NSBezierPath bezierPath];
 	[path setLineWidth:1.0];
 	

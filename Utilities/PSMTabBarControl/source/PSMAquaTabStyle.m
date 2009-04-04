@@ -496,7 +496,7 @@
     
     // object counter
     if ([cell count] > 0) {
-        [[NSColor colorWithCalibratedWhite:0.3 alpha:0.45] set];
+        [[cell countColor] ?: [NSColor colorWithCalibratedWhite:0.3 alpha:0.45] set];
         NSBezierPath *path = [NSBezierPath bezierPath];
         NSRect myRect = [self objectCounterRectForTabCell:cell];
         [path moveToPoint:NSMakePoint(myRect.origin.x + kPSMAquaObjectCounterRadius, myRect.origin.y)];

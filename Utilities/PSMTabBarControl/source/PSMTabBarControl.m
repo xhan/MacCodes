@@ -632,6 +632,7 @@
     [cell unbind:@"hasLargeImage"];
     [cell unbind:@"title"];
     [cell unbind:@"count"];
+	[cell unbind:@"countColor"];
     [cell unbind:@"isEdited"];
 
 	if ([item identifier] != nil) {
@@ -649,6 +650,12 @@
 	if ([item identifier] != nil) {
 		if ([[[cell representedObject] identifier] respondsToSelector:@selector(objectCount)]) {
 			[[item identifier] removeObserver:cell forKeyPath:@"objectCount"];
+		}
+	}
+	
+	if ([item identifier] != nil) {
+		if ([[[cell representedObject] identifier] respondsToSelector:@selector(countColor)]) {
+			[[item identifier] removeObserver:cell forKeyPath:@"countColor"];
 		}
 	}
 
@@ -1951,6 +1958,15 @@
 		if ([[[cell representedObject] identifier] respondsToSelector:@selector(objectCount)]) {
 			[cell bind:@"count" toObject:[item identifier] withKeyPath:@"objectCount" options:nil];
 			[[item identifier] addObserver:cell forKeyPath:@"objectCount" options:nil context:nil];
+		}
+    }
+	
+    // bind for the color of a counter
+    [cell setCountColor:nil];
+    if ([item identifier] != nil) {
+		if ([[[cell representedObject] identifier] respondsToSelector:@selector(countColor)]) {
+			[cell bind:@"countColor" toObject:[item identifier] withKeyPath:@"countColor" options:nil];
+			[[item identifier] addObserver:cell forKeyPath:@"countColor" options:nil context:nil];
 		}
     }
 
