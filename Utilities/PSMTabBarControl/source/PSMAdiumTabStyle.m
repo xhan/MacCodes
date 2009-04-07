@@ -13,6 +13,7 @@
 
 #define Adium_CellPadding 2
 #define Adium_MARGIN_X 4
+#define kPSMAdiumCounterPadding 3.0
 #define kPSMAdiumObjectCounterRadius 7.0
 #define kPSMAdiumCounterMinWidth 20
 
@@ -266,7 +267,7 @@
 	NSSize size;
 	float countWidth = [[self attributedObjectCountValueForTabCell:cell] size].width;
 
-	countWidth += (2 * kPSMAdiumObjectCounterRadius - 6.0);
+	countWidth += (2 * kPSMAdiumObjectCounterRadius - 6.0 + kPSMAdiumCounterPadding);
 	
 	if (countWidth < kPSMAdiumCounterMinWidth) {
 		countWidth = kPSMAdiumCounterMinWidth;
@@ -446,6 +447,9 @@
 
 - (void)drawObjectCounterInCell:(PSMTabBarCell *)cell withRect:(NSRect)myRect
 {
+    myRect.size.width -= kPSMAdiumCounterPadding;
+    myRect.origin.x += kPSMAdiumCounterPadding;
+    
 	[[cell countColor] ?: [NSColor colorWithCalibratedWhite:0.3 alpha:0.6] set];
 	NSBezierPath *path = [NSBezierPath bezierPath];
 	[path setLineWidth:1.0];
