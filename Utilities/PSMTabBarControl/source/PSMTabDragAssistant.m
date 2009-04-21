@@ -679,7 +679,7 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
 
 - (void)animateDrag:(NSTimer *)timer
 {
-    NSEnumerator *e = [_participatingTabBars objectEnumerator];
+    NSEnumerator *e = [[[_participatingTabBars copy] autorelease] objectEnumerator];
     PSMTabBarControl *tabBar;
     while ( (tabBar = [e nextObject]) ) {
         [self calculateDragAnimationForTabBar:tabBar];
