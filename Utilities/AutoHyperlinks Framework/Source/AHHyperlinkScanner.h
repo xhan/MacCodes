@@ -52,6 +52,7 @@ extern void AH_delete_buffer(AH_BUFFER_STATE, yyscan_t scanner);
 	unsigned long				 m_scanStringLength;
 }
 
++ (void)initialize;
 
 /*!
  * @brief Allocs and inits a new lax AHHyperlinkScanner with the given NSString

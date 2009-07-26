@@ -51,6 +51,33 @@
 	static NSArray			*enclosureStopArray = nil;
 	static NSArray			*encKeys = nil;
 	
+#pragma mark runtime initialization
++ (void)initialize
+{
+	NSMutableCharacterSet *mutableSkipSet = [[NSMutableCharacterSet alloc] init];
+	[mutableSkipSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+	[mutableSkipSet formUnionWithCharacterSet:[NSCharacterSet illegalCharacterSet]];
+	[mutableSkipSet formUnionWithCharacterSet:[NSCharacterSet controlCharacterSet]];
+	[mutableSkipSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
+	skipSet = [[NSCharacterSet characterSetWithBitmapRepresentation:[mutableSkipSet bitmapRepresentation]] retain];
+	[mutableSkipSet release];
+	
+	endSet = [[NSCharacterSet characterSetWithCharactersInString:@"\"',:;>)]}.?!@"] retain];
+	
+	NSMutableCharacterSet *mutableStartSet = [[NSMutableCharacterSet alloc] init];
+	[mutableStartSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+	[mutableStartSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"\"'.,:;<?!-@"]];
+	startSet = [[NSCharacterSet characterSetWithBitmapRepresentation:[mutableStartSet bitmapRepresentation]] retain];
+	[mutableStartSet release];
+	
+	puncSet = [[NSCharacterSet characterSetWithCharactersInString:@"\"'.,:;<?!"] retain];
+	hostnameComponentSeparatorSet = [[NSCharacterSet characterSetWithCharactersInString:@"./"] retain];
+	enclosureStartArray = [[NSArray arrayWithObjects:@"(",@"[",@"{",nil] retain];
+	enclosureSet = [[NSCharacterSet characterSetWithCharactersInString:@"()[]{}"] retain];
+	enclosureStopArray = [[NSArray arrayWithObjects:@")",@"]",@"}",nil] retain];
+	encKeys = [[NSArray arrayWithObjects:ENC_INDEX_KEY, ENC_CHAR_KEY, nil] retain];
+}
+
 #pragma mark Class Methods
 + (id)hyperlinkScannerWithString:(NSString *)inString
 {
@@ -77,7 +104,7 @@
 
 - (id)initWithString:(NSString *)inString usingStrictChecking:(BOOL)flag
 {
-	if((self = [self init])){
+	if((self = [super init])){
 		m_scanString = [inString retain];
 		m_scanAttrString = nil;
 		m_urlSchemes = [[NSDictionary alloc] initWithObjectsAndKeys:
@@ -92,7 +119,7 @@
 
 - (id)initWithAttributedString:(NSAttributedString *)inString usingStrictChecking:(BOOL)flag
 {
-	if((self = [self init])){
+	if((self = [super init])){
 		m_scanString = [[inString string] retain];
 		m_scanAttrString = [inString retain];
 		m_urlSchemes = [[NSDictionary alloc] initWithObjectsAndKeys:
@@ -102,65 +129,6 @@
 		m_scanLocation = 0;
 		m_scanStringLength = [m_scanString length];
 	}
-	return self;
-}
-
-- (id)init
-{
-	static BOOL		 s_allSet = NO;
-	static NSLock	*s_initLock = nil;
-	if((self = [super init]) && !s_allSet) {
-		if(!s_initLock) s_initLock = [[NSLock alloc] init];
-		[s_initLock lock];
-		if (!skipSet) {
-			NSMutableCharacterSet *mutableSkipSet = [[NSMutableCharacterSet alloc] init];
-			[mutableSkipSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-			[mutableSkipSet formUnionWithCharacterSet:[NSCharacterSet illegalCharacterSet]];
-			[mutableSkipSet formUnionWithCharacterSet:[NSCharacterSet controlCharacterSet]];
-			[mutableSkipSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
-			skipSet = [[NSCharacterSet characterSetWithBitmapRepresentation:[mutableSkipSet bitmapRepresentation]] retain];
-			[mutableSkipSet release];
-		}
-		
-		if (!endSet) {
-			endSet = [[NSCharacterSet characterSetWithCharactersInString:@"\"',:;>)]}.?!@"] retain];
-		}
-		
-		if (!startSet) {
-			NSMutableCharacterSet *mutableStartSet = [[NSMutableCharacterSet alloc] init];
-			[mutableStartSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-			[mutableStartSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"\"'.,:;<?!-@"]];
-			startSet = [[NSCharacterSet characterSetWithBitmapRepresentation:[mutableStartSet bitmapRepresentation]] retain];
-			[mutableStartSet release];
-		}
-		
-		if (!puncSet) {
-			puncSet = [[NSCharacterSet characterSetWithCharactersInString:@"\"'.,:;<?!"] retain];
-		}
-		
-		if (!hostnameComponentSeparatorSet) {
-			hostnameComponentSeparatorSet = [[NSCharacterSet characterSetWithCharactersInString:@"./"] retain];
-		}
-		
-		if(!enclosureStartArray){
-			enclosureStartArray = [[NSArray arrayWithObjects:@"(",@"[",@"{",nil] retain];
-		}
-		
-		if(!enclosureSet){
-			enclosureSet = [[NSCharacterSet characterSetWithCharactersInString:@"()[]{}"] retain];
-		}
-		
-		if(!enclosureStopArray){
-			enclosureStopArray = [[NSArray arrayWithObjects:@")",@"]",@"}",nil] retain];
-		}
-
-		if(!encKeys){
-			encKeys = [[NSArray arrayWithObjects:ENC_INDEX_KEY, ENC_CHAR_KEY, nil] retain];
-		}
-		s_allSet = YES;
-		[s_initLock unlock];
-	}
-	
 	return self;
 }
 
