@@ -54,28 +54,30 @@
 #pragma mark runtime initialization
 + (void)initialize
 {
-	NSMutableCharacterSet *mutableSkipSet = [[NSMutableCharacterSet alloc] init];
-	[mutableSkipSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-	[mutableSkipSet formUnionWithCharacterSet:[NSCharacterSet illegalCharacterSet]];
-	[mutableSkipSet formUnionWithCharacterSet:[NSCharacterSet controlCharacterSet]];
-	[mutableSkipSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
-	skipSet = [[NSCharacterSet characterSetWithBitmapRepresentation:[mutableSkipSet bitmapRepresentation]] retain];
-	[mutableSkipSet release];
-	
-	endSet = [[NSCharacterSet characterSetWithCharactersInString:@"\"',:;>)]}.?!@"] retain];
-	
-	NSMutableCharacterSet *mutableStartSet = [[NSMutableCharacterSet alloc] init];
-	[mutableStartSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-	[mutableStartSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"\"'.,:;<?!-@"]];
-	startSet = [[NSCharacterSet characterSetWithBitmapRepresentation:[mutableStartSet bitmapRepresentation]] retain];
-	[mutableStartSet release];
-	
-	puncSet = [[NSCharacterSet characterSetWithCharactersInString:@"\"'.,:;<?!"] retain];
-	hostnameComponentSeparatorSet = [[NSCharacterSet characterSetWithCharactersInString:@"./"] retain];
-	enclosureStartArray = [[NSArray arrayWithObjects:@"(",@"[",@"{",nil] retain];
-	enclosureSet = [[NSCharacterSet characterSetWithCharactersInString:@"()[]{}"] retain];
-	enclosureStopArray = [[NSArray arrayWithObjects:@")",@"]",@"}",nil] retain];
-	encKeys = [[NSArray arrayWithObjects:ENC_INDEX_KEY, ENC_CHAR_KEY, nil] retain];
+	if (self == [AHHyperlinkScanner class]){
+		NSMutableCharacterSet *mutableSkipSet = [[NSMutableCharacterSet alloc] init];
+		[mutableSkipSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+		[mutableSkipSet formUnionWithCharacterSet:[NSCharacterSet illegalCharacterSet]];
+		[mutableSkipSet formUnionWithCharacterSet:[NSCharacterSet controlCharacterSet]];
+		[mutableSkipSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
+		skipSet = [[NSCharacterSet characterSetWithBitmapRepresentation:[mutableSkipSet bitmapRepresentation]] retain];
+		[mutableSkipSet release];
+		
+		endSet = [[NSCharacterSet characterSetWithCharactersInString:@"\"',:;>)]}.?!@"] retain];
+		
+		NSMutableCharacterSet *mutableStartSet = [[NSMutableCharacterSet alloc] init];
+		[mutableStartSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+		[mutableStartSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"\"'.,:;<?!-@"]];
+		startSet = [[NSCharacterSet characterSetWithBitmapRepresentation:[mutableStartSet bitmapRepresentation]] retain];
+		[mutableStartSet release];
+		
+		puncSet = [[NSCharacterSet characterSetWithCharactersInString:@"\"'.,:;<?!"] retain];
+		hostnameComponentSeparatorSet = [[NSCharacterSet characterSetWithCharactersInString:@"./"] retain];
+		enclosureStartArray = [[NSArray arrayWithObjects:@"(",@"[",@"{",nil] retain];
+		enclosureSet = [[NSCharacterSet characterSetWithCharactersInString:@"()[]{}"] retain];
+		enclosureStopArray = [[NSArray arrayWithObjects:@")",@"]",@"}",nil] retain];
+		encKeys = [[NSArray arrayWithObjects:ENC_INDEX_KEY, ENC_CHAR_KEY, nil] retain];
+	}
 }
 
 #pragma mark Class Methods
