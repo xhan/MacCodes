@@ -636,37 +636,37 @@
     [cell unbind:@"isEdited"];
 
 	if ([item identifier] != nil) {
-		if ([[[cell representedObject] identifier] respondsToSelector:@selector(isProcessing)]) {
-			[[[cell representedObject] identifier] removeObserver:cell forKeyPath:@"isProcessing"];
+		if ([[item identifier] respondsToSelector:@selector(isProcessing)]) {
+			[[item identifier] removeObserver:cell forKeyPath:@"isProcessing"];
 		}
 	}
 	
 	if ([item identifier] != nil) {
-		if ([[[cell representedObject] identifier] respondsToSelector:@selector(icon)]) {
+		if ([[item identifier] respondsToSelector:@selector(icon)]) {
 			[[item identifier] removeObserver:cell forKeyPath:@"icon"];
 		}
 	}
 	
 	if ([item identifier] != nil) {
-		if ([[[cell representedObject] identifier] respondsToSelector:@selector(objectCount)]) {
+		if ([[item identifier] respondsToSelector:@selector(objectCount)]) {
 			[[item identifier] removeObserver:cell forKeyPath:@"objectCount"];
 		}
 	}
 	
 	if ([item identifier] != nil) {
-		if ([[[cell representedObject] identifier] respondsToSelector:@selector(countColor)]) {
+		if ([[item identifier] respondsToSelector:@selector(countColor)]) {
 			[[item identifier] removeObserver:cell forKeyPath:@"countColor"];
 		}
 	}
 
 	if ([item identifier] != nil) {
-		if ([[[cell representedObject] identifier] respondsToSelector:@selector(largeImage)]) {
+		if ([[item identifier] respondsToSelector:@selector(largeImage)]) {
 			[[item identifier] removeObserver:cell forKeyPath:@"largeImage"];
 		}
 	}
 	
 	if ([item identifier] != nil) {
-		if ([[[cell representedObject] identifier] respondsToSelector:@selector(isEdited)]) {
+		if ([[item identifier] respondsToSelector:@selector(isEdited)]) {
 			[[item identifier] removeObserver:cell forKeyPath:@"isEdited"];
 		}
 	}
