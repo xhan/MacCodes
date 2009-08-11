@@ -343,10 +343,10 @@
 	}
 
 	//for each SHMarkedHyperlink, add the proper URL to the proper range in the string.
-	while((markedLink = [self nextURI])) {
+	for(markedLink in self) {
 		NSURL *markedLinkURL;
 		_didFindLinks = YES;
-		if((markedLinkURL = [markedLink URL])){
+		if((markedLinkURL = [markedLink URL])) {
 			[linkifiedString addAttribute:NSLinkAttributeName
 									value:markedLinkURL
 									range:[markedLink range]];
@@ -367,6 +367,24 @@
 - (void)setScanLocation:(unsigned int)location
 {
 	m_scanLocation = location;
+}
+
+#pragma mark NSFastEnumeration
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(id *)stackbuf count:(NSUInteger)len
+{
+	AHMarkedHyperlink	*currentLink;
+	
+	NSUInteger fastEnumCount = 0;
+	while (fastEnumCount < len && nil != (currentLink = [self nextURI])) {
+		stackbuf[fastEnumCount] = currentLink;
+		++fastEnumCount;
+	}
+	
+	state->state = (nil == currentLink)? (NSUInteger)currentLink : NSNotFound;
+	state->itemsPtr = stackbuf;
+	state->mutationsPtr = (unsigned long *)self;
+	
+	return fastEnumCount;
 }
 
 #pragma mark Below Here There Be Private Methods
