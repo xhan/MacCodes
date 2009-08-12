@@ -373,9 +373,11 @@
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(id *)stackbuf count:(NSUInteger)len
 {
 	AHMarkedHyperlink	*currentLink;
+	SEL nextURISelector = @selector(nextURI);
+	IMP nextURIImp = [self methodForSelector:nextURISelector];
 	
 	NSUInteger fastEnumCount = 0;
-	while (fastEnumCount < len && nil != (currentLink = [self nextURI])) {
+	while (fastEnumCount < len && nil != (currentLink = (AHMarkedHyperlink *)(*nextURIImp)(self, nextURISelector))) {
 		stackbuf[fastEnumCount] = currentLink;
 		++fastEnumCount;
 	}
