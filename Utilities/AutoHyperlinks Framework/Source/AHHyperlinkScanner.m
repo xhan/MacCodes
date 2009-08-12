@@ -222,7 +222,7 @@
 	unsigned long scannedLocation = m_scanLocation;
 	
     // scan upto the next whitespace char so that we don't unnecessarity confuse flex
-    // otherwise we end up validating urls that look like this "http://www.adiumx.com/ <--cool"
+    // otherwise we end up validating urls that look like this "http://www.adium.im/ <--cool"
 	[self _scanString:m_scanString charactersFromSet:startSet intoRange:nil fromIndex:&scannedLocation];
 
 	// main scanning loop
@@ -373,11 +373,9 @@
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(id *)stackbuf count:(NSUInteger)len
 {
 	AHMarkedHyperlink	*currentLink;
-	SEL nextURISelector = @selector(nextURI);
-	IMP nextURIImp = [self methodForSelector:nextURISelector];
 	
 	NSUInteger fastEnumCount = 0;
-	while (fastEnumCount < len && nil != (currentLink = (AHMarkedHyperlink *)(*nextURIImp)(self, nextURISelector))) {
+	while (fastEnumCount < len && nil != (currentLink = [self nextURI])) {
 		stackbuf[fastEnumCount] = currentLink;
 		++fastEnumCount;
 	}
