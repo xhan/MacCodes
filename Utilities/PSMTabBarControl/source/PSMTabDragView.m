@@ -28,7 +28,7 @@
 - (void)drawRect:(NSRect)rect {
 	//1.0 fade means show the primary image
 	//0.0 fade means show the secondary image
-	float primaryAlpha = _alpha + 0.001f, alternateAlpha = 1.001f - _alpha;
+	CGFloat primaryAlpha = _alpha + 0.001f, alternateAlpha = 1.001f - _alpha;
 	NSRect srcRect;
 	srcRect.origin = NSZeroPoint;
 	srcRect.size = [_image size];
@@ -38,7 +38,7 @@
 	[_alternateImage drawInRect:[self bounds] fromRect:srcRect operation:NSCompositeSourceOver fraction:alternateAlpha];
 }
 
-- (void)setFadeValue:(float)value
+- (void)setFadeValue:(CGFloat)value
 {
 	_alpha = value;
 }

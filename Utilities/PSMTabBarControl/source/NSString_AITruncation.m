@@ -16,7 +16,7 @@
 	return [NSString stringWithUTF8String:"\xE2\x80\xA6"];
 }
 
-- (NSString *)stringWithEllipsisByTruncatingToLength:(unsigned int)length
+- (NSString *)stringWithEllipsisByTruncatingToLength:(NSUInteger)length
 {
 	NSString *returnString;
 	

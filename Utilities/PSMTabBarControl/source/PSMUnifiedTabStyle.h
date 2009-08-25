@@ -23,8 +23,8 @@
 	
     NSDictionary *_objectCountStringAttributes;
     
-    float leftMargin;
+    CGFloat leftMargin;
 	PSMTabBarControl *tabBar;
 }
-- (void)setLeftMarginForTabBarControl:(float)margin;
+- (void)setLeftMarginForTabBarControl:(CGFloat)margin;
 @end

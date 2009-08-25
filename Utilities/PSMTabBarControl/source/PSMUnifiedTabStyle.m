@@ -72,22 +72,22 @@
 #pragma mark -
 #pragma mark Control Specific
 
-- (void)setLeftMarginForTabBarControl:(float)margin
+- (void)setLeftMarginForTabBarControl:(CGFloat)margin
 {
 	leftMargin = margin;
 }
 
-- (float)leftMarginForTabBarControl
+- (CGFloat)leftMarginForTabBarControl
 {
     return leftMargin;
 }
 
-- (float)rightMarginForTabBarControl
+- (CGFloat)rightMarginForTabBarControl
 {
     return 24.0f;
 }
 
-- (float)topMarginForTabBarControl
+- (CGFloat)topMarginForTabBarControl
 {
 	return 10.0f;
 }
@@ -183,7 +183,7 @@
         return NSZeroRect;
     }
     
-    float countWidth = [[self attributedObjectCountValueForTabCell:cell] size].width;
+    CGFloat countWidth = [[self attributedObjectCountValueForTabCell:cell] size].width;
     countWidth += (2 * kPSMUnifiedObjectCounterRadius - 6.0);
     if (countWidth < kPSMUnifiedCounterMinWidth) {
         countWidth = kPSMUnifiedCounterMinWidth;
@@ -202,9 +202,9 @@
 }
 
 
-- (float)minimumWidthOfTabCell:(PSMTabBarCell *)cell
+- (CGFloat)minimumWidthOfTabCell:(PSMTabBarCell *)cell
 {
-    float resultWidth = 0.0;
+    CGFloat resultWidth = 0.0;
     
     // left margin
     resultWidth = MARGIN_X;
@@ -237,9 +237,9 @@
     return ceil(resultWidth);
 }
 
-- (float)desiredWidthOfTabCell:(PSMTabBarCell *)cell
+- (CGFloat)desiredWidthOfTabCell:(PSMTabBarCell *)cell
 {
-    float resultWidth = 0.0;
+    CGFloat resultWidth = 0.0;
     
     // left margin
     resultWidth = MARGIN_X;
@@ -271,7 +271,7 @@
     return ceil(resultWidth);
 }
 
-- (float)tabCellHeight
+- (CGFloat)tabCellHeight
 {
 	return kPSMTabBarControlHeight;
 }
@@ -281,7 +281,7 @@
 
 - (NSAttributedString *)attributedObjectCountValueForTabCell:(PSMTabBarCell *)cell
 {
-    NSString *contents = [NSString stringWithFormat:@"%i", [cell count]];
+    NSString *contents = [NSString stringWithFormat:@"%lu", (unsigned long)[cell count]];
     return [[[NSMutableAttributedString alloc] initWithString:contents attributes:_objectCountStringAttributes] autorelease];
 }
 
@@ -329,7 +329,7 @@
         NSRect aRect = NSMakeRect(cellFrame.origin.x+0.5, cellFrame.origin.y-0.5, cellFrame.size.width, cellFrame.size.height);
         
         // frame
-		float radius = MIN(6.0, 0.5f * MIN(NSWidth(aRect), NSHeight(aRect)));
+		CGFloat radius = MIN(6.0, 0.5f * MIN(NSWidth(aRect), NSHeight(aRect)));
 		NSRect rect = NSInsetRect(aRect, radius, radius);
 		
 		[bezier appendBezierPathWithArcWithCenter:NSMakePoint(NSMinX(rect), NSMinY(rect)) radius:radius startAngle:180.0 endAngle:270.0];
@@ -416,7 +416,7 @@
 - (void)drawInteriorWithTabCell:(PSMTabBarCell *)cell inView:(NSView*)controlView
 {
     NSRect cellFrame = [cell frame];
-    float labelPosition = cellFrame.origin.x + MARGIN_X;
+    CGFloat labelPosition = cellFrame.origin.x + MARGIN_X;
     
     // close button
     if ([cell hasCloseButton] && ![cell isCloseButtonSuppressed]) {

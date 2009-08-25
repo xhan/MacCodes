@@ -12,7 +12,7 @@
 
 @implementation PSMTabDragWindowController
 
-- (id)initWithImage:(NSImage *)image styleMask:(unsigned int)styleMask tearOffStyle:(PSMTabBarTearOffStyle)tearOffStyle
+- (id)initWithImage:(NSImage *)image styleMask:(NSUInteger)styleMask tearOffStyle:(PSMTabBarTearOffStyle)tearOffStyle
 {
 	PSMTabDragWindow *window = [PSMTabDragWindow dragWindowWithImage:image styleMask:styleMask];
 	if ( (self = [super initWithWindow:window]) ) {
@@ -69,7 +69,7 @@
 		return;
 	}
 	
-	float progress = 0;
+	CGFloat progress = 0;
 	_showingAlternate = !_showingAlternate;
 	
 	if (_animation) {
@@ -99,7 +99,7 @@
 	NSImage *currentImage = _showingAlternate ? [_view alternateImage] : [_view image];
 	NSSize size = [currentImage size];
 	NSPoint mousePoint = [NSEvent mouseLocation];
-	float animationValue = [_animation currentValue];
+	CGFloat animationValue = [_animation currentValue];
 	
 	frame.size.width = _originalWindowFrame.size.width + (size.width - _originalWindowFrame.size.width) * animationValue;
 	frame.size.height = _originalWindowFrame.size.height + (size.height - _originalWindowFrame.size.height) * animationValue;

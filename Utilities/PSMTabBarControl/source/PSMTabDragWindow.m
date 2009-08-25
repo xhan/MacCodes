@@ -11,12 +11,12 @@
 
 @implementation PSMTabDragWindow
 
-+ (PSMTabDragWindow *)dragWindowWithImage:(NSImage *)image styleMask:(unsigned int)styleMask
++ (PSMTabDragWindow *)dragWindowWithImage:(NSImage *)image styleMask:(NSUInteger)styleMask
 {
 	return [[[PSMTabDragWindow alloc] initWithImage:image styleMask:styleMask] autorelease];
 }
 
-- (id)initWithImage:(NSImage *)image styleMask:(unsigned int)styleMask
+- (id)initWithImage:(NSImage *)image styleMask:(NSUInteger)styleMask
 {
 	NSSize size = [image size];
 	

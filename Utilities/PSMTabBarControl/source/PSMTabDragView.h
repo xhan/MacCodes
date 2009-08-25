@@ -10,9 +10,9 @@
 
 @interface PSMTabDragView : NSView {
 	NSImage *_image, *_alternateImage;
-	float _alpha;
+	CGFloat _alpha;
 }
-- (void)setFadeValue:(float)value;
+- (void)setFadeValue:(CGFloat)value;
 - (NSImage *)image;
 - (void)setImage:(NSImage *)image;
 - (NSImage *)alternateImage;

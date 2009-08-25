@@ -18,7 +18,7 @@
 @end
 
 @interface PSMTabDragAssistant (Private)
-- (NSImage *)_imageForViewOfCell:(PSMTabBarCell *)cell styleMask:(unsigned int *)outMask;
+- (NSImage *)_imageForViewOfCell:(PSMTabBarCell *)cell styleMask:(NSUInteger *)outMask;
 - (NSImage *)_miniwindowImageOfWindow:(NSWindow *)window;
 - (void)_expandWindow:(NSWindow *)window atPoint:(NSPoint)point;
 @end
@@ -106,12 +106,12 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
     _draggedCell = cell;
 }
 
-- (int)draggedCellIndex
+- (NSInteger)draggedCellIndex
 {
     return _draggedCellIndex;
 }
 
-- (void)setDraggedCellIndex:(int)value
+- (void)setDraggedCellIndex:(NSInteger)value
 {
     _draggedCellIndex = value;
 }
@@ -162,13 +162,13 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
     
     NSRect cellFrame = [cell frame];
     // list of widths for animation
-    int i;
-    float cellStepSize = ([control orientation] == PSMTabBarHorizontalOrientation) ? (cellFrame.size.width + 6) : (cellFrame.size.height + 1);
+    NSInteger i;
+    CGFloat cellStepSize = ([control orientation] == PSMTabBarHorizontalOrientation) ? (cellFrame.size.width + 6) : (cellFrame.size.height + 1);
     for (i = 0; i < kPSMTabDragAnimationSteps - 1; i++) {
-        int thisWidth = (int)(cellStepSize - ((cellStepSize/2.0) + ((sin((PI/2.0) + ((float)i/(float)kPSMTabDragAnimationSteps)*PI) * cellStepSize) / 2.0)));
-        [_sineCurveWidths addObject:[NSNumber numberWithInt:thisWidth]];
+        NSInteger thisWidth = (NSInteger)(cellStepSize - ((cellStepSize/2.0) + ((sin((PI/2.0) + ((CGFloat)i/(CGFloat)kPSMTabDragAnimationSteps)*PI) * cellStepSize) / 2.0)));
+        [_sineCurveWidths addObject:[NSNumber numberWithInteger:thisWidth]];
     }
-	[_sineCurveWidths addObject:[NSNumber numberWithInt:([control orientation] == PSMTabBarHorizontalOrientation) ? cellFrame.size.width : cellFrame.size.height]];
+	[_sineCurveWidths addObject:[NSNumber numberWithInteger:([control orientation] == PSMTabBarHorizontalOrientation) ? cellFrame.size.width : cellFrame.size.height]];
     
     // hide UI buttons
     [[control overflowPopUpButton] setHidden:YES];
@@ -187,7 +187,7 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
     [cell setHighlighted:NO];
     NSSize offset = NSZeroSize;
     [pboard declareTypes:[NSArray arrayWithObjects:@"PSMTabBarControlItemPBType", nil] owner: nil];
-    [pboard setString:[[NSNumber numberWithInt:[[control cells] indexOfObject:cell]] stringValue] forType:@"PSMTabBarControlItemPBType"];
+    [pboard setString:[[NSNumber numberWithInteger:[[control cells] indexOfObject:cell]] stringValue] forType:@"PSMTabBarControlItemPBType"];
     _animationTimer = [NSTimer scheduledTimerWithTimeInterval:(1.0/30.0) target:self selector:@selector(animateDrag:) userInfo:nil repeats:YES];
     
 	[[NSNotificationCenter defaultCenter] postNotificationName:PSMTabDragDidBeginNotification object:nil];
@@ -261,7 +261,7 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
 		if (_currentTearOffStyle == PSMTabBarTearOffAlphaWindow) {
 			//create a new floating drag window
 			if (!_draggedView) {
-				unsigned int styleMask;
+				NSUInteger styleMask;
 				NSImage *viewImage = [self _imageForViewOfCell:[self draggedCell] styleMask:&styleMask];
 				
 				_draggedView = [[PSMTabDragWindowController alloc] initWithImage:viewImage styleMask:styleMask tearOffStyle:PSMTabBarTearOffAlphaWindow];
@@ -278,7 +278,7 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
 		} else if (_currentTearOffStyle == PSMTabBarTearOffMiniwindow && ![_draggedTab alternateImage]) {
 			NSImage *image;
 			NSSize imageSize;
-			unsigned int mask; //we don't need this but we can't pass nil in for the style mask, as some delegate implementations will crash
+			NSUInteger mask; //we don't need this but we can't pass nil in for the style mask, as some delegate implementations will crash
 			
 			if ( !(image = [self _miniwindowImageOfWindow:[control window]]) ) {
 				image = [[self _imageForViewOfCell:[self draggedCell] styleMask:&mask] copy];
@@ -321,7 +321,7 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
 - (void)performDragOperation
 {
     // move cell
-	int destinationIndex = [[[self destinationTabBar] cells] indexOfObject:[self targetCell]];
+	NSInteger destinationIndex = [[[self destinationTabBar] cells] indexOfObject:[self targetCell]];
 	
 	//there is the slight possibility of the targetCell now being set properly, so avoid errors
 	if (destinationIndex >= [[[self destinationTabBar] cells] count])  {
@@ -338,7 +338,7 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
 		[[self sourceTabBar] removeTrackingRect:[[self draggedCell] cellTrackingTag]];
 		[[self sourceTabBar] removeTabForCell:[self draggedCell]];
 		
-		int i, insertIndex;
+		NSInteger i, insertIndex;
 		NSArray *cells = [[self destinationTabBar] cells];
 		
 		//find the index of where the dragged cell was just dropped
@@ -373,7 +373,7 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
 		NSTabView *tabView = [[self sourceTabBar] tabView];
 		NSTabViewItem *item = [[self draggedCell] representedObject];
 		BOOL reselect = ([tabView selectedTabViewItem] == item);
-		int index;
+		NSInteger index;
 		NSArray *cells = [[self sourceTabBar] cells];
 		
 		//find the index of where the dragged cell was just dropped
@@ -540,7 +540,7 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
 
 - (void)fadeInDragWindow:(NSTimer *)timer
 {
-	float value = [[_draggedView window] alphaValue];
+	CGFloat value = [[_draggedView window] alphaValue];
 	if (value >= kPSMTabDragWindowAlpha || _draggedTab == nil) {
 		[timer invalidate];
 		_fadeTimer = nil;
@@ -552,7 +552,7 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
 
 - (void)fadeOutDragWindow:(NSTimer *)timer
 {
-	float value = [[_draggedView window] alphaValue];
+	CGFloat value = [[_draggedView window] alphaValue];
 	NSWindow *tabWindow = [_draggedTab window], *viewWindow = [_draggedView window];
 	
 	if (value <= 0.0) {
@@ -572,7 +572,7 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
 #pragma mark -
 #pragma mark Private
 
-- (NSImage *)_imageForViewOfCell:(PSMTabBarCell *)cell styleMask:(unsigned int *)outMask
+- (NSImage *)_imageForViewOfCell:(PSMTabBarCell *)cell styleMask:(NSUInteger *)outMask
 {
 	PSMTabBarControl *control = [cell controlView];
 	NSImage *viewImage = nil;
@@ -691,8 +691,8 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
 {
     BOOL removeFlag = YES;
     NSMutableArray *cells = [control cells];
-    int i, cellCount = [cells count];
-    float position = [control orientation] == PSMTabBarHorizontalOrientation ? [[control style] leftMarginForTabBarControl] : [[control style] topMarginForTabBarControl];
+    NSInteger i, cellCount = [cells count];
+    CGFloat position = [control orientation] == PSMTabBarHorizontalOrientation ? [[control style] leftMarginForTabBarControl] : [[control style] topMarginForTabBarControl];
     
     // identify target cell
     // mouse at beginning of tabs
@@ -751,9 +751,9 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
                 }
 				
 				if ([control orientation] == PSMTabBarHorizontalOrientation) {
-					newRect.size.width = [[_sineCurveWidths objectAtIndex:[cell currentStep]] intValue];
+					newRect.size.width = [[_sineCurveWidths objectAtIndex:[cell currentStep]] integerValue];
 				} else {
-					newRect.size.height = [[_sineCurveWidths objectAtIndex:[cell currentStep]] intValue];
+					newRect.size.height = [[_sineCurveWidths objectAtIndex:[cell currentStep]] integerValue];
 				}
             }
         } else {
@@ -789,7 +789,7 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
 	NSMutableArray *cells = [control cells];
 	
     // replace dragged cell with a placeholder, and clean up surrounding cells
-    int cellIndex = [cells indexOfObject:cell];
+    NSInteger cellIndex = [cells indexOfObject:cell];
     PSMTabBarCell *pc = [[[PSMTabBarCell alloc] initPlaceholderWithFrame:[[self draggedCell] frame] expanded:YES inControlView:control] autorelease];
     [cells replaceObjectAtIndex:cellIndex withObject:pc];
     [cells removeObjectAtIndex:(cellIndex + 1)];
@@ -803,7 +803,7 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
 
 - (void)distributePlaceholdersInTabBar:(PSMTabBarControl *)control
 {
-    int i, numVisibleTabs = [control numberOfVisibleTabs];
+    NSInteger i, numVisibleTabs = [control numberOfVisibleTabs];
     for (i = 0; i < numVisibleTabs; i++) {
         PSMTabBarCell *pc = [[[PSMTabBarCell alloc] initPlaceholderWithFrame:[[self draggedCell] frame] expanded:NO inControlView:control] autorelease];
         [[control cells] insertObject:pc atIndex:(2 * i)];
@@ -819,7 +819,7 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
 
 - (void)removeAllPlaceholdersFromTabBar:(PSMTabBarControl *)control
 {
-    int i, cellCount = [[control cells] count];
+    NSInteger i, cellCount = [[control cells] count];
     for (i = (cellCount - 1); i >= 0; i--) {
         PSMTabBarCell *cell = [[control cells] objectAtIndex:i];
         if ([cell isPlaceholder]) {
@@ -840,7 +840,7 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
         [aCoder encodeObject:_destinationTabBar forKey:@"destinationTabBar"];
         [aCoder encodeObject:_participatingTabBars forKey:@"participatingTabBars"];
         [aCoder encodeObject:_draggedCell forKey:@"draggedCell"];
-        [aCoder encodeInt:_draggedCellIndex forKey:@"draggedCellIndex"];
+        [aCoder encodeInteger:_draggedCellIndex forKey:@"draggedCellIndex"];
         [aCoder encodeBool:_isDragging forKey:@"isDragging"];
         [aCoder encodeObject:_animationTimer forKey:@"animationTimer"];
         [aCoder encodeObject:_sineCurveWidths forKey:@"sineCurveWidths"];
@@ -857,7 +857,7 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
             _destinationTabBar = [[aDecoder decodeObjectForKey:@"destinationTabBar"] retain];
             _participatingTabBars = [[aDecoder decodeObjectForKey:@"participatingTabBars"] retain];
             _draggedCell = [[aDecoder decodeObjectForKey:@"draggedCell"] retain];
-            _draggedCellIndex = [aDecoder decodeIntForKey:@"draggedCellIndex"];
+            _draggedCellIndex = [aDecoder decodeIntegerForKey:@"draggedCellIndex"];
             _isDragging = [aDecoder decodeBoolForKey:@"isDragging"];
             _animationTimer = [[aDecoder decodeObjectForKey:@"animationTimer"] retain];
             _sineCurveWidths = [[aDecoder decodeObjectForKey:@"sineCurveWidths"] retain];

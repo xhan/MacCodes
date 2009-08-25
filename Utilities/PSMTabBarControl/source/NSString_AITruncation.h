@@ -8,5 +8,5 @@
 #import <Cocoa/Cocoa.h>
 
 @interface NSString (AITruncation)
-- (NSString *)stringWithEllipsisByTruncatingToLength:(unsigned int)length;
+- (NSString *)stringWithEllipsisByTruncatingToLength:(NSUInteger)length;
 @end

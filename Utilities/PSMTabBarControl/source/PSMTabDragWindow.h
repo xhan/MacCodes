@@ -13,8 +13,8 @@
 @interface PSMTabDragWindow : NSWindow {
 	PSMTabDragView *_dragView;
 }
-+ (PSMTabDragWindow *)dragWindowWithImage:(NSImage *)image styleMask:(unsigned int)styleMask;
++ (PSMTabDragWindow *)dragWindowWithImage:(NSImage *)image styleMask:(NSUInteger)styleMask;
 
-- (id)initWithImage:(NSImage *)image styleMask:(unsigned int)styleMask;
+- (id)initWithImage:(NSImage *)image styleMask:(NSUInteger)styleMask;
 - (PSMTabDragView *)dragView;
 @end

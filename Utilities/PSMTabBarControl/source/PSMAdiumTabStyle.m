@@ -110,17 +110,17 @@
 #pragma mark -
 #pragma mark Control Specific
 
-- (float)leftMarginForTabBarControl
+- (CGFloat)leftMarginForTabBarControl
 {
     return 3.0f;
 }
 
-- (float)rightMarginForTabBarControl
+- (CGFloat)rightMarginForTabBarControl
 {
     return 24.0f;
 }
 
-- (float)topMarginForTabBarControl
+- (CGFloat)topMarginForTabBarControl
 {
 	return 10.0f;
 }
@@ -265,7 +265,7 @@
 - (NSSize)sizeForObjectCounterRectForTabCell:(PSMTabBarCell *)cell
 {
 	NSSize size;
-	float countWidth = [[self attributedObjectCountValueForTabCell:cell] size].width;
+	CGFloat countWidth = [[self attributedObjectCountValueForTabCell:cell] size].width;
 
 	countWidth += (2 * kPSMAdiumObjectCounterRadius - 6.0 + kPSMAdiumCounterPadding);
 	
@@ -299,9 +299,9 @@
 	return result;
 }
 
-- (float)minimumWidthOfTabCell:(PSMTabBarCell *)cell
+- (CGFloat)minimumWidthOfTabCell:(PSMTabBarCell *)cell
 {
-	float resultWidth = 0.0;
+	CGFloat resultWidth = 0.0;
 
 	// left margin
 	resultWidth = Adium_MARGIN_X;
@@ -335,9 +335,9 @@
 	return ceil(resultWidth);
 }
 
-- (float)desiredWidthOfTabCell:(PSMTabBarCell *)cell
+- (CGFloat)desiredWidthOfTabCell:(PSMTabBarCell *)cell
 {
-	float resultWidth = 0.0;
+	CGFloat resultWidth = 0.0;
 
 	// left margin
 	resultWidth = Adium_MARGIN_X;
@@ -371,7 +371,7 @@
 	return ceil(resultWidth);
 }
 
-- (float)tabCellHeight
+- (CGFloat)tabCellHeight
 {
 	return ((orientation == PSMTabBarHorizontalOrientation) ? kPSMTabBarControlHeight : kPSMTabBarControlSourceListHeight);
 }
@@ -381,7 +381,7 @@
 
 - (NSAttributedString *)attributedObjectCountValueForTabCell:(PSMTabBarCell *)cell
 {
-	NSString *contents = [NSString stringWithFormat:@"%i", [cell count]];
+	NSString *contents = [NSString stringWithFormat:@"%lu", (unsigned long)[cell count]];
     return [[[NSMutableAttributedString alloc] initWithString:contents attributes:_objectCountStringAttributes] autorelease];
 }
 
@@ -410,7 +410,7 @@
 #pragma mark -
 #pragma mark Cell Drawing
 
-- (float)heightOfAttributedString:(NSAttributedString *)inAttributedString withWidth:(float)width
+- (CGFloat)heightOfAttributedString:(NSAttributedString *)inAttributedString withWidth:(CGFloat)width
 {
 	static NSMutableDictionary *cache;
 	if (!cache)
@@ -419,7 +419,7 @@
 		[cache removeAllObjects];
 	NSNumber *cachedHeight = [cache objectForKey:inAttributedString];
 	if (cachedHeight)
-		return [cachedHeight floatValue];
+		return [cachedHeight doubleValue];
 	else {
 		NSTextStorage		*textStorage = [[NSTextStorage alloc] initWithAttributedString:inAttributedString];
 		NSTextContainer 	*textContainer = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(width, 1e7)];
@@ -433,13 +433,13 @@
 		//Force the layout manager to layout its text
 		(void)[layoutManager glyphRangeForTextContainer:textContainer];
 		
-		float height = [layoutManager usedRectForTextContainer:textContainer].size.height;
+		CGFloat height = [layoutManager usedRectForTextContainer:textContainer].size.height;
 		
 		[textStorage release];
 		[textContainer release];
 		[layoutManager release];
 		
-		[cache setObject:[NSNumber numberWithFloat:height] forKey:inAttributedString];
+		[cache setObject:[NSNumber numberWithDouble:height] forKey:inAttributedString];
 		
 		return height;
 	}
@@ -480,7 +480,7 @@
 	[counterString drawInRect:counterStringRect];
 }
 
-- (NSBezierPath *)bezierPathWithRoundedRect:(NSRect)rect radius:(float)radius
+- (NSBezierPath *)bezierPathWithRoundedRect:(NSRect)rect radius:(CGFloat)radius
 {
     NSBezierPath	*path = [NSBezierPath bezierPath];
     NSPoint 		topLeft, topRight, bottomLeft, bottomRight;
@@ -544,7 +544,7 @@
 		imageDrawingRect.origin = NSMakePoint(0,0);
 		
 		//Create Rounding.
-		float userIconRoundingRadius = (kPSMTabBarLargeImageWidth / 4.0);
+		CGFloat userIconRoundingRadius = (kPSMTabBarLargeImageWidth / 4.0);
 		if (userIconRoundingRadius > 3) userIconRoundingRadius = 3;
 		NSBezierPath	*clipPath = [self bezierPathWithRoundedRect:imageDrawingRect radius:userIconRoundingRadius];
 		[clipPath addClip];
@@ -635,7 +635,7 @@
 		{
 			case PSMTabBarHorizontalOrientation:
 			{
-				float oldOrigin = labelRect.origin.x;
+				CGFloat oldOrigin = labelRect.origin.x;
 				if (NSWidth(iconRect) > NSWidth(closeButtonRect)) {
 					labelRect.origin.x = (NSMaxX(iconRect) + (Adium_CellPadding * 2));
 				} else {
@@ -703,7 +703,7 @@
 	NSAttributedString *attributedString = [cell attributedStringValue];
 	if (orientation == PSMTabBarVerticalOrientation) {
 		//Calculate the centered rect
-		float stringHeight = [self heightOfAttributedString:attributedString withWidth:NSWidth(labelRect)];
+		CGFloat stringHeight = [self heightOfAttributedString:attributedString withWidth:NSWidth(labelRect)];
 		if (stringHeight < labelRect.size.height) {
 			labelRect.origin.y += (NSHeight(labelRect) - stringHeight) / 2.0;
 		}		

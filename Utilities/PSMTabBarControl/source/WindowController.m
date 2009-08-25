@@ -116,7 +116,7 @@
 
 - (void)setObjectCount:(id)sender
 {
-    [[[tabView selectedTabViewItem] identifier] setValue:[NSNumber numberWithInt:[sender intValue]] forKeyPath:@"objectCount"];
+    [[[tabView selectedTabViewItem] identifier] setValue:[NSNumber numberWithInteger:[sender integerValue]] forKeyPath:@"objectCount"];
 }
 
 - (IBAction)isProcessingAction:(id)sender
@@ -134,7 +134,7 @@
     [[tabView selectedTabViewItem] setLabel:[sender stringValue]];
 }
 
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
     if ([menuItem action] == @selector(closeTab:)) {
         if (![tabBar canCloseOnlyTab] && ([tabView numberOfTabViewItems] <= 1)) {
@@ -242,47 +242,47 @@
 
 - (void)configTabMinWidth:(id)sender
 {
-    if ([tabBar cellOptimumWidth] < [sender intValue]) {
+    if ([tabBar cellOptimumWidth] < [sender integerValue]) {
         [tabBar setCellMinWidth:[tabBar cellOptimumWidth]];
-        [sender setIntValue:[tabBar cellOptimumWidth]];
+        [sender setIntegerValue:[tabBar cellOptimumWidth]];
         return;
     }
     
-    [tabBar setCellMinWidth:[sender intValue]];
+    [tabBar setCellMinWidth:[sender integerValue]];
 	
-	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:[sender intValue]]
+	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:[sender integerValue]]
 											  forKey:@"TabMinWidth"];
 }
 
 - (void)configTabMaxWidth:(id)sender
 {
-    if ([tabBar cellOptimumWidth] > [sender intValue]) {
+    if ([tabBar cellOptimumWidth] > [sender integerValue]) {
         [tabBar setCellMaxWidth:[tabBar cellOptimumWidth]];
-        [sender setIntValue:[tabBar cellOptimumWidth]];
+        [sender setIntegerValue:[tabBar cellOptimumWidth]];
         return;
     }
     
-    [tabBar setCellMaxWidth:[sender intValue]];
+    [tabBar setCellMaxWidth:[sender integerValue]];
 	
-	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:[sender intValue]]
+	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:[sender integerValue]]
 											  forKey:@"TabMaxWidth"];
 }
 
 - (void)configTabOptimumWidth:(id)sender
 {
-    if ([tabBar cellMaxWidth] < [sender intValue]) {
+    if ([tabBar cellMaxWidth] < [sender integerValue]) {
         [tabBar setCellOptimumWidth:[tabBar cellMaxWidth]];
-        [sender setIntValue:[tabBar cellMaxWidth]];
+        [sender setIntegerValue:[tabBar cellMaxWidth]];
         return;
     }
     
-    if ([tabBar cellMinWidth] > [sender intValue]) {
+    if ([tabBar cellMinWidth] > [sender integerValue]) {
         [tabBar setCellOptimumWidth:[tabBar cellMinWidth]];
-        [sender setIntValue:[tabBar cellMinWidth]];
+        [sender setIntegerValue:[tabBar cellMinWidth]];
         return;
     }
     
-    [tabBar setCellOptimumWidth:[sender intValue]];
+    [tabBar setCellOptimumWidth:[sender integerValue]];
 	
 }
 
@@ -290,7 +290,7 @@
 {
     [tabBar setSizeCellsToFit:[sender state]];
 	
-	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:[sender intValue]]
+	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:[sender integerValue]]
 											  forKey:@"SizeToFit"];
 }
 
@@ -306,7 +306,7 @@
 {
     [tabBar setUseOverflowMenu:[sender state]];
 	
-	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:[sender intValue]]
+	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:[sender integerValue]]
 											  forKey:@"UseOverflowMenu"];
 }
 
@@ -314,7 +314,7 @@
 {
 	[tabBar setAutomaticallyAnimates:[sender state]];
 	
-	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:[sender intValue]]
+	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:[sender integerValue]]
 											  forKey:@"AutomaticallyAnimates"];
 }
 
@@ -322,7 +322,7 @@
 {
 	[tabBar setAllowsScrubbing:[sender state]];
 	
-	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:[sender intValue]]
+	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:[sender integerValue]]
 											  forKey:@"AllowScrubbing"];
 }
 
@@ -333,7 +333,7 @@
 {
     // need to update bound values to match the selected tab
 	if ([[tabViewItem identifier] respondsToSelector:@selector(objectCount)]) {
-		[objectCounterField setIntValue:[[tabViewItem identifier] objectCount]];
+		[objectCounterField setIntegerValue:[[tabViewItem identifier] objectCount]];
 	}
 	
 	if ([[tabViewItem identifier] respondsToSelector:@selector(isProcessing)]) {
@@ -400,7 +400,7 @@
 	NSLog(@"didDropTabViewItem: %@ inTabBar: %@", [tabViewItem label], tabBarControl);
 }
 
-- (NSImage *)tabView:(NSTabView *)aTabView imageForTabViewItem:(NSTabViewItem *)tabViewItem offset:(NSSize *)offset styleMask:(unsigned int *)styleMask
+- (NSImage *)tabView:(NSTabView *)aTabView imageForTabViewItem:(NSTabViewItem *)tabViewItem offset:(NSSize *)offset styleMask:(NSUInteger *)styleMask
 {
 	// grabs whole window image
 	NSImage *viewImage = [[[NSImage alloc] init] autorelease];
@@ -441,7 +441,7 @@
 	
 	[viewImage unlockFocus];
 	
-	if ([[aTabView delegate] orientation] == PSMTabBarHorizontalOrientation) {
+	if ([(PSMTabBarControl *)[aTabView delegate] orientation] == PSMTabBarHorizontalOrientation) {
 		offset->width = [(id <PSMTabStyle>)[[aTabView delegate] style] leftMarginForTabBarControl];
 		offset->height = 22;
 	} else {
@@ -495,7 +495,7 @@
 	return [tabViewItem label];
 }
 
-- (NSString *)accessibilityStringForTabView:(NSTabView *)aTabView objectCount:(int)objectCount
+- (NSString *)accessibilityStringForTabView:(NSTabView *)aTabView objectCount:(NSInteger)objectCount
 {
 	return (objectCount == 1) ? @"item" : @"items";
 }

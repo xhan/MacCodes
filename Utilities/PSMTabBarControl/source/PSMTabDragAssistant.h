@@ -22,7 +22,7 @@
     PSMTabBarControl            *_destinationTabBar;
     NSMutableSet                *_participatingTabBars;
     PSMTabBarCell               *_draggedCell;
-    int                         _draggedCellIndex;   // for snap back
+    NSInteger                         _draggedCellIndex;   // for snap back
     BOOL                        _isDragging;
 	
 	// Support for dragging into new windows
@@ -49,8 +49,8 @@
 - (void)setDestinationTabBar:(PSMTabBarControl *)tabBar;
 - (PSMTabBarCell *)draggedCell;
 - (void)setDraggedCell:(PSMTabBarCell *)cell;
-- (int)draggedCellIndex;
-- (void)setDraggedCellIndex:(int)value;
+- (NSInteger)draggedCellIndex;
+- (void)setDraggedCellIndex:(NSInteger)value;
 - (BOOL)isDragging;
 - (void)setIsDragging:(BOOL)value;
 - (NSPoint)currentMouseLoc;
@@ -88,13 +88,13 @@
 - (void)setControlView:(id)view;
 - (id)cellForPoint:(NSPoint)point cellFrame:(NSRectPointer)outFrame;
 - (PSMTabBarCell *)lastVisibleTab;
-- (int)numberOfVisibleTabs;
+- (NSInteger)numberOfVisibleTabs;
 
 @end
 
-void CGContextCopyWindowCaptureContentsToRect(void *grafport, CGRect rect, int cid, int wid, int zero);
-OSStatus CGSSetWindowTransform(int cid, int wid, CGAffineTransform transform); 
+void CGContextCopyWindowCaptureContentsToRect(void *grafport, CGRect rect, NSInteger cid, NSInteger wid, NSInteger zero);
+OSStatus CGSSetWindowTransform(NSInteger cid, NSInteger wid, CGAffineTransform transform); 
 
 @interface NSApplication (CoreGraphicsUndocumented)
-- (int)contextID;
+- (NSInteger)contextID;
 @end

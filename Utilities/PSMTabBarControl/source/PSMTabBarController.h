@@ -22,9 +22,9 @@
 
 - (NSRect)addButtonRect;
 - (NSMenu *)overflowMenu;
-- (NSRect)cellTrackingRectAtIndex:(int)index;
-- (NSRect)closeButtonTrackingRectAtIndex:(int)index;
-- (NSRect)cellFrameAtIndex:(int)index;
+- (NSRect)cellTrackingRectAtIndex:(NSInteger)index;
+- (NSRect)closeButtonTrackingRectAtIndex:(NSInteger)index;
+- (NSRect)cellFrameAtIndex:(NSInteger)index;
 
 - (void)setSelectedCell:(PSMTabBarCell *)cell;
 

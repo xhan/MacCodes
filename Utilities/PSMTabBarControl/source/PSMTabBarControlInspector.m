@@ -43,28 +43,28 @@
     } else if ([sender tag] == kPSMShowAddTabTag) {
         [[self object] setShowAddTabButton:[sender state]];
     } else if ([sender tag] == kPSMMinWidthTag) {
-        if ([[self object] cellOptimumWidth] < [sender intValue]) {
+        if ([[self object] cellOptimumWidth] < [sender integerValue]) {
             [[self object] setCellMinWidth:[[self object] cellOptimumWidth]];
-            [sender setIntValue:[[self object] cellOptimumWidth]];
+            [sender setIntegerValue:[[self object] cellOptimumWidth]];
         } else {
-            [[self object] setCellMinWidth:[sender intValue]];
+            [[self object] setCellMinWidth:[sender integerValue]];
         }
     } else if ([sender tag] == kPSMMaxWidthTag) {
-        if ([[self object] cellOptimumWidth] > [sender intValue]) {
+        if ([[self object] cellOptimumWidth] > [sender integerValue]) {
             [[self object] setCellMaxWidth:[[self object] cellOptimumWidth]];
-            [sender setIntValue:[[self object] cellOptimumWidth]];
+            [sender setIntegerValue:[[self object] cellOptimumWidth]];
         } else {
-            [[self object] setCellMaxWidth:[sender intValue]];
+            [[self object] setCellMaxWidth:[sender integerValue]];
         }
     } else if ([sender tag] == kPSMOptimumWidthTag) {
-        if ([[self object] cellMaxWidth] < [sender intValue]) {
+        if ([[self object] cellMaxWidth] < [sender integerValue]) {
             [[self object] setCellOptimumWidth:[[self object] cellMaxWidth]];
-            [sender setIntValue:[[self object] cellMaxWidth]];
-        } else if ([[self object] cellMinWidth] > [sender intValue]) {
+            [sender setIntegerValue:[[self object] cellMaxWidth]];
+        } else if ([[self object] cellMinWidth] > [sender integerValue]) {
             [[self object] setCellOptimumWidth:[[self object] cellMinWidth]];
-            [sender setIntValue:[[self object] cellMinWidth]];
+            [sender setIntegerValue:[[self object] cellMinWidth]];
         } else {
-            [[self object] setCellOptimumWidth:[sender intValue]];
+            [[self object] setCellOptimumWidth:[sender integerValue]];
         }
     } else if ([sender tag] == kPSMSizeToFitTag) {
         [[self object] setSizeCellsToFit:[sender state]];
@@ -90,9 +90,9 @@
 	[_disableTabClose setState:[[self object] disableTabClose]];
     [_hideForSingleTab setState:[[self object] hideForSingleTab]];
     [_showAddTab setState:[[self object] showAddTabButton]];
-    [_cellMinWidth setIntValue:[[self object] cellMinWidth]];
-    [_cellMaxWidth setIntValue:[[self object] cellMaxWidth]];
-    [_cellOptimumWidth setIntValue:[[self object] cellOptimumWidth]];
+    [_cellMinWidth setIntegerValue:[[self object] cellMinWidth]];
+    [_cellMaxWidth setIntegerValue:[[self object] cellMaxWidth]];
+    [_cellOptimumWidth setIntegerValue:[[self object] cellOptimumWidth]];
     [_sizeToFit setState:[[self object] sizeCellsToFit]];
 	[_useOverflowMenu setState:[[self object] useOverflowMenu]];
     [_automaticallyAnimates setState:[[self object] automaticallyAnimates]];

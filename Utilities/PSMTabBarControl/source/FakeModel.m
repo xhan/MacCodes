@@ -59,12 +59,12 @@
     _iconName = iconName;
 }
 
-- (int)objectCount
+- (NSInteger)objectCount
 {
     return _objectCount;
 }
 
-- (void)setObjectCount:(int)value
+- (void)setObjectCount:(NSInteger)value
 {
     _objectCount = value;
 }
