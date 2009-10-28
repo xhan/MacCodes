@@ -336,7 +336,7 @@
 - (void)setStyle:(id <PSMTabStyle>)newStyle
 {
     if (style != newStyle) {
-        [style release];
+        [style autorelease];
         style = [newStyle retain];
         
         // restyle add tab button

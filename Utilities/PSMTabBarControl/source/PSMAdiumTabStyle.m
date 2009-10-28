@@ -976,7 +976,8 @@
 	}
 	
 	if (tabBar != bar) {
-		tabBar = bar;
+		[tabBar release];
+		tabBar = [bar retain];
 	}
 	
 	[self drawBackgroundInRect:rect];
